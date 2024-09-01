@@ -5,11 +5,13 @@ using DG.Tweening;
 
 public class Circle : MonoBehaviour
 {
+    [SerializeField] LineController lineController;
     [SerializeField] float bounceAnimationDuration;
     [SerializeField] float bounceScaleValue;
     [SerializeField] float inputReadOffset;
     [SerializeField] Rigidbody2D rb;
     [SerializeField, Range(1, 15)] float speedMultiplier;
+    [SerializeField] float minSpeed;
     [SerializeField] float minStretchDistance, maxStretchDistance;
     Vector2 initialPosition;
     bool canStretch;
@@ -42,10 +44,16 @@ public class Circle : MonoBehaviour
 
     void StartBallStretch(Vector2 startPos)
     {
+        rb.velocity *= 0;
+        transform.rotation = Quaternion.identity;
         canStretch = true;
         if (startPos.y > inputReadOffset)
         {
             canStretch = false;
+        }
+        if (canStretch)
+        {
+            lineController.Init();
         }
     }
 
@@ -55,11 +63,12 @@ public class Circle : MonoBehaviour
             return;
 
         float clamped = Mathf.Clamp(direction.magnitude + 1, minStretchDistance, maxStretchDistance);
-        float lnMagnitude = Mathf.Log(clamped);
-        var newPos = (initialPosition - direction.normalized * lnMagnitude);
+        speed = Mathf.Log(clamped);
+        var newPos = (initialPosition - direction.normalized * speed);
 
-        speed = lnMagnitude;
         transform.position = newPos;
+
+        lineController.UpdateState(speed, direction.normalized);
     }
 
     void ReleaseBall(Vector2 direction)
@@ -67,9 +76,15 @@ public class Circle : MonoBehaviour
         if (!canStretch)
             return;
 
-        UpdateBallPosition(direction);
+        if (speed < minSpeed)
+        {
+            transform.DOMove(initialPosition, 0.15f);
+            return;
+        }
 
         rb.velocity = direction.normalized * speed * speedMultiplier;
+
+        lineController.Disable();
     }
 
     public void OnBounce(Vector2 normalVector)
