@@ -1,0 +1,60 @@
+{
+    "name": "InputMaster",
+    "maps": [
+        {
+            "name": "Gesture",
+            "id": "4121d696-8019-4d1a-9e4a-ed0df8d47b49",
+            "actions": [
+                {
+                    "name": "FingerPressed",
+                    "type": "Value",
+                    "id": "e8b507fe-c639-465d-8e07-6f98fb7bf484",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
+                },
+                {
+                    "name": "Position",
+                    "type": "Value",
+                    "id": "377df251-3495-44b1-a74d-4a6fe51aaaca",
+                    "expectedControlType": "Vector2",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "40b0e764-a15f-43ff-aea1-1d39dc196476",
+                    "path": "<Touchscreen>/Press",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Touch",
+                    "action": "FingerPressed",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "0681b666-bb10-410a-8654-c59f477e8fd2",
+                    "path": "<Touchscreen>/position",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Touch",
+                    "action": "Position",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
+        }
+    ],
+    "controlSchemes": [
+        {
+            "name": "Touch",
+            "bindingGroup": "Touch",
+            "devices": []
+        }
+    ]
+}
