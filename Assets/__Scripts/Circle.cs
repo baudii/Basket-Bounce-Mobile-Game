@@ -4,6 +4,7 @@ using UnityEngine;
 using DG.Tweening;
 using UnityEditor.VisionOS;
 using System.Runtime.CompilerServices;
+using System;
 
 public class Circle : MonoBehaviour
 {
@@ -16,6 +17,7 @@ public class Circle : MonoBehaviour
     [SerializeField, Range(1, 15)] float speedMultiplier;
     [SerializeField] float minSpeed;
     [SerializeField] float minStretchDistance, maxStretchDistance;
+
     Vector2 initialPosition;
     bool startedStretch;
     bool isDead;
@@ -26,6 +28,7 @@ public class Circle : MonoBehaviour
 
     bool isCircleRoaming;
 
+    public Action OnDeath;
 
     void Start()
     {
@@ -35,6 +38,8 @@ public class Circle : MonoBehaviour
         GestureDetector.OnDragStart += StartBallStretch;
         GestureDetector.OnDragUpdate += UpdateBallPosition;
         GestureDetector.OnDragEnd += ReleaseBall;
+
+        GameManager.Instance.OnRestart.AddListener(ResetBall);
     }
 
     void Update()
@@ -56,8 +61,11 @@ public class Circle : MonoBehaviour
 
     void OnDestroy()
     {
+        GestureDetector.OnDragStart -= StartBallStretch;
         GestureDetector.OnDragUpdate -= UpdateBallPosition;
         GestureDetector.OnDragEnd -= ReleaseBall;
+
+        GameManager.Instance.OnRestart.RemoveListener(ResetBall);
     }
 
     bool IsBallInScreen()
@@ -137,8 +145,12 @@ public class Circle : MonoBehaviour
             return;
         isDead = true;
 
-        Invoke(nameof(ResetBall), 1f);
-        //game end / restart logic
+        GameManager.Instance.Co_DelayedExecute(GameManager.Instance.ShowGameOverScreen, 0.5f);
+    }
+
+    public void OnFinish()
+    {
+        rb.velocity *= 0;
     }
 
     public void OnBounce(Vector2 normalVector)
@@ -149,6 +161,6 @@ public class Circle : MonoBehaviour
         GFX.eulerAngles += angleOffset;
         transform.localScale = initialScale;
 
-        transform.DOScaleY(bounceScaleValue, bounceAnimationDuration).OnComplete(() => transform.DOScaleY(initialScale.y, bounceAnimationDuration));
+        transform.DOScaleY(initialScale.y * Mathf.Pow(bounceScaleValue, speed), bounceAnimationDuration).OnComplete(() => transform.DOScaleY(initialScale.y, bounceAnimationDuration));
     }
 }
