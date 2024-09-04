@@ -70,16 +70,16 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4873644438653420069, guid: 6eef6397fd2e386449d99515efca6d14, type: 3}
       propertyPath: m_Size.x
-      value: 1.8622468
+      value: 3.5
       objectReference: {fileID: 0}
     - target: {fileID: 4873644438653420069, guid: 6eef6397fd2e386449d99515efca6d14, type: 3}
       propertyPath: m_Size.y
-      value: 0.7021425
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4873644438653420069, guid: 6eef6397fd2e386449d99515efca6d14, type: 3}
       propertyPath: m_Sprite
       value: 
-      objectReference: {fileID: 21300000, guid: 4901b9b13396e25449aaf7a5cdefb741, type: 3}
+      objectReference: {fileID: 21300000, guid: a37bf3984fe7b0740869f3a7f9b886dc, type: 3}
     - target: {fileID: 4873644438653420069, guid: 6eef6397fd2e386449d99515efca6d14, type: 3}
       propertyPath: m_DrawMode
       value: 2
@@ -94,23 +94,23 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6591640710321136981, guid: 6eef6397fd2e386449d99515efca6d14, type: 3}
       propertyPath: m_LocalScale.x
-      value: 1.5
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6591640710321136981, guid: 6eef6397fd2e386449d99515efca6d14, type: 3}
       propertyPath: m_LocalScale.y
-      value: 1.5
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6591640710321136981, guid: 6eef6397fd2e386449d99515efca6d14, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -1.46
+      value: -2.2072167
       objectReference: {fileID: 0}
     - target: {fileID: 6591640710321136981, guid: 6eef6397fd2e386449d99515efca6d14, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -0.48
+      value: -2.3436873
       objectReference: {fileID: 0}
     - target: {fileID: 6591640710321136981, guid: 6eef6397fd2e386449d99515efca6d14, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0
+      value: 0.034287617
       objectReference: {fileID: 0}
     - target: {fileID: 6591640710321136981, guid: 6eef6397fd2e386449d99515efca6d14, type: 3}
       propertyPath: m_LocalRotation.w
@@ -118,15 +118,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6591640710321136981, guid: 6eef6397fd2e386449d99515efca6d14, type: 3}
       propertyPath: m_LocalRotation.x
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 6591640710321136981, guid: 6eef6397fd2e386449d99515efca6d14, type: 3}
       propertyPath: m_LocalRotation.y
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 6591640710321136981, guid: 6eef6397fd2e386449d99515efca6d14, type: 3}
       propertyPath: m_LocalRotation.z
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 6591640710321136981, guid: 6eef6397fd2e386449d99515efca6d14, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -142,16 +142,16 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7332710111941346978, guid: 6eef6397fd2e386449d99515efca6d14, type: 3}
       propertyPath: m_Size.x
-      value: 1.8622468
+      value: 3.5
       objectReference: {fileID: 0}
     - target: {fileID: 7332710111941346978, guid: 6eef6397fd2e386449d99515efca6d14, type: 3}
       propertyPath: m_Size.y
-      value: 0.7021425
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7332710111941346978, guid: 6eef6397fd2e386449d99515efca6d14, type: 3}
       propertyPath: m_Sprite
       value: 
-      objectReference: {fileID: 21300000, guid: 4901b9b13396e25449aaf7a5cdefb741, type: 3}
+      objectReference: {fileID: 21300000, guid: a37bf3984fe7b0740869f3a7f9b886dc, type: 3}
     m_RemovedComponents:
     - {fileID: 2106636626803921766, guid: 6eef6397fd2e386449d99515efca6d14, type: 3}
     m_RemovedGameObjects: []
@@ -200,10 +200,10 @@ BoxCollider2D:
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}
   m_SpriteTilingProperty:
-    border: {x: 0.140625, y: 0.078125, z: 0.09375, w: 0.0625}
+    border: {x: 0.108695656, y: 0.108695656, z: 0.13043478, w: 0.02173913}
     pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 1, y: 1}
-    newSize: {x: 1.8622468, y: 0.7021425}
+    oldSize: {x: 1.3913044, y: 1}
+    newSize: {x: 3.5, y: 1}
     adaptiveTilingThreshold: 0.5
     drawMode: 2
     adaptiveTiling: 0

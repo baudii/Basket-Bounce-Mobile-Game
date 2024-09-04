@@ -1,3 +1,4 @@
+using DG.Tweening;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -17,7 +18,7 @@ public class UI_Button_Handler : MonoBehaviour, IPointerDownHandler, IPointerUpH
 
     public void LevelSelect()
     {
-        GameManager.Instance.SelectLevel();
+        GameManager.Instance.ShowLevelSelect();
     }
 
     public void Restart()
@@ -27,11 +28,16 @@ public class UI_Button_Handler : MonoBehaviour, IPointerDownHandler, IPointerUpH
 
     public void NextLevel()
     {
-        GameManager.Instance.NextLevel();
+        LevelManager.Instance.NextLevel();
     }
 
     public void ResumeGame()
     {
         GameManager.Instance.ResumeGame();
+    }
+
+    public void Back()
+    {
+        GameManager.Instance.Back();
     }
 }

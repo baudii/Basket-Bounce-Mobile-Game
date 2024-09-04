@@ -31,6 +31,18 @@ public class GestureDetector : MonoBehaviour
         InitDrag();
     }
 
+    private void Update()
+    {
+        if (GameManager.Instance.state == GameManager.State.InGame)
+        {
+            input.Enable();
+        }
+        else
+        {
+            input.Disable();
+        }
+    }
+
     private void InitSwipes()
     {
         input.Gesture.FingerPressed.performed += ctx => StartCoroutine(SwipeCheck(GetTouchPosition()));
@@ -57,7 +69,6 @@ public class GestureDetector : MonoBehaviour
         var endPos = Vector2.zero;
         var distance = 0f;
         var time = 0f;
-
 
         while (distance < minSwipeLength)
         {
@@ -118,5 +129,13 @@ public class GestureDetector : MonoBehaviour
             return Vector2.down;
 
         return Vector2.zero;
+    }
+
+    public void SetActive(bool isActive)
+    {
+        if (isActive)
+            input.Enable();
+        else
+            input.Disable();
     }
 }
