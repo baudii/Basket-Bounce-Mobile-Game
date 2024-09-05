@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 
 public class UI_LevelSelector : MonoBehaviour
@@ -29,5 +30,18 @@ public class UI_LevelSelector : MonoBehaviour
 
             levels[i].Init(stars, i, i <= lastLevel);
         }
+    }
+
+    public void LoadLevel()
+    {
+        int selectedLevel = UI_LevelIcon.SelectedLevel;
+        print("trying to load " + selectedLevel);
+        if (selectedLevel == -1)
+        {
+            print("WTF");
+            return;
+        }
+        //gridParent.GetChild(selectedLevel).GetComponent<UI_LevelIcon>().StopAllCoroutines();
+        LevelManager.Instance.LoadLevel(selectedLevel);
     }
 }

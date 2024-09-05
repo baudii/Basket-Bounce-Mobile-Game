@@ -5,19 +5,15 @@ using UnityEngine.Events;
 
 public class Finish : MonoBehaviour
 {
-    bool finished;
+
     [SerializeField] UnityEvent OnFinish;
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (finished)
-            return;
-
         if (collision.transform.TryGetComponent(out Ball circle))
         {
             if (circle.finished)
                 return;
 
-            finished = true;
             int bounces = circle.OnFinish();
             OnFinish?.Invoke();
 

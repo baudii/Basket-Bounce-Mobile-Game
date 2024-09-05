@@ -38,11 +38,12 @@ namespace KK
 
             if (fixedDirection == FixedDirection.Horizontal)
             {
-                rows = transform.childCount / columns + (int)Mathf.Sign(transform.childCount % columns);
+                rows = transform.childCount / columns + Utils.Signum(transform.childCount % columns);
+                print(rows);
             }
             else if (fixedDirection == FixedDirection.Vertical)
             {
-                columns = transform.childCount / rows + (int)Mathf.Sign(transform.childCount % rows);
+                columns = transform.childCount / rows + Utils.Signum(transform.childCount % rows);
             }
             if (fittingMethod == FittingMethod.Cell)
             {
@@ -98,7 +99,6 @@ namespace KK
             }
 
             Vector2 sizeDelta = rectTransform.sizeDelta;
-            Vector2 pos = rectTransform.anchoredPosition;
 
             if (fitToContent == FitToContent.Width || fitToContent == FitToContent.Both)
             {
@@ -115,7 +115,6 @@ namespace KK
             }
 
             rectTransform.sizeDelta = sizeDelta;
-            rectTransform.anchoredPosition = pos;
         }
 
         public override void CalculateLayoutInputVertical()

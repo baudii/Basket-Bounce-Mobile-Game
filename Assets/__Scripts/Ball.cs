@@ -48,13 +48,13 @@ public class Ball : MonoBehaviour
         GameManager.Instance.OnRestart.AddListener(ResetBall);
     }
 
-    void Update()
+/*    void Update()
     {
         if (!IsBallInScreen())
         {
             Die();
         }
-    }
+    }*/
 
 
     void OnCollisionEnter2D(Collision2D collision)
@@ -150,12 +150,12 @@ public class Ball : MonoBehaviour
 
     public void Die()
     {
-        if (isDead)
+        if (isDead || finished || !gameObject.activeSelf || !enabled)
             return;
         isDead = true;
         rb.velocity *= 0;
 
-        GameManager.Instance.Co_DelayedExecute(GameManager.Instance.ShowGameOverScreen, 0.5f);
+        this.Co_DelayedExecute(GameManager.Instance.ShowGameOverScreen, 0.5f);
     }
 
     public int OnFinish()

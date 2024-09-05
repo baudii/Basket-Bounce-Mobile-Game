@@ -89,4 +89,13 @@ public static class Utils
 
         return false;
     }
+
+    public static int Signum(float number)
+    {
+        if (number > 0) 
+            return 1;
+        if (number < 0) 
+            return -1;
+        return 0;
+    }
 }

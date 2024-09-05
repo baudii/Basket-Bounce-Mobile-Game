@@ -1,3 +1,4 @@
+using Cinemachine;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -5,10 +6,13 @@ using UnityEngine;
 
 public class LevelManager : MonoBehaviour
 {
+    [SerializeField] CinemachineSmoothPath dollyTrack;
     public static LevelManager Instance => instance;
     static LevelManager instance;
+    [SerializeField] int testLevel;
+    [SerializeField] bool validate;
 
-    [SerializeField] GameObject[] levels;
+    [SerializeField] List<GameObject> levels;
 
     public LevelData CurrentLevelData { get; private set; }
     int currentLevel;
@@ -21,13 +25,35 @@ public class LevelManager : MonoBehaviour
         if (instance != null)
             Destroy(gameObject);
         instance = this;
+
+        transform.ActOnEveryChild(child =>
+        {
+            if (child.name.Contains("Level"))
+            {
+                child.gameObject.SetActive(false);
+            }
+        });
     }
 
+#if UNITY_EDITOR
+    private void OnValidate()
+    {
+        if (!validate)
+            return;
+
+        levels = new List<GameObject>();
+        transform.ActOnEveryChild(child =>
+        {
+            if (child.name.Contains("Level"))
+                levels.Add(child.gameObject);
+        });
+    }
+#endif
     private void Start()
     {
         currentLevel = PlayerPrefs.GetInt(LAST_OPENED_LEVEL, -1);
 #if UNITY_EDITOR
-        currentLevel = 0;
+        currentLevel = testLevel;
 #endif
         if (currentLevel < 0)
         {
@@ -54,7 +80,7 @@ public class LevelManager : MonoBehaviour
     /// <param name="level">Level numeration starts from 0</param>
     public void LoadLevel(int level) 
     {
-        if (level >= levels.Length)
+        if (level >= levels.Count)
             return;
 
         GameManager.Instance.SetActiveLoadingScreen(true);
@@ -62,13 +88,17 @@ public class LevelManager : MonoBehaviour
         levels[level].SetActive(true);
         if (levels[level].TryGetComponent(out LevelData levelData))
             CurrentLevelData = levelData;
-        
         currentLevel = level;
         int lastSavedLevel = PlayerPrefs.GetInt(LAST_OPENED_LEVEL, -1);
         if (lastSavedLevel < currentLevel)
             PlayerPrefs.SetInt(LAST_OPENED_LEVEL, currentLevel);
 
         GameManager.Instance.UpdateLevelSelector();
+
+        //update camera dolly
+        var waypoint = dollyTrack.m_Waypoints[1];
+        waypoint.position = CurrentLevelData.GetFinPos().AddTo(y: -4, z: -10);
+        dollyTrack.m_Waypoints[1] = waypoint;
 
         this.Co_DelayedExecute(() =>
         {
