@@ -1,4 +1,3 @@
-using System.Drawing;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -39,7 +38,6 @@ namespace KK
             if (fixedDirection == FixedDirection.Horizontal)
             {
                 rows = transform.childCount / columns + Utils.Signum(transform.childCount % columns);
-                print(rows);
             }
             else if (fixedDirection == FixedDirection.Vertical)
             {

@@ -8,11 +8,11 @@ TagManager:
   - Default
   - TransparentFX
   - Ignore Raycast
-  - 
+  - Environment
   - Water
   - UI
-  - 
-  - 
+  - Ball
+  - CanInteractWithMehanic
   - 
   - 
   - 
@@ -40,6 +40,9 @@ TagManager:
   m_SortingLayers:
   - name: BG
     uniqueID: 2173405315
+    locked: 0
+  - name: Shadow
+    uniqueID: 588277589
     locked: 0
   - name: Default
     uniqueID: 0

@@ -1,19 +1,36 @@
-using DG.Tweening;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
 public class UI_Button_Handler : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
 {
+    [SerializeField, Tooltip("Needed to adjust size. If none given - this gameobject's rectTransform will be taken by default")] RectTransform iconRect;
+    [SerializeField] bool scaleIcon;
+
+    private void Awake()
+    {
+        if (iconRect == null)
+        {
+            iconRect = GetComponent<RectTransform>();
+        }
+    }
     public void OnPointerDown(PointerEventData eventData)
     {
-        transform.GetComponent<RectTransform>().sizeDelta += new Vector2(0, -3);
+        if (scaleIcon)
+        {
+            iconRect.transform.localScale *= 0.95f;
+            return;
+        }
+        iconRect.sizeDelta += new Vector2(0, -3);
     }
 
     public void OnPointerUp(PointerEventData eventData)
     {
-        transform.GetComponent<RectTransform>().sizeDelta += new Vector2(0, 3);
+        if (scaleIcon)
+        {
+            iconRect.transform.localScale *= (20f / 19f);
+            return;
+        }
+        iconRect.sizeDelta += new Vector2(0, 3);
     }
 
     public void LevelSelect()
@@ -39,5 +56,10 @@ public class UI_Button_Handler : MonoBehaviour, IPointerDownHandler, IPointerUpH
     public void Back()
     {
         GameManager.Instance.Back();
+    }
+
+    public void Pause()
+    {
+        GameManager.Instance.ShowPauseScreen();
     }
 }

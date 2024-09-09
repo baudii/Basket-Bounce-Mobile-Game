@@ -1,8 +1,4 @@
-using System.Collections;
-using System.Collections.Generic;
-using System.Diagnostics.Contracts;
 using UnityEngine;
-using UnityEngine.AdaptivePerformance.Google.Android;
 using UnityEngine.Events;
 
 [DefaultExecutionOrder(-1)]
@@ -32,10 +28,13 @@ public class GameManager : MonoBehaviour
     public UnityEvent OnRestart;
     [HideInInspector]
     public UnityEvent OnGameOver;
-
+    [HideInInspector]
+    public UnityEvent OnInGameStateEnter;
+    [HideInInspector]
+    public UnityEvent OnInGameStateExit;
     State prevState;
 
-    public State state;
+    public State currentState;
 
     private void Awake()
     {
@@ -43,7 +42,7 @@ public class GameManager : MonoBehaviour
             Destroy(gameObject);
 
         instance = this;
-        state = State.InGame;
+        currentState = State.InGame;
 
         levelSelector.Init();
     }
@@ -56,6 +55,62 @@ public class GameManager : MonoBehaviour
 
 #endif
 
+    void SetState(State state)
+    {
+        this.SmartLog("Current state: " + currentState + ". New state: " + state);
+        OnExitState(currentState);
+
+        switch (state)
+        {
+            case State.InGame:
+                DisableAll();
+                Time.timeScale = 1;
+                OnInGameStateEnter?.Invoke();
+                break;
+            case State.Completed:
+                levelCompleteScreen.gameObject.SetActive(true);
+                break;
+            case State.GameOver:
+                if (currentState != State.InGame)
+                    return;
+                gameOverScreen.SetActive(true);
+                OnGameOver?.Invoke();
+                break;
+            case State.LevelSelect:
+                levelSelector.gameObject.SetActive(true);
+                break;
+            case State.Paused:
+                pauseScreen.SetActive(true);
+                break;
+        }
+
+        prevState = currentState;
+        currentState = state;
+    }
+
+    void OnExitState(State state)
+    {
+        switch (state)
+        {
+            case State.InGame:
+                Time.timeScale = 0;
+                OnInGameStateExit?.Invoke();
+                break;
+            case State.Completed:
+                levelCompleteScreen.gameObject.SetActive(false);
+                break;
+            case State.GameOver:
+                gameOverScreen.SetActive(false);
+                break;
+            case State.LevelSelect:
+                levelSelector.gameObject.SetActive(false);
+                break;
+            case State.Paused:
+                pauseScreen.SetActive(false);
+                break;
+        }
+    }
+
     public void Back()
     {
         if (prevState == State.None)
@@ -66,10 +121,10 @@ public class GameManager : MonoBehaviour
 
         DisableAll();
 
-        state = prevState;
+        currentState = prevState;
         prevState = State.None;
 
-        switch (state)
+        switch (currentState)
         {
             case State.Completed:
                 levelCompleteScreen.gameObject.SetActive(true);
@@ -86,6 +141,11 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    public void GameOver()
+    {
+        SetState(State.GameOver);
+    }
+
     public void SetActiveLoadingScreen(bool isActive)
     {
         loadingScreen.SetActive(isActive);
@@ -93,8 +153,8 @@ public class GameManager : MonoBehaviour
 
     public void ShowLevelSelect()
     {
-        prevState = state;
-        state = State.LevelSelect;
+        prevState = currentState;
+        currentState = State.LevelSelect;
 
         DisableAll();
         levelSelector.gameObject.SetActive(true);
@@ -109,40 +169,19 @@ public class GameManager : MonoBehaviour
         ResumeGame();
     }
 
-    public void ShowGameOverScreen()
-    {
-        if (state != State.InGame)
-            return;
-        state = State.GameOver;
-
-        OnGameOver?.Invoke();
-
-        gameOverScreen.SetActive(true);
-    }
-
     public void ShowLevelCompleteScreen(int stars)
     {
-        if (state != State.InGame)
-            return;
-        state = State.Completed;
-
-        levelCompleteScreen.gameObject.SetActive(true);
-        levelCompleteScreen.ShowStars(stars);
+        SetState(State.Completed);
+        levelCompleteScreen.SetStars(stars);
     }
 
     public void ShowPauseScreen()
     {
-        if (state != State.InGame)
-            return;
-        state = State.Paused;
-
-        pauseScreen.SetActive(true);
+        SetState(State.Paused);
     }
     public void ResumeGame()
     {
-        DisableAll();
-
-        state = State.InGame;
+        SetState(State.InGame);
     }
 
     void DisableAll()

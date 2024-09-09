@@ -24,23 +24,21 @@ public class GestureDetector : MonoBehaviour
     {
         input = new InputMaster();
         input.Enable();
+
+        GameManager.Instance.OnInGameStateEnter.AddListener(() => InputToggler(true));
+        GameManager.Instance.OnInGameStateExit.AddListener(() => InputToggler(false));
+    }
+
+    void InputToggler(bool val)
+    {
+        this.SmartLog("Val: " + val);
+        if (val) input.Enable();
+        else input.Disable();
     }
 
     private void Start()
     {
         InitDrag();
-    }
-
-    private void Update()
-    {
-        if (GameManager.Instance.state == GameManager.State.InGame)
-        {
-            input.Enable();
-        }
-        else
-        {
-            input.Disable();
-        }
     }
 
     private void InitSwipes()

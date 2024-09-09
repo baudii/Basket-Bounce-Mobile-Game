@@ -1,8 +1,8 @@
 using Cinemachine;
-using System;
-using System.Collections;
 using System.Collections.Generic;
+using System.Collections;
 using UnityEngine;
+using System;
 
 public class LevelManager : MonoBehaviour
 {
@@ -11,6 +11,7 @@ public class LevelManager : MonoBehaviour
     static LevelManager instance;
     [SerializeField] int testLevel;
     [SerializeField] bool validate;
+    [SerializeField] GameObject tutorial;
 
     [SerializeField] List<GameObject> levels;
 
@@ -26,13 +27,27 @@ public class LevelManager : MonoBehaviour
             Destroy(gameObject);
         instance = this;
 
-        transform.ActOnEveryChild(child =>
+        GameManager.Instance.OnRestart.AddListener(OnRestart);
+
+        transform.ForEachChild(child =>
         {
             if (child.name.Contains("Level"))
             {
                 child.gameObject.SetActive(false);
             }
         });
+    }
+
+    void OnRestart()
+    {
+        if (CurrentLevelData == null)
+        {
+            this.SmartLog("Current level data is NULL");
+            return;
+        }
+
+        this.SmartLog(CurrentLevelData.gameObject.name);
+        CurrentLevelData.OnRestart();
     }
 
 #if UNITY_EDITOR
@@ -42,24 +57,26 @@ public class LevelManager : MonoBehaviour
             return;
 
         levels = new List<GameObject>();
-        transform.ActOnEveryChild(child =>
+        transform.ForEachChild(child =>
         {
             if (child.name.Contains("Level"))
                 levels.Add(child.gameObject);
         });
     }
 #endif
-    private void Start()
+    void Start()
     {
         currentLevel = PlayerPrefs.GetInt(LAST_OPENED_LEVEL, -1);
 #if UNITY_EDITOR
         currentLevel = testLevel;
 #endif
+        tutorial.SetActive(false);
         if (currentLevel < 0)
         {
             currentLevel = 0;
+            tutorial.SetActive(true);
         }
-        LoadLevel(currentLevel);
+        LoadLevel(currentLevel, true);
     }
 
     public void SaveProgress(int stars)
@@ -68,7 +85,7 @@ public class LevelManager : MonoBehaviour
         if (savedProgress < stars)
             PlayerPrefs.SetInt(LEVEL_STARS + currentLevel, stars);
 
-        print("saved, stars: " + stars + "\n level: " + currentLevel);
+        this.SmartLog("Progress saved. Stars: " + stars + ", Level: " + currentLevel);
     }
 
     public void NextLevel()
@@ -78,16 +95,20 @@ public class LevelManager : MonoBehaviour
 
     /// <summary>Loads level</summary>
     /// <param name="level">Level numeration starts from 0</param>
-    public void LoadLevel(int level) 
+    public void LoadLevel(int level, bool isFirstTimeLoad = false) 
     {
         if (level >= levels.Count)
             return;
 
+        float loadTime = 0.5f;
+        if (isFirstTimeLoad) loadTime = 4f;
         GameManager.Instance.SetActiveLoadingScreen(true);
         levels[currentLevel].SetActive(false);
         levels[level].SetActive(true);
         if (levels[level].TryGetComponent(out LevelData levelData))
             CurrentLevelData = levelData;
+        else
+            this.SmartWarning("Couldn't retrieve level data. Level num: " + level + ". leves[level] GO: " + levels[level].name);
         currentLevel = level;
         int lastSavedLevel = PlayerPrefs.GetInt(LAST_OPENED_LEVEL, -1);
         if (lastSavedLevel < currentLevel)
@@ -105,7 +126,6 @@ public class LevelManager : MonoBehaviour
             GameManager.Instance.SetActiveLoadingScreen(false);
             GameManager.Instance.Restart();
             
-        }, 0.5f, false);
+        }, loadTime);
     }
-
 }

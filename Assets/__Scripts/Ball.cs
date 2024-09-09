@@ -1,13 +1,11 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using DG.Tweening;
-using UnityEditor.VisionOS;
-using System.Runtime.CompilerServices;
 using System;
 
 public class Ball : MonoBehaviour
 {
+    [SerializeField] Animator animator;
+    [SerializeField] float maxTimeOutOfScreen;
     [SerializeField] AudioClip releaseSFX;
     [SerializeField] AudioSource src;
     [SerializeField] Transform GFX;
@@ -36,6 +34,8 @@ public class Ball : MonoBehaviour
 
     public bool finished;
 
+    float timeOutOfScreen;
+
     void Start()
     {
         cam = Camera.main;
@@ -48,13 +48,21 @@ public class Ball : MonoBehaviour
         GameManager.Instance.OnRestart.AddListener(ResetBall);
     }
 
-/*    void Update()
+    void Update()
     {
         if (!IsBallInScreen())
         {
-            Die();
+            timeOutOfScreen += Time.deltaTime;
+            if (timeOutOfScreen > maxTimeOutOfScreen)
+            {
+                Die();
+            }
         }
-    }*/
+        else
+        {
+            timeOutOfScreen = 0;
+        }
+    }
 
 
     void OnCollisionEnter2D(Collision2D collision)
@@ -84,15 +92,28 @@ public class Ball : MonoBehaviour
 
     void ResetBall()
     {
+        //transform
+        transform.position = initialPosition;
+        ResetRotation();
+
+        //dependancies
+        rb.velocity *= 0;
+        lineController.Disable();
+        animator.SetBool("IsRotating", false);
+        animator.speed = 1;
+
+        //private variables
+        timeOutOfScreen = 0;
         bounces = 0;
         isDead = false;
         isCircleRoaming = false;
-        transform.position = initialPosition;
+        finished = false;
+    }
+
+    public void ResetRotation()
+    {
         transform.rotation = Quaternion.identity;
         GFX.rotation = Quaternion.identity;
-        rb.velocity *= 0;
-        lineController.Disable();
-        finished = false;
     }
 
     void StartBallStretch(Vector2 startPos)
@@ -142,9 +163,14 @@ public class Ball : MonoBehaviour
             return;
         }
 
+
         rb.velocity = direction.normalized * speed * speedMultiplier;
 
         isCircleRoaming = true;
+
+        animator.SetBool("IsRotating", true);
+        this.SmartLog(Mathf.Exp(speed) + "stretch: " + maxStretchDistance);
+        animator.speed = Mathf.Exp(speed) / maxStretchDistance;
         src.PlayOneShot(releaseSFX, 1.2f);
     }
 
@@ -154,8 +180,7 @@ public class Ball : MonoBehaviour
             return;
         isDead = true;
         rb.velocity *= 0;
-
-        this.Co_DelayedExecute(GameManager.Instance.ShowGameOverScreen, 0.5f);
+        GameManager.Instance.GameOver();
     }
 
     public int OnFinish()
