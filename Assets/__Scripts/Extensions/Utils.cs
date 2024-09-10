@@ -1,12 +1,12 @@
+using System;
 using System.Threading.Tasks;
 using System.Threading;
-using System;
 using System.Collections;
 using UnityEngine;
-using System.Runtime.CompilerServices;
 
 public static class Utils
 {
+
     public static IEnumerator Co_DelayedExecute(Action action, int framesDelay)
     {
         for (int i = 0; i < framesDelay; i++)
@@ -98,5 +98,19 @@ public static class Utils
         if (number < 0) 
             return -1;
         return 0;
+    }
+}
+
+[Serializable]
+public struct Vector4Int
+{
+    public int x, y, z, w;
+
+    public Vector4Int(int x, int y, int z, int w)
+    {
+        this.x = x;
+        this.y = y;
+        this.z = z;
+        this.w = w;
     }
 }

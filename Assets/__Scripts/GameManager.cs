@@ -45,6 +45,13 @@ public class GameManager : MonoBehaviour
         currentState = State.InGame;
 
         levelSelector.Init();
+
+#if UNITY_IOS
+
+        Application.targetFrameRate = 120;
+
+#endif
+
     }
 #if UNITY_EDITOR
     [ContextMenu("Clear Prefs")]

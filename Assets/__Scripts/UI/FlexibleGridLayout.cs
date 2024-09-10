@@ -5,15 +5,18 @@ namespace KK
 {
     public class FlexibleGridLayout : LayoutGroup
     {
-
+        // Определяет какой параметр будет изменяться, чтобы таблица уместилась в экране (прим.: по горизонтали, если выбран FixedSide.Rows)
+        // Пример: Допустим, мы хотим зафиксировать 5 столбцов, размер ячейки 30х30 ширина вьюпорта 150, спейсинг 10. (30*5) + 10*4 = 190 > 150.
+        // Если мы хотим сохранить ровно 5 столбоцов, то все в этот вьюпорт не влезет. 
         enum FittingMethod
         {
             None, Cell, Spacing
         }
 
-        enum FixedDirection
+        // Какую сторону таблицы мы хотим фиксировать. Другая будет вычисленна 
+        enum FixedSide
         {
-            Horizontal, Vertical
+            Columns, Rows
         }
 
         enum FitToContent
@@ -21,38 +24,42 @@ namespace KK
             None, Width, Height, Both
         }
 
-        [SerializeField] FittingMethod fittingMethod;
-        [SerializeField] Vector2 cellSize;
-        [SerializeField] bool FitToContentSize;
+        [SerializeField, Tooltip("Applies to the main gameObject. Should it to content?")] FitToContent fitToContent;
 
-        [SerializeField] FixedDirection fixedDirection;
+        [Header("Fix one side")]
+        [SerializeField, Tooltip("123")] FixedSide fixedSide;
         [SerializeField, Min(1)] int columns = 1;
         [SerializeField, Min(1)] int rows = 1;
+        [Header("Fit the fixed side")]
+        [SerializeField] FittingMethod fittingMethod;
+        [SerializeField] Vector2 cellSize;
         [SerializeField] Vector2 spacing;
-        [SerializeField] FitToContent fitToContent;
 
         public override void CalculateLayoutInputHorizontal()
         {
             base.CalculateLayoutInputHorizontal();
 
-            if (fixedDirection == FixedDirection.Horizontal)
+            // Полагая, что разработчик уже зафиксировал один из параметров (столбцы или строки), вычисляем неизвестный, основываясь на количестве элементов
+            if (fixedSide == FixedSide.Columns)
             {
                 rows = transform.childCount / columns + Utils.Signum(transform.childCount % columns);
             }
-            else if (fixedDirection == FixedDirection.Vertical)
+            else if (fixedSide == FixedSide.Rows)
             {
                 columns = transform.childCount / rows + Utils.Signum(transform.childCount % rows);
             }
+
+            // Пробуем вместить элементы по ширине или высоте по одному из указанных методов (либо меняя размер самой ячейки, либо меняя расстояние между ячейками)
             if (fittingMethod == FittingMethod.Cell)
             {
-                if (fixedDirection == FixedDirection.Horizontal)
+                if (fixedSide == FixedSide.Columns)
                 {
                     float containerWidth = rectTransform.rect.width;
-                    float nonCellsX = (padding.left + padding.right + spacing.x * (columns - 1));
+                    float nonCellsX = (padding.left + padding.right + spacing.x * (columns - 1)); // Требует пояснения, хоть переменная говорящая. Весь горизонтальный отрезок за вычетом ячеек
                     if (nonCellsX < containerWidth)
                         cellSize.x = (containerWidth - nonCellsX) / columns;
                 }
-                else if (fixedDirection == FixedDirection.Vertical)
+                else if (fixedSide == FixedSide.Rows)
                 {
                     float containerHeight = rectTransform.rect.height;
                     float nonCellsY = (padding.top + padding.bottom + spacing.y * (rows - 1));
@@ -62,15 +69,17 @@ namespace KK
             }
             else if (fittingMethod == FittingMethod.Spacing)
             {
-                if (fixedDirection == FixedDirection.Horizontal && columns > 1)
+                if (fixedSide == FixedSide.Columns && columns > 1)
                 {
                     float containerWidth = rectTransform.rect.width;
-                    float nonSpacingX = (padding.left + padding.right + cellSize.x * columns);
+                    float nonSpacingX = (padding.left + padding.right + cellSize.x * columns); // Аналогично весь горизнотальный отрезок за вычетом "спейсинга"
 
+                    float totalSpacing = (containerWidth - nonSpacingX);
+                    float amountOfSpaces = (columns - 1);
                     if (nonSpacingX < containerWidth)
-                        spacing.x = (containerWidth - nonSpacingX) / (columns - 1);
+                        spacing.x = totalSpacing / amountOfSpaces;
                 }
-                else if (fixedDirection == FixedDirection.Vertical && rows > 1)
+                else if (fixedSide == FixedSide.Rows && rows > 1)
                 {
                     float nonSpacingY = (padding.top + padding.bottom + cellSize.y * rows);
                     float containerHeight = rectTransform.rect.height;
@@ -111,7 +120,8 @@ namespace KK
 
                 sizeDelta.y = height;
             }
-
+            
+            // Работает только если размер изменяется через стандартные (ширина/высота), а не через "якори"
             rectTransform.sizeDelta = sizeDelta;
         }
 

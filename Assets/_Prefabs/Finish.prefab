@@ -101,14 +101,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c847035ef41d0514989ea5af98262f63, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  localScaleModifier: 0.8
-  animationSpeed: 2
+  localScaleModifier: 0.7
+  animationSpeed: 4
   netCover: {fileID: 4676121933188736611}
   animationStartPoint: {fileID: 801117563873849396}
   animationEndPoint: {fileID: 9155684571295029207}
   OnFinish:
     m_PersistentCalls:
       m_Calls: []
+  finished: 0
 --- !u!58 &1226003587675304367
 CircleCollider2D:
   m_ObjectHideFlags: 0

@@ -8,27 +8,11 @@ public class LevelData : MonoBehaviour
 
     public void OnRestart()
     {
-        if (fin == null)
-        {
-            foreach (Transform child in transform)
-            {
-                if (child.TryGetComponent(out fin))
-                {
-                    this.SmartLog("Found finish");
-                    fin.finished = false;
-                    return;
-                }
-            }
-            this.SmartLog("Didn't find finish", fin);
-
-        }
         fin.finished = false;
     }
 
     public Vector3 GetFinPos()
     {
-        if (fin == null)
-            return new Vector3(0, 4, 0);
         return fin.transform.position;
     }
 
