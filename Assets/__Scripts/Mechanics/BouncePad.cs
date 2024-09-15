@@ -9,9 +9,9 @@ public class BouncePad : MonoBehaviour
     {
         if (collision.TryGetComponent(out Ball ball))
         {
-            animator.SetTrigger("Bounce");
-
-            ball.BounceFromBouncePad(transform.up, force);
+            bool bounced = ball.BounceFromBouncePad(transform.up, force);
+            if (bounced)
+                animator.SetTrigger("Bounce");
         }
     }
 }

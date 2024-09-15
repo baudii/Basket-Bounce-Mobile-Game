@@ -1,48 +1,54 @@
 ﻿using UnityEngine;
 using DG.Tweening;
 using System;
-using UnityEditorInternal;
 
 public class Ball : MonoBehaviour
 {
-    [SerializeField] float stuckSpeed;
-    [SerializeField] Animator animator;
+    [Header("Roaming phase")]
     [SerializeField] float maxTimeOutOfScreen;
     [SerializeField] float maxStuckTime;
-    [SerializeField] Transform GFX;
-    [SerializeField] Animator explodeAnimator;
-    [SerializeField] LineController lineController;
     [SerializeField] float bounceAnimationDuration;
     [SerializeField] float bounceScaleValue;
-    [SerializeField] float inputReadOffset;
-    [SerializeField] Rigidbody2D rb;
-    [SerializeField, Range(1, 15)] float speedMultiplier;
+    [Header("Preparation phase")]
     [SerializeField] float minSpeed;
     [SerializeField] float minStretchDistance, maxStretchDistance;
+    [SerializeField] float inputReadOffset;
+    [SerializeField, Range(1, 15)] float speedMultiplier;
     [Header("Audio")]
     [SerializeField] AudioSource src;
     [SerializeField] AudioClip releaseSFX, bouncePadSFX, deathSFX;
+    [Header("Dependancies")]
+    [SerializeField] Animator animator;
+    [SerializeField] Animator explodeAnimator;
+    [SerializeField] Transform GFX;
+    [SerializeField] LineController lineController;
+    [SerializeField] Rigidbody2D rb;
+
+    public State CurrentState { get; private set; }
 
     Vector2 initialPosition;
-    bool startedStretch;
-    bool isDead;
     float speed;
 
     Camera cam;
     Vector2 initialScale;
 
-    bool isCircleRoaming;
 
     public Action OnDeath;
 
     int bounces;
 
-    [HideInInspector]
-    public bool finished;
-
     float timeOutOfScreen;
     float stuckTime;
     float maxY;
+
+    public enum State
+    {
+        Preparation,
+        Stretching,
+        Roaming,
+        Finished,
+        Dead
+    }
 
     void Start()
     {
@@ -74,7 +80,7 @@ public class Ball : MonoBehaviour
             timeOutOfScreen = 0;
         }
 
-        if (IsBallStuck() && isCircleRoaming)
+        if (IsBallStuck())
         {
             stuckTime += Time.deltaTime;
             if (stuckTime > maxStuckTime)
@@ -87,6 +93,12 @@ public class Ball : MonoBehaviour
         {
             stuckTime = 0;
         }
+    }
+
+    void SetState(State newState)
+    {
+        CurrentState = newState;
+        this.SmartLog(newState);
     }
 
 
@@ -108,27 +120,37 @@ public class Ball : MonoBehaviour
         GameManager.Instance.OnRestart.RemoveListener(ResetBall);
     }
 
-    public void BounceFromBouncePad(Vector2 direction, float force)
+    public bool BounceFromBouncePad(Vector2 direction, float force)
     {
-        var f = direction * force;
-        var reflected = rb.velocity;
-        var dot = Vector2.Dot(rb.velocity, direction);
-        if (dot < 0)
-            reflected = Vector2.Reflect(rb.velocity, direction);
-        this.SmartLog(f, direction, reflected, rb.velocity, dot);
-        var newdir = (reflected.normalized + f).normalized;
+        /*        var f = direction * force;
+                var reflected = rb.velocity;
+                var dot = Vector2.Dot(rb.velocity, direction);
+                if (dot < 0)
+                    reflected = Vector2.Reflect(rb.velocity, direction);
+                this.SmartLog(f, direction, reflected, rb.velocity, dot);
+                var newdir = (reflected.normalized + f).normalized;
 
-        rb.velocity = newdir * speed * force * speedMultiplier;
+                rb.velocity = newdir * speed * force * speedMultiplier;*/
+        if (CurrentState != State.Roaming)
+            return false;
+
+        rb.velocity = direction * speed * speedMultiplier;
         src.PlayOneShot(bouncePadSFX, 0.4f);
+        return true;
     }
 
     bool IsBallStuck()
     {
-        if (transform.position.y <= maxY)
-            return true;
+        if (CurrentState != State.Roaming)
+            return false;
 
-        maxY = transform.position.y + 0.1f;
-        return false;
+        if (transform.position.y > maxY)
+        {
+            maxY = transform.position.y + 0.1f;
+            return false;
+        }
+
+        return true;
     }
     bool IsBallInScreen()
     {
@@ -137,8 +159,6 @@ public class Ball : MonoBehaviour
             return false;
         return true;
     }
-
-
 
     void ResetBall()
     {
@@ -159,9 +179,7 @@ public class Ball : MonoBehaviour
         stuckTime = 0;
         timeOutOfScreen = 0;
         bounces = 0;
-        isDead = false;
-        isCircleRoaming = false;
-        finished = false;
+        SetState(State.Preparation);
     }
 
     public void ResetRotation()
@@ -172,32 +190,30 @@ public class Ball : MonoBehaviour
 
     void StartBallStretch(Vector2 startPos)
     {
-        if (isCircleRoaming)
-        {
-            startedStretch = false;
+        if (CurrentState != State.Preparation || startPos.y > inputReadOffset)
             return;
-        }
 
-        startedStretch = true;
-        if (startPos.y > inputReadOffset)
-        {
-            startedStretch = false;
-        }
-        if (startedStretch)
-        {
-            lineController.Init();
-        }
+        lineController.Init();
+        SetState(State.Stretching);
+    }
+
+    void ResetBallSlow()
+    {
+        transform.DOMove(initialPosition, 0.15f);
+        lineController.Disable();
+        SetState(State.Preparation);
     }
 
     bool UpdateBallPosition(Vector2 direction)
     {
-        if (!startedStretch)
+        if (CurrentState != State.Stretching)
             return false;
 
-        if (direction.y < 0)
+        var dot = Vector2.Dot(direction, Vector2.up);
+        this.SmartLog("Dot:", dot);
+        if (Vector2.Dot(direction, Vector2.up) < -1f)
         {
-            transform.DOMove(initialPosition, 0.15f);
-            lineController.Disable();
+            ResetBallSlow();
             return false;
         }
 
@@ -216,22 +232,19 @@ public class Ball : MonoBehaviour
 
     void ReleaseBall(Vector2 direction)
     {
-        if (!startedStretch)
+        if (CurrentState != State.Stretching)
             return;
 
         lineController.Disable();
 
         if (speed < minSpeed)
         {
-            transform.DOMove(initialPosition, 0.15f);
-            lineController.Disable();
+            ResetBallSlow();
             return;
         }
 
 
         rb.velocity = direction.normalized * speed * speedMultiplier;
-
-        isCircleRoaming = true;
 
         animator.SetBool("IsRotating", true);
         this.SmartLog("Current stetch:", Mathf.Exp(speed), "Max stretch: ", maxStretchDistance);
@@ -240,17 +253,20 @@ public class Ball : MonoBehaviour
         // x ∈ [minStretchDistance, maxStretchDistance]
         // animator.speed = x / maxStretchDistance => animator.speed ∈ [0,1]
         animator.speed = Mathf.Exp(speed) / maxStretchDistance;
-        this.SmartLog(Mathf.Exp(speed) / maxStretchDistance);
         src.PlayOneShot(releaseSFX, 1.2f);
+
+        SetState(State.Roaming);
     }
 
 
     public void Die(bool showDeathAnimation)
     {
-        if (isDead || finished || !gameObject.activeSelf || !enabled)
+        if (CurrentState != State.Roaming)
             return;
+        /*        if (isDead || finished || !gameObject.activeSelf || !enabled)
+                    return;*/
 
-        isDead = true;
+        CurrentState = State.Dead;
         rb.velocity *= 0;
 
         if (showDeathAnimation)
@@ -268,7 +284,7 @@ public class Ball : MonoBehaviour
 
     public int OnFinish()
     {
-        finished = true;
+        SetState(State.Finished);
         rb.velocity *= 0;
         return bounces;
     }

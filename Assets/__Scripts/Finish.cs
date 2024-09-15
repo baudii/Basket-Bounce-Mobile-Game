@@ -1,3 +1,4 @@
+using DG.Tweening;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.Events;
@@ -8,6 +9,7 @@ public class Finish : MonoBehaviour
     [SerializeField] float animationSpeed;
     [SerializeField] GameObject netCover;
     [SerializeField] Transform animationStartPoint, animationEndPoint;
+    [SerializeField] float secToStart, secToEnd;
     [SerializeField] UnityEvent OnFinish;
 
     public bool finished;
@@ -19,19 +21,18 @@ public class Finish : MonoBehaviour
 
         if (collision.transform.TryGetComponent(out Ball ball))
         {
-            if (ball.finished)
+            if (ball.CurrentState == Ball.State.Finished)
                 return;
 
 
             finished = true;
+            OnFinish?.Invoke();
 
             StartCoroutine(AnimateFinish(ball));
         }
     }
     IEnumerator AnimateFinish(Ball ball)
     {
-        OnFinish?.Invoke();
-
         //подвинуть мяч к точке анимации
         ball.transform.rotation = Quaternion.identity;
         ball.ResetRotation();
@@ -80,5 +81,16 @@ public class Finish : MonoBehaviour
         GameManager.Instance.UpdateLevelSelector();
         GameManager.Instance.ShowLevelCompleteScreen(stars);
     }
+/*
+    Потенциально переделать в dotween
+    public void AnimateFinishTween(Ball ball)
+    {
+        Sequence sequence = DOTween.Sequence(ball.transform);
+
+        Tween moveToStartPos = transform.DOMove(animationStartPoint.position, secToStart);
+        Tween moveToEndPos = transform.DOMove(animationEndPoint.position, secToEnd);
+        Tween shrink = transform.DOSc
+
+    }*/
 }
 
