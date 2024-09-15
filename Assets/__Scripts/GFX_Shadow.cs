@@ -6,17 +6,9 @@ public class GFX_Shadow : MonoBehaviour
     [SerializeField] float xOffset = 0.05f;
     [SerializeField] float yOffset = -0.1f;
     [SerializeField] SpriteRenderer mainSr;
-    [SerializeField] bool validate;
     SpriteRenderer sr;
 
 #if UNITY_EDITOR
-    private void OnValidate()
-    {
-        if (validate)
-        {
-            Adjust();
-        }
-    }
 
     [ContextMenu("Adjust")]
     public void Adjust()
@@ -27,10 +19,19 @@ public class GFX_Shadow : MonoBehaviour
         if (mainSr == null)
             return;
 
+        sr.tileMode = mainSr.tileMode;
         sr.sprite = mainSr.sprite;
         sr.size = new Vector2(mainSr.size.x, mainSr.size.y);
 
-        transform.localPosition = new Vector2(xOffset, yOffset);
+        transform.position = mainSr.transform.position + new Vector3(xOffset, yOffset, 0);
     }
 #endif
+
+    public void AdjustPosition()
+    {
+        if (mainSr == null)
+            return;
+        
+        transform.position = mainSr.transform.position + new Vector3(xOffset, yOffset, 0);
+    }
 }

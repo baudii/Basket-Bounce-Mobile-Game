@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class Killable : MonoBehaviour
@@ -8,7 +6,7 @@ public class Killable : MonoBehaviour
     {
         if (collision.TryGetComponent(out Ball circle))
         {
-            circle.Die();
+            circle.Die(true);
         }
     }
 }

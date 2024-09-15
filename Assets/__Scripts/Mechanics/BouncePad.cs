@@ -7,10 +7,11 @@ public class BouncePad : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.TryGetComponent(out Rigidbody2D rb))
+        if (collision.TryGetComponent(out Ball ball))
         {
             animator.SetTrigger("Bounce");
-            rb.AddForce(transform.up * force, ForceMode2D.Impulse);
+
+            ball.BounceFromBouncePad(transform.up, force);
         }
     }
 }

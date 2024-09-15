@@ -36,6 +36,10 @@ PrefabInstance:
       propertyPath: m_SpriteTilingProperty.oldSize.y
       value: 4
       objectReference: {fileID: 0}
+    - target: {fileID: 3004076102171267844, guid: 6eef6397fd2e386449d99515efca6d14, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -0.100000024
+      objectReference: {fileID: 0}
     - target: {fileID: 4873644438653420069, guid: 6eef6397fd2e386449d99515efca6d14, type: 3}
       propertyPath: m_FlipX
       value: 0
@@ -55,6 +59,10 @@ PrefabInstance:
     - target: {fileID: 4873644438653420069, guid: 6eef6397fd2e386449d99515efca6d14, type: 3}
       propertyPath: m_DrawMode
       value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 4873644438653420069, guid: 6eef6397fd2e386449d99515efca6d14, type: 3}
+      propertyPath: m_SortingOrder
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 4873644438653420069, guid: 6eef6397fd2e386449d99515efca6d14, type: 3}
       propertyPath: m_SpriteTileMode
@@ -195,11 +203,7 @@ PolygonCollider2D:
   m_Points:
     m_Paths:
     - - {x: -0.15625, y: 1.859375}
-      - {x: -0.15625, y: -1.6875}
-      - {x: -0.234375, y: -1.6875}
-      - {x: -0.234375, y: -1.828125}
-      - {x: 0.21875, y: -1.828125}
-      - {x: 0.21875, y: -1.703125}
-      - {x: 0.15625, y: -1.703125}
+      - {x: -0.15625, y: -1.828125}
+      - {x: 0.15625, y: -1.828125}
       - {x: 0.15625, y: 1.859375}
   m_UseDelaunayMesh: 0

@@ -70,6 +70,34 @@ public partial class @InputMaster: IInputActionCollection2, IDisposable
                     ""isPartOfComposite"": false
                 }
             ]
+        },
+        {
+            ""name"": ""Taps"",
+            ""id"": ""284efdc2-b780-4ade-a21a-24c4bbd888b6"",
+            ""actions"": [
+                {
+                    ""name"": ""Tap"",
+                    ""type"": ""Button"",
+                    ""id"": ""a9498483-19fc-41ae-9dd9-a99f4f24cd40"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                }
+            ],
+            ""bindings"": [
+                {
+                    ""name"": """",
+                    ""id"": ""93af5955-4eef-4697-a432-285e83e2ae21"",
+                    ""path"": ""<Touchscreen>/Press"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Touch"",
+                    ""action"": ""Tap"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                }
+            ]
         }
     ],
     ""controlSchemes"": [
@@ -84,6 +112,9 @@ public partial class @InputMaster: IInputActionCollection2, IDisposable
         m_Gesture = asset.FindActionMap("Gesture", throwIfNotFound: true);
         m_Gesture_FingerPressed = m_Gesture.FindAction("FingerPressed", throwIfNotFound: true);
         m_Gesture_Position = m_Gesture.FindAction("Position", throwIfNotFound: true);
+        // Taps
+        m_Taps = asset.FindActionMap("Taps", throwIfNotFound: true);
+        m_Taps_Tap = m_Taps.FindAction("Tap", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -195,6 +226,52 @@ public partial class @InputMaster: IInputActionCollection2, IDisposable
         }
     }
     public GestureActions @Gesture => new GestureActions(this);
+
+    // Taps
+    private readonly InputActionMap m_Taps;
+    private List<ITapsActions> m_TapsActionsCallbackInterfaces = new List<ITapsActions>();
+    private readonly InputAction m_Taps_Tap;
+    public struct TapsActions
+    {
+        private @InputMaster m_Wrapper;
+        public TapsActions(@InputMaster wrapper) { m_Wrapper = wrapper; }
+        public InputAction @Tap => m_Wrapper.m_Taps_Tap;
+        public InputActionMap Get() { return m_Wrapper.m_Taps; }
+        public void Enable() { Get().Enable(); }
+        public void Disable() { Get().Disable(); }
+        public bool enabled => Get().enabled;
+        public static implicit operator InputActionMap(TapsActions set) { return set.Get(); }
+        public void AddCallbacks(ITapsActions instance)
+        {
+            if (instance == null || m_Wrapper.m_TapsActionsCallbackInterfaces.Contains(instance)) return;
+            m_Wrapper.m_TapsActionsCallbackInterfaces.Add(instance);
+            @Tap.started += instance.OnTap;
+            @Tap.performed += instance.OnTap;
+            @Tap.canceled += instance.OnTap;
+        }
+
+        private void UnregisterCallbacks(ITapsActions instance)
+        {
+            @Tap.started -= instance.OnTap;
+            @Tap.performed -= instance.OnTap;
+            @Tap.canceled -= instance.OnTap;
+        }
+
+        public void RemoveCallbacks(ITapsActions instance)
+        {
+            if (m_Wrapper.m_TapsActionsCallbackInterfaces.Remove(instance))
+                UnregisterCallbacks(instance);
+        }
+
+        public void SetCallbacks(ITapsActions instance)
+        {
+            foreach (var item in m_Wrapper.m_TapsActionsCallbackInterfaces)
+                UnregisterCallbacks(item);
+            m_Wrapper.m_TapsActionsCallbackInterfaces.Clear();
+            AddCallbacks(instance);
+        }
+    }
+    public TapsActions @Taps => new TapsActions(this);
     private int m_TouchSchemeIndex = -1;
     public InputControlScheme TouchScheme
     {
@@ -208,5 +285,9 @@ public partial class @InputMaster: IInputActionCollection2, IDisposable
     {
         void OnFingerPressed(InputAction.CallbackContext context);
         void OnPosition(InputAction.CallbackContext context);
+    }
+    public interface ITapsActions
+    {
+        void OnTap(InputAction.CallbackContext context);
     }
 }

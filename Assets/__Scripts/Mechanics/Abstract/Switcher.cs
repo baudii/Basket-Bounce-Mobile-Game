@@ -7,6 +7,7 @@ public abstract class Switcher : MonoBehaviour
     {
         get { return isActivated; }
     }
+
     public void Toggle()
     {
         SetActivation(!isActivated);
@@ -19,6 +20,11 @@ public abstract class Switcher : MonoBehaviour
 
         isActivated = value;
         Activation();
+    }
+
+    protected void Deactivate()
+    {
+        isActivated = false;
     }
 
     public abstract void Activation();

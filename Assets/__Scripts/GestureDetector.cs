@@ -13,7 +13,7 @@ public class GestureDetector : MonoBehaviour
     public static UnityAction<Vector2> OnSwipePerformed;
 
     public static UnityAction<Vector2> OnDragStart;
-    public static UnityAction<Vector2> OnDragUpdate;
+    public static Func<Vector2, bool> OnDragUpdate;
     public static UnityAction<Vector2> OnDragEnd;
 
     private InputMaster input;
@@ -31,7 +31,6 @@ public class GestureDetector : MonoBehaviour
 
     void InputToggler(bool val)
     {
-        this.SmartLog("Val: " + val);
         if (val) input.Enable();
         else input.Disable();
     }
@@ -59,6 +58,7 @@ public class GestureDetector : MonoBehaviour
     private Vector2 GetTouchPosition()
     {
         Vector3 screenPos = input.Gesture.Position.ReadValue<Vector2>();
+        
         return cam.ScreenToWorldPoint(screenPos.WhereZ(10));
     }
 
@@ -90,16 +90,20 @@ public class GestureDetector : MonoBehaviour
 
         OnDragStart?.Invoke(startPos);
 
-        while (isDragging)
+        bool isUpdateSuccessful = true;
+
+        while (isDragging && isUpdateSuccessful)
         {
             direction = (startPos - GetTouchPosition());
 
-            OnDragUpdate?.Invoke(direction);
+            if (OnDragUpdate != null)
+                isUpdateSuccessful = OnDragUpdate.Invoke(direction);
 
             yield return null;
         }
 
-        OnDragEnd?.Invoke(direction);
+        if (isUpdateSuccessful)
+            OnDragEnd?.Invoke(direction);
     }
 
     private void EndSwipe(Vector2 startPos, Vector2 endPos)

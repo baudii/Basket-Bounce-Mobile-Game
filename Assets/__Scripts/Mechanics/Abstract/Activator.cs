@@ -1,8 +1,10 @@
 using UnityEngine;
+using System.Collections.Generic;
 
 public abstract class Activator : MonoBehaviour
 {
-    [SerializeField] protected Switcher[] switchers;
+    [SerializeField] List<Switcher> switchers;
+
     protected void ActivateAll(bool value)
     {
         foreach (var switcher in switchers)

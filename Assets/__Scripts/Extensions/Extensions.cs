@@ -1,9 +1,9 @@
 using UnityEngine;
 using System;
-using System.Runtime.CompilerServices;
 
 public static class Extensions
 {
+    #region Vectors
     public static Vector3 WhereX(this Vector3 vector, float x)
     {
         vector.x = x;
@@ -90,10 +90,7 @@ public static class Extensions
         var heading = to - from;
         return heading.normalized;
     }
-    public static bool Contains(this LayerMask mask, int layer)
-    {
-        return mask == (mask | (1 << layer));
-    }
+    #endregion
 
     #region String
 
@@ -122,47 +119,70 @@ public static class Extensions
 
     #endregion
 
+    #region Log
     /// <summary> Logs out a message to the Console in format: "[callerScript.callerMethodName()]: message" </summary>
-    /// <param name="message">Log message</param>
-    /// <param name="callerMethodName">Leave empty for automatic recognition of method name.</param>
+    /// <param name="message">Log messages</param>
     public static void SmartLog(this MonoBehaviour callerScript, params object[] messages)
     {
-        System.Diagnostics.StackTrace stackTrace = new System.Diagnostics.StackTrace();
-        System.Reflection.MethodBase methodBase = stackTrace.GetFrame(1).GetMethod();
-
-        string log = "[" + callerScript.GetType().ToString() + "." + methodBase.Name + "()]";
-        foreach (var message in messages)
-            log += (" " + message);
+        string log = GetLog(callerScript, messages);
         Debug.Log(log);
     }
     /// <summary> Logs out a message to the Console in format: "[callerScript.callerMethodName()]: message" </summary>
-    /// <param name="message">Log message</param>
-    /// <param name="callerMethodName">Leave empty for automatic recognition of method name.</param>
-    public static void SmartError(this MonoBehaviour callerScript, object message, [CallerMemberName] string callerMethodName = "")
+    /// <param name="message">Log messages</param>
+    public static void SmartError(this MonoBehaviour callerScript, params object[] messages)
     {
-        string log = "[" + callerScript.GetType().ToString() + "." + callerMethodName + "()]: " + message;
+        string log = GetLog(callerScript, messages);
         Debug.LogError(log);
     }
     /// <summary> Logs out a message to the Console in format: "[callerScript.callerMethodName()]: message" </summary>
-    /// <param name="message">Log message</param>
-    /// <param name="callerMethodName">Leave empty for automatic recognition of method name.</param>
-    public static void SmartWarning(this MonoBehaviour callerScript, object message, [CallerMemberName] string callerMethodName = "")
+    /// <param name="messages">Log messages</param>
+    public static void SmartWarning(this MonoBehaviour callerScript, params object[] messages)
     {
-        string log = "[" + callerScript.GetType().ToString() + "." + callerMethodName + "()]: " + message;
+        string log = GetLog(callerScript, messages);
         Debug.LogWarning(log);
     }
+
+    static string GetLog(MonoBehaviour callerScript, object[] messages)
+    {
+        string log = "[" + callerScript.GetType().ToString() + "]";
+        foreach (var message in messages)
+            log += (" " + message.ToString());
+        return log;
+    }
+
+    #endregion
+
+    #region Transform
     /// <summary>
-    /// Perform action on every child including root parent
+    /// Perform action on every transform in the whole hierarchy of descendants including root parent
     /// </summary>
-    /// <param name="parent"></param>
-    /// <param name="action"></param>
-    public static void ForEachChild(this Transform parent, System.Action<Transform> action)
+    public static void ForAllDescendants(this Transform parent, Action<Transform> action)
     {
         action?.Invoke(parent);
 
         foreach (Transform child in parent)
         {
-            ForEachChild(child, action);
+            ForAllDescendants(child, action);
         }
+    }
+
+    /// <summary>
+    /// Perform action on every direct child
+    /// </summary>
+    public static void ForEachChild(this Transform parent, Action<Transform> action)
+    {
+        foreach (Transform child in parent)
+        {
+            action?.Invoke(child);
+        }
+    }
+    #endregion
+
+    /// <summary>
+    /// Check if layermask contains layer (int)
+    /// </summary>
+    public static bool Contains(this LayerMask mask, int layer)
+    {
+        return mask == (mask | (1 << layer));
     }
 }

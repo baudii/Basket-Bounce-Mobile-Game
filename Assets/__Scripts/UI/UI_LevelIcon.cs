@@ -50,7 +50,6 @@ public class UI_LevelIcon : MonoBehaviour, ISelectHandler, IDeselectHandler
         this.Co_DelayedExecute(() => {
             if (SelectedLevel == thisLevel)
             {
-                print("-1");
                 SelectedLevel = -1;
             }
         }, 1f);

@@ -1,67 +1,132 @@
-using System.Collections;
-using System.Collections.Generic;
+using DG.Tweening;
+using System;
 using UnityEngine;
+using UnityEngine.Events;
 
-public class DoorSwitcher : Switcher
+public class DoorSwitcher : Switcher, IMovableItem
 {
-    [SerializeField] Vector3 posOffset;
-    [SerializeField] Vector3 eulerAnglesOffset;
-    [SerializeField] Vector3 openScale;
+    [SerializeField] DoorMovement[] doorMovements;
+
+    [Header("Events")]
+    [SerializeField] UnityEvent OnMoveUpdate;
+    [SerializeField] UnityEvent OnResetState;
     [SerializeField] bool canClose;
 
-    Vector3 initialPosition, initialRotation, initialScale;
+
+    Vector3 initialPosition, initialRotation;
+
+    bool isOpened = false;
 
     private void Awake()
     {
         initialPosition = transform.position;
         initialRotation = transform.eulerAngles;
-        initialScale = transform.localScale;
     }
 
     public override void Activation()
     {
-        if (IsActivated)
+        if (IsActivated && !isOpened)
         {
-            StartCoroutine(AnimateOpening(true));
+            SequantialDoorOpen();
+            isOpened = true;
         }
         else if (canClose)
         {
-            StartCoroutine(AnimateOpening(false));
+            SequantialDoorClose();
+            isOpened = false;
         }
     }
 
-    IEnumerator AnimateOpening(bool isOpening)
+    void SequantialDoorOpen()
     {
-        Vector3 startEulers, startPos, startScale;
-        Vector3 targetEulers, targetPos, targetScale;
-        if (isOpening)
+        Sequence sequence = DOTween.Sequence(transform);
+        float currentTime = 0;
+        foreach (var doorMovement in doorMovements)
         {
-            targetPos = transform.position + posOffset;
-            targetEulers = transform.eulerAngles + eulerAnglesOffset;
-            targetScale = openScale;
+            float duration = doorMovement.Duration;
+
+            foreach (var action in doorMovement.MoveActions)
+            {
+                Tween tween = null;
+                switch (action.Type)
+                {
+                    case DoorMoveAction.ActionType.Rotation:
+                        tween = transform.DORotate(action.Target, duration, RotateMode.FastBeyond360).SetEase(action.Ease);
+                        break;
+                    case DoorMoveAction.ActionType.Position:
+                        tween = transform.DOMove(action.Target, duration).SetEase(action.Ease);
+                        break;
+                }
+                sequence.Insert(currentTime, tween);
+            }
+            currentTime += duration;
         }
-        else
-        {
-            print("initial");
-            targetPos = initialPosition;
-            targetEulers = initialRotation;
-            targetScale = initialScale;
-        }
-        startEulers = transform.eulerAngles;
-        startPos = transform.position;
-        startScale = transform.localScale;
-
-        float t = 0;
-
-        do
-        {
-            t = Mathf.Clamp(t + Time.deltaTime, 0, 1);
-
-            transform.position = Vector3.Lerp(startPos, targetPos, t);
-            transform.eulerAngles = Vector3.Lerp(startEulers, targetEulers, t);
-            transform.localScale = Vector3.Lerp(startScale, targetScale, t);
-
-            yield return null;
-        } while (t < 1);
+        sequence.Play().OnUpdate(() => OnMoveUpdate?.Invoke());
     }
+
+    void SequantialDoorClose()
+    {
+        Sequence sequence = DOTween.Sequence(transform);
+        float currentTime = 0;
+        for (int i = doorMovements.Length - 1; i >= 0; i--) 
+        {
+            float duration = doorMovements[i].Duration;
+            if (i == 0)
+            {
+                this.SmartLog(initialPosition, initialRotation);
+                Tween tween = null;
+                tween = transform.DOMove(initialPosition, duration);
+                sequence.Insert(currentTime, tween);
+
+                tween = transform.DORotate(initialRotation, duration, RotateMode.FastBeyond360);
+                sequence.Insert(currentTime, tween);
+                break;
+            }
+            foreach (var action in doorMovements[i - 1].MoveActions)
+            {
+                Tween tween = null;
+                switch (action.Type)
+                {
+                    case DoorMoveAction.ActionType.Rotation:
+                        tween = transform.DORotate(action.Target, duration, RotateMode.FastBeyond360).SetEase(action.Ease);
+                        break;
+                    case DoorMoveAction.ActionType.Position:
+                        tween = transform.DOMove(action.Target, duration).SetEase(action.Ease);
+                        break;
+                }
+                sequence.Insert(currentTime, tween);
+            }
+            currentTime += duration;
+        }
+        sequence.Play().OnUpdate(() => OnMoveUpdate?.Invoke());
+    }
+
+    public void ResetState()
+    {
+        transform.position = initialPosition;
+        transform.eulerAngles = initialRotation;
+        isOpened = false;
+        Deactivate();
+        OnResetState?.Invoke();
+    }
+}
+
+[Serializable]
+public class DoorMovement
+{
+    public float Duration;
+    public DoorMoveAction[] MoveActions;
+}
+
+[Serializable]
+public class DoorMoveAction
+{
+    public enum ActionType
+    {
+        Position, Rotation
+    }
+
+    public ActionType Type;
+    public Vector3 Target;
+    public Ease Ease;
 }

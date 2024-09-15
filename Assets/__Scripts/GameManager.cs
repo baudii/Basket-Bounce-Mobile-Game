@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.UI;
 using UnityEngine.Events;
 
 [DefaultExecutionOrder(-1)]
@@ -12,6 +13,7 @@ public class GameManager : MonoBehaviour
         GameOver,
         LevelSelect,
         Paused,
+        Finished,
         None
     }
 
@@ -20,14 +22,21 @@ public class GameManager : MonoBehaviour
 
     [SerializeField] GameObject gameOverScreen;
     [SerializeField] UI_LevelCompleted levelCompleteScreen;
-    [SerializeField] GameObject pauseScreen;
+    [SerializeField] UI_PauseController pauseScreen;
     [SerializeField] GameObject loadingScreen;
-    [SerializeField] UI_LevelSelector levelSelector;
+    [SerializeField] UI_LevelSelector levelSelectorScreen;
+    [SerializeField] UI_GameFinished gameFinishedScreen;
+    [SerializeField] Image mainUiBgImage;
+    [SerializeField] Image gameCompleteBgImage;
+    [SerializeField] AudioSource src;
+
 
     [HideInInspector]
     public UnityEvent OnRestart;
     [HideInInspector]
-    public UnityEvent OnGameOver;
+    public UnityEvent OnGameOver; 
+    [HideInInspector]
+    public UnityEvent OnLevelComplete;
     [HideInInspector]
     public UnityEvent OnInGameStateEnter;
     [HideInInspector]
@@ -36,6 +45,9 @@ public class GameManager : MonoBehaviour
 
     public State currentState;
 
+    InputMaster input;
+
+
     private void Awake()
     {
         if (instance != null)
@@ -43,16 +55,13 @@ public class GameManager : MonoBehaviour
 
         instance = this;
         currentState = State.InGame;
-
-        levelSelector.Init();
-
-#if UNITY_IOS
-
         Application.targetFrameRate = 120;
 
-#endif
-
+        input = new InputMaster();
+        input.Enable();
+        input.Taps.Tap.performed += ctx => Vibrate();
     }
+
 #if UNITY_EDITOR
     [ContextMenu("Clear Prefs")]
     public void ClearPrefs()
@@ -61,6 +70,12 @@ public class GameManager : MonoBehaviour
     }
 
 #endif
+
+    void Vibrate()
+    {
+        src.Play();
+        Handheld.Vibrate();
+    }
 
     void SetState(State state)
     {
@@ -76,18 +91,25 @@ public class GameManager : MonoBehaviour
                 break;
             case State.Completed:
                 levelCompleteScreen.gameObject.SetActive(true);
+                OnLevelComplete?.Invoke();
                 break;
             case State.GameOver:
-                if (currentState != State.InGame)
+                if (currentState != State.InGame && currentState != State.LevelSelect)
                     return;
                 gameOverScreen.SetActive(true);
                 OnGameOver?.Invoke();
                 break;
             case State.LevelSelect:
-                levelSelector.gameObject.SetActive(true);
+                levelSelectorScreen.gameObject.SetActive(true);
                 break;
             case State.Paused:
-                pauseScreen.SetActive(true);
+                pauseScreen.gameObject.SetActive(true);
+                break;
+            case State.Finished:
+                gameFinishedScreen.gameObject.SetActive(true);
+                gameCompleteBgImage.gameObject.SetActive(true);
+                break;
+            case State.None:
                 break;
         }
 
@@ -101,6 +123,7 @@ public class GameManager : MonoBehaviour
         {
             case State.InGame:
                 Time.timeScale = 0;
+                mainUiBgImage.gameObject.SetActive(true);
                 OnInGameStateExit?.Invoke();
                 break;
             case State.Completed:
@@ -110,42 +133,50 @@ public class GameManager : MonoBehaviour
                 gameOverScreen.SetActive(false);
                 break;
             case State.LevelSelect:
-                levelSelector.gameObject.SetActive(false);
+                levelSelectorScreen.gameObject.SetActive(false);
                 break;
             case State.Paused:
-                pauseScreen.SetActive(false);
+                pauseScreen.gameObject.SetActive(false);
+                break;
+            case State.Finished:
+                gameFinishedScreen.gameObject.SetActive(false);
+                break;
+            case State.None:
                 break;
         }
     }
 
     public void Back()
     {
-        if (prevState == State.None)
-        {
-            ShowPauseScreen();
-            return;
-        }
+        /*        if (prevState == State.None)
+                {
+                    ShowPauseScreen();
+                    return;
+                }
 
-        DisableAll();
+                DisableAll();
 
-        currentState = prevState;
+                currentState = prevState;
+                prevState = State.None;
+
+                switch (currentState)
+                {
+                    case State.Completed:
+                        levelCompleteScreen.gameObject.SetActive(true);
+                        break;
+                    case State.GameOver:
+                        gameOverScreen.SetActive(true);
+                        break;
+                    case State.LevelSelect:
+                        levelSelectorScreen.gameObject.SetActive(true);
+                        break;
+                    case State.Paused:
+                        pauseScreen.SetActive(true);
+                        break;
+                }*/
+
+        SetState(prevState);
         prevState = State.None;
-
-        switch (currentState)
-        {
-            case State.Completed:
-                levelCompleteScreen.gameObject.SetActive(true);
-                break;
-            case State.GameOver:
-                gameOverScreen.SetActive(true);
-                break;
-            case State.LevelSelect:
-                levelSelector.gameObject.SetActive(true);
-                break;
-            case State.Paused:
-                pauseScreen.SetActive(true);
-                break;
-        }
     }
 
     public void GameOver()
@@ -160,14 +191,12 @@ public class GameManager : MonoBehaviour
 
     public void ShowLevelSelect()
     {
-        prevState = currentState;
-        currentState = State.LevelSelect;
-
-        DisableAll();
-        levelSelector.gameObject.SetActive(true);
+        SetState(State.LevelSelect);
     }
 
-    public void UpdateLevelSelector() => levelSelector.UpdateLevelSelector();
+    public void UpdateLevelSelector() => levelSelectorScreen.UpdateLevelSelector();
+    public UI_LevelSelector GetUILevelSelector() => levelSelectorScreen;
+
 
     public void Restart()
     {
@@ -184,24 +213,35 @@ public class GameManager : MonoBehaviour
 
     public void ShowPauseScreen()
     {
+        pauseScreen.InitPause();
         SetState(State.Paused);
     }
+
+    public void ShowStuckScreen()
+    {
+        pauseScreen.InitStuck();
+        SetState(State.Paused);
+    }
+
     public void ResumeGame()
     {
         SetState(State.InGame);
     }
 
+    public void FinishGame()
+    {
+        SetState(State.Finished);
+    }
+
     void DisableAll()
     {
+        mainUiBgImage.gameObject.SetActive(false);
+        gameCompleteBgImage.gameObject.SetActive(false);
         loadingScreen.SetActive(false);
         gameOverScreen.SetActive(false);
         levelCompleteScreen.gameObject.SetActive(false);
-        pauseScreen.SetActive(false);
-        levelSelector.gameObject.SetActive(false);
-    }
-
-    public void ShowAd()
-    {
-
+        pauseScreen.gameObject.SetActive(false);
+        levelSelectorScreen.gameObject.SetActive(false);
+        gameFinishedScreen.gameObject.SetActive(false);
     }
 }
