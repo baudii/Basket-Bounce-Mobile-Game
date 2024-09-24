@@ -3,19 +3,19 @@ using UnityEngine;
 
 public class UI_GameFinished : MonoBehaviour
 {
-    [SerializeField] UI_LevelSelector levelSelector;
+	[SerializeField] UI_LevelSelector levelSelector;
 
-    [SerializeField] TextMeshProUGUI totalStarsTextField;
+	[SerializeField] TextMeshProUGUI totalStarsTextField;
 
-    private void OnEnable()
-    {
-        SetStars();
-    }
+	private void OnEnable()
+	{
+		SetStars();
+	}
 
-    public void SetStars()
-    {
-        int starsEarned = levelSelector.GetTotalEarnedStars();
+	public void SetStars()
+	{
+		int starsEarned = levelSelector.GetTotalEarnedStars();
 
-        totalStarsTextField.text = starsEarned + " / " + levelSelector.MaxTotalStars;
-    }
+		totalStarsTextField.text = starsEarned + " / " + levelSelector.MaxTotalStars;
+	}
 }

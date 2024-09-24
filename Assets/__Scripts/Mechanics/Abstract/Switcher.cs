@@ -2,30 +2,30 @@ using UnityEngine;
 
 public abstract class Switcher : MonoBehaviour
 {
-    bool isActivated;
-    public bool IsActivated
-    {
-        get { return isActivated; }
-    }
+	bool isActivated;
+	public bool IsActivated
+	{
+		get { return isActivated; }
+	}
 
-    public void Toggle()
-    {
-        SetActivation(!isActivated);
-    }
+	public void Toggle()
+	{
+		SetActivation(!isActivated);
+	}
 
-    public void SetActivation(bool value)
-    {
-        if (value == isActivated)
-            return;
+	public void SetActivation(bool value)
+	{
+		if (value == isActivated)
+			return;
 
-        isActivated = value;
-        Activation();
-    }
+		isActivated = value;
+		Activation();
+	}
 
-    protected void Deactivate()
-    {
-        isActivated = false;
-    }
+	protected void Deactivate()
+	{
+		isActivated = false;
+	}
 
-    public abstract void Activation();
+	public abstract void Activation();
 }

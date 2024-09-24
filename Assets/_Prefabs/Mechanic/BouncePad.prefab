@@ -466,6 +466,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Shadow
       objectReference: {fileID: 0}
+    - target: {fileID: 4646130274176115238, guid: 2d6339e5a12030443ba7ee7e8e2af0af, type: 3}
+      propertyPath: m_Layer
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 7761876819930465045, guid: 2d6339e5a12030443ba7ee7e8e2af0af, type: 3}
       propertyPath: m_Size.x
       value: 1.61412

@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 582708277018556530}
   - component: {fileID: 1205532896901926597}
   - component: {fileID: 1226003587675304367}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Finish
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -106,6 +106,8 @@ MonoBehaviour:
   netCover: {fileID: 4676121933188736611}
   animationStartPoint: {fileID: 801117563873849396}
   animationEndPoint: {fileID: 9155684571295029207}
+  secToStart: 0
+  secToEnd: 0
   OnFinish:
     m_PersistentCalls:
       m_Calls: []
@@ -154,7 +156,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 9155684571295029207}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Anim End Point
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -185,7 +187,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 801117563873849396}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Anim Start Point
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -218,7 +220,7 @@ GameObject:
   - component: {fileID: 2498640709083141148}
   - component: {fileID: 5702864225729182827}
   - component: {fileID: 6767361745925819449}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Net Cover
   m_TagString: Untagged
   m_Icon: {fileID: 0}

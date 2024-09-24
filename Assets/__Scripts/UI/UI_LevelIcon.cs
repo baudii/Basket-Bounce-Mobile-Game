@@ -9,22 +9,37 @@ public class UI_LevelIcon : MonoBehaviour, ISelectHandler, IDeselectHandler
     [SerializeField] TextMeshProUGUI levelNumText;
     [SerializeField] Image bodyImg;
     [SerializeField] Image starsImg;
-    [SerializeField] Sprite lockedSprite, unlockedSprite;
+    [SerializeField] GameObject currentLevelBorder;
+    [SerializeField] Sprite lockedSprite, unlockedSprite, selectedSprite;
     [SerializeField] Sprite star1, star2, star3;
 
     int thisLevel;
+    bool isCurrentLevel;
 
     public static int SelectedLevel { get; private set; }
 
-    public void Init(int stars, int level, bool isOpened)
+    public void UpdateCell(int stars, int level, bool isOpened, bool isCurrentLevel)
     {
         levelNumText.text = "";
-        button.interactable = false;
+        this.isCurrentLevel = isCurrentLevel;
+
+        if (isOpened)
+        {
+            bodyImg.sprite = unlockedSprite;
+            button.interactable = true;
+            currentLevelBorder.SetActive(isCurrentLevel);
+        }
+        else
+        {
+            bodyImg.sprite = lockedSprite;
+            button.interactable = false;
+            currentLevelBorder.SetActive(false);
+        }
+
         thisLevel = level;
         if (isOpened)
         {
             levelNumText.text = (level + 1).ToString();
-            button.interactable = true;
         }
 
         starsImg.enabled = true;
@@ -42,7 +57,13 @@ public class UI_LevelIcon : MonoBehaviour, ISelectHandler, IDeselectHandler
 
     public void OnSelect(BaseEventData eventData)
     {
+        if (isCurrentLevel)
+        {
+            SelectedLevel = -1;
+            return;
+        }
         SelectedLevel = thisLevel;
+        bodyImg.sprite = selectedSprite;
     }
 
     public void OnDeselect(BaseEventData eventData)
@@ -50,8 +71,12 @@ public class UI_LevelIcon : MonoBehaviour, ISelectHandler, IDeselectHandler
         this.Co_DelayedExecute(() => {
             if (SelectedLevel == thisLevel)
             {
-                SelectedLevel = -1;
+                button.Select();
             }
-        }, 1f);
+            else
+            {
+                bodyImg.sprite = unlockedSprite;
+            }
+        }, 1);
     }
 }

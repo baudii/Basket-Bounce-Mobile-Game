@@ -1,6 +1,7 @@
 <dependencies>
   <packages>
-    <package>com.yandex.android:mobileads-mediation:7.4.0.0</package>
+    <package>androidx.lifecycle:lifecycle-process:2.4.1</package>
+    <package>com.yandex.android:mobileads:7.4.0</package>
   </packages>
   <files />
   <settings>

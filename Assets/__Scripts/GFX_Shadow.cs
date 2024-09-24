@@ -11,7 +11,7 @@ public class GFX_Shadow : MonoBehaviour
 #if UNITY_EDITOR
 
     [ContextMenu("Adjust")]
-    public void Adjust()
+    internal void Adjust()
     {
         if (sr == null)
             sr = GetComponent<SpriteRenderer>();

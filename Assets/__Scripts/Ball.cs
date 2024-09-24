@@ -9,6 +9,7 @@ public class Ball : MonoBehaviour
     [SerializeField] float maxStuckTime;
     [SerializeField] float bounceAnimationDuration;
     [SerializeField] float bounceScaleValue;
+    [SerializeField] LayerMask bounceLayerMask;
     [Header("Preparation phase")]
     [SerializeField] float minSpeed;
     [SerializeField] float minStretchDistance, maxStretchDistance;
@@ -17,31 +18,17 @@ public class Ball : MonoBehaviour
     [Header("Audio")]
     [SerializeField] AudioSource src;
     [SerializeField] AudioClip releaseSFX, bouncePadSFX, deathSFX;
-    [Header("Dependancies")]
+    [Header("Inner dependencies")]
     [SerializeField] Animator animator;
     [SerializeField] Animator explodeAnimator;
     [SerializeField] Transform GFX;
     [SerializeField] LineController lineController;
     [SerializeField] Rigidbody2D rb;
+    [Header("Outer dependencies")]
+    [SerializeField] ReflectionLine reflectionLine;
+    [SerializeField] UI_BounceCounter ui_bounceCounter;
 
-    public State CurrentState { get; private set; }
-
-    Vector2 initialPosition;
-    float speed;
-
-    Camera cam;
-    Vector2 initialScale;
-
-
-    public Action OnDeath;
-
-    int bounces;
-
-    float timeOutOfScreen;
-    float stuckTime;
-    float maxY;
-
-    public enum State
+    public enum BallState
     {
         Preparation,
         Stretching,
@@ -49,6 +36,24 @@ public class Ball : MonoBehaviour
         Finished,
         Dead
     }
+    public BallState CurrentState { get; private set; }
+    Camera cam;
+
+    public Action<bool> OnBallReleased;
+
+
+    Vector2 initialPosition;
+    Vector2 initialScale;
+
+    float speed;
+
+    int bounces;
+
+    // For time calcualtion in Update()
+    float timeOutOfScreen;
+    float stuckTime;
+    float maxY;
+
 
     void Start()
     {
@@ -57,12 +62,14 @@ public class Ball : MonoBehaviour
         cam = Camera.main;
         initialScale = transform.localScale;
         initialPosition = transform.position;
+
         GestureDetector.OnDragStart += StartBallStretch;
         GestureDetector.OnDragUpdate += UpdateBallPosition;
         GestureDetector.OnDragEnd += ReleaseBall;
 
-        GameManager.Instance.OnRestart.AddListener(ResetBall);
+        LevelManager.Instance.OnLevelSetup.AddListener(ResetBall);
     }
+
 
     void Update()
     {
@@ -95,7 +102,7 @@ public class Ball : MonoBehaviour
         }
     }
 
-    void SetState(State newState)
+    void SetState(BallState newState)
     {
         CurrentState = newState;
         this.SmartLog(newState);
@@ -103,13 +110,14 @@ public class Ball : MonoBehaviour
 
 
     void OnCollisionEnter2D(Collision2D collision)
-    {
-        if (collision.transform.TryGetComponent(out Wall wall))
+	{
+        this.SmartLog("Name:", collision.gameObject.name, "Layer num:", collision.gameObject.layer, "Layer contains in mask:", bounceLayerMask.Contains(collision.gameObject.layer));
+
+        if (bounceLayerMask.Contains(collision.gameObject.layer))
         {
-            this.SmartLog("Contact point:", collision.contacts[0].point.y, "maxY:", maxY);
             OnBounce(collision.contacts[0].normal);
         }
-    }
+	}
 
     void OnDestroy()
     {
@@ -117,10 +125,13 @@ public class Ball : MonoBehaviour
         GestureDetector.OnDragUpdate -= UpdateBallPosition;
         GestureDetector.OnDragEnd -= ReleaseBall;
 
-        GameManager.Instance.OnRestart.RemoveListener(ResetBall);
-    }
+        LevelManager.Instance.OnLevelSetup.RemoveListener(ResetBall);
 
-    public bool BounceFromBouncePad(Vector2 direction, float force)
+        OnBallReleased = null;
+
+	}
+
+    public bool BounceFromBouncePad(Vector2 direction, Vector3 position)
     {
         /*        var f = direction * force;
                 var reflected = rb.velocity;
@@ -131,17 +142,21 @@ public class Ball : MonoBehaviour
                 var newdir = (reflected.normalized + f).normalized;
 
                 rb.velocity = newdir * speed * force * speedMultiplier;*/
-        if (CurrentState != State.Roaming)
+        if (CurrentState != BallState.Roaming)
             return false;
 
-        rb.velocity = direction * speed * speedMultiplier;
+        bounces++;
+		ui_bounceCounter.OnBounce(bounces);
+
+		// вылет с центра transform.position = position + (Vector3)direction * 0.3f;
+		rb.velocity = direction * speed * speedMultiplier;
         src.PlayOneShot(bouncePadSFX, 0.4f);
         return true;
     }
 
     bool IsBallStuck()
     {
-        if (CurrentState != State.Roaming)
+        if (CurrentState != BallState.Roaming)
             return false;
 
         if (transform.position.y > maxY)
@@ -168,18 +183,20 @@ public class Ball : MonoBehaviour
 
         //dependancies
         GFX.gameObject.SetActive(true);
-        rb.velocity *= 0;
-        lineController.Disable();
+        lineController.gameObject.SetActive(false);
         explodeAnimator.gameObject.SetActive(false);
+        reflectionLine.gameObject.SetActive(false);
+        rb.velocity *= 0;
         animator.SetBool("IsRotating", false);
         animator.speed = 1;
+        ui_bounceCounter.ResetState();
 
         //private variables
         maxY = float.MinValue;
         stuckTime = 0;
         timeOutOfScreen = 0;
         bounces = 0;
-        SetState(State.Preparation);
+        SetState(BallState.Preparation);
     }
 
     public void ResetRotation()
@@ -188,30 +205,35 @@ public class Ball : MonoBehaviour
         GFX.rotation = Quaternion.identity;
     }
 
-    void StartBallStretch(Vector2 startPos)
-    {
-        if (CurrentState != State.Preparation || startPos.y > inputReadOffset)
-            return;
-
-        lineController.Init();
-        SetState(State.Stretching);
-    }
-
     void ResetBallSlow()
     {
         transform.DOMove(initialPosition, 0.15f);
-        lineController.Disable();
-        SetState(State.Preparation);
+        lineController.gameObject.SetActive(false);
+        reflectionLine.gameObject.SetActive(false);
+        SetState(BallState.Preparation);
     }
 
+    void StartBallStretch(Vector2 startPos)
+    {
+        if (CurrentState != BallState.Preparation || startPos.y > inputReadOffset)
+            return;
+
+        lineController.gameObject.SetActive(true);
+
+        if (LevelManager.Instance.isReflectionMode)
+            reflectionLine.gameObject.SetActive(true);
+        
+
+        SetState(BallState.Stretching);
+    }
+    
     bool UpdateBallPosition(Vector2 direction)
     {
-        if (CurrentState != State.Stretching)
+        if (CurrentState != BallState.Stretching)
             return false;
 
         var dot = Vector2.Dot(direction, Vector2.up);
-        this.SmartLog("Dot:", dot);
-        if (Vector2.Dot(direction, Vector2.up) < -1f)
+        if (dot < -0.5f)
         {
             ResetBallSlow();
             return false;
@@ -226,16 +248,19 @@ public class Ball : MonoBehaviour
         transform.position = newPos;
 
         lineController.UpdateState(speed, direction.normalized);
+        if (reflectionLine.gameObject.activeSelf)
+            reflectionLine.UpdateWorldSpace(initialPosition, direction.normalized, clamped);
 
         return true;
     }
 
     void ReleaseBall(Vector2 direction)
     {
-        if (CurrentState != State.Stretching)
+        if (CurrentState != BallState.Stretching)
             return;
 
-        lineController.Disable();
+        lineController.gameObject.SetActive(false);
+        reflectionLine.gameObject.SetActive(false);
 
         if (speed < minSpeed)
         {
@@ -243,6 +268,7 @@ public class Ball : MonoBehaviour
             return;
         }
 
+        OnBallReleased?.Invoke(true);
 
         rb.velocity = direction.normalized * speed * speedMultiplier;
 
@@ -255,18 +281,18 @@ public class Ball : MonoBehaviour
         animator.speed = Mathf.Exp(speed) / maxStretchDistance;
         src.PlayOneShot(releaseSFX, 1.2f);
 
-        SetState(State.Roaming);
+        SetState(BallState.Roaming);
     }
 
 
     public void Die(bool showDeathAnimation)
     {
-        if (CurrentState != State.Roaming)
+        if (CurrentState != BallState.Roaming)
             return;
         /*        if (isDead || finished || !gameObject.activeSelf || !enabled)
                     return;*/
 
-        CurrentState = State.Dead;
+        CurrentState = BallState.Dead;
         rb.velocity *= 0;
 
         if (showDeathAnimation)
@@ -284,13 +310,17 @@ public class Ball : MonoBehaviour
 
     public int OnFinish()
     {
-        SetState(State.Finished);
+        SetState(BallState.Finished);
         rb.velocity *= 0;
         return bounces;
     }
-
+    float lastBounce;
     public void OnBounce(Vector2 normalVector)
     {
+        if (Time.time - lastBounce < 0.1f || CurrentState != BallState.Roaming)
+            return;
+        lastBounce = Time.time;
+
         src.Play();
         var ang = Vector2.SignedAngle(normalVector, transform.up);
         var angleOffset = new Vector3(0, 0, ang);
@@ -298,7 +328,9 @@ public class Ball : MonoBehaviour
         GFX.eulerAngles += angleOffset;
         transform.localScale = initialScale;
 
-        transform.DOScaleY(initialScale.y * Mathf.Pow(bounceScaleValue, speed), bounceAnimationDuration).OnComplete(() => transform.DOScaleY(initialScale.y, bounceAnimationDuration));
+
+		transform.DOScaleY(initialScale.y * Mathf.Pow(bounceScaleValue, speed), bounceAnimationDuration).OnComplete(() => transform.DOScaleY(initialScale.y, bounceAnimationDuration));
         bounces++;
+        ui_bounceCounter.OnBounce(bounces);
     }
 }

@@ -35,13 +35,15 @@ public class UI_LevelSelector : MonoBehaviour
 
     public void UpdateLevelSelector()
     {
+        int currentLevel = LevelManager.Instance.CurrentLevel;
+
         int lastLevel = PlayerPrefs.GetInt(LevelManager.LAST_OPENED_LEVEL_KEY, 0);
 
         for (int i = 0; i < levels.Count; i++)
         {
             int stars = PlayerPrefs.GetInt(LevelManager.LEVEL_STARS_KEY + i, 0);
 
-            levels[i].Init(stars, i, i <= lastLevel);
+            levels[i].UpdateCell(stars, i, i <= lastLevel, currentLevel == i);
         }
     }
 

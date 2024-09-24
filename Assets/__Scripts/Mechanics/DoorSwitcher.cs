@@ -3,15 +3,18 @@ using System;
 using UnityEngine;
 using UnityEngine.Events;
 
-public class DoorSwitcher : Switcher, IMovableItem
+public class DoorSwitcher : Switcher, IResetableItem
 {
     [SerializeField] DoorMovement[] doorMovements;
 
     [Header("Events")]
     [SerializeField] UnityEvent OnMoveUpdate;
     [SerializeField] UnityEvent OnResetState;
+    [SerializeField] bool activateOnAwake;
+    [SerializeField] float delay;
     [SerializeField] bool canClose;
-
+    Ball ball;
+    Sequence sequence;
 
     Vector3 initialPosition, initialRotation;
 
@@ -21,9 +24,27 @@ public class DoorSwitcher : Switcher, IMovableItem
     {
         initialPosition = transform.position;
         initialRotation = transform.eulerAngles;
-    }
+	}
 
-    public override void Activation()
+	private void OnEnable()
+	{
+		if (activateOnAwake)
+		{
+            if (ball == null)
+			    ball = FindObjectOfType<Ball>();
+			ball.OnBallReleased += SetActivation;
+		}
+	}
+
+	private void OnDisable()
+	{
+        if (ball != null)
+        {
+            ball.OnBallReleased -= SetActivation;
+        }
+	}
+
+	public override void Activation()
     {
         if (IsActivated && !isOpened)
         {
@@ -38,8 +59,9 @@ public class DoorSwitcher : Switcher, IMovableItem
     }
 
     void SequantialDoorOpen()
-    {
-        Sequence sequence = DOTween.Sequence(transform);
+	{
+		sequence?.Kill();
+		sequence = DOTween.Sequence(transform);
         float currentTime = 0;
         foreach (var doorMovement in doorMovements)
         {
@@ -66,7 +88,8 @@ public class DoorSwitcher : Switcher, IMovableItem
 
     void SequantialDoorClose()
     {
-        Sequence sequence = DOTween.Sequence(transform);
+        sequence?.Kill();
+        sequence = DOTween.Sequence(transform);
         float currentTime = 0;
         for (int i = doorMovements.Length - 1; i >= 0; i--) 
         {
@@ -103,6 +126,7 @@ public class DoorSwitcher : Switcher, IMovableItem
 
     public void ResetState()
     {
+        sequence.Kill();
         transform.position = initialPosition;
         transform.eulerAngles = initialRotation;
         isOpened = false;
