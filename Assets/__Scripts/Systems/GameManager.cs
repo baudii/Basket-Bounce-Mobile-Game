@@ -1,7 +1,11 @@
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
+using CandyCoded.HapticFeedback;
 
+#if UNITY_ANDROID || UNITY_IOS
+using CandyCoded;
+#endif
 [DefaultExecutionOrder(-1)]
 
 public class GameManager : MonoBehaviour
@@ -91,7 +95,7 @@ public class GameManager : MonoBehaviour
 	{
 		src.Play();
 #if (UNITY_IOS || UNITY_ANDROID)
-        Handheld.Vibrate();
+		HapticFeedback.LightFeedback();
 #endif
 	}
 
