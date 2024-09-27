@@ -76,7 +76,7 @@ public class DoorSwitcher : Switcher, IResetableItem
                         tween = transform.DORotate(action.Target, duration, RotateMode.FastBeyond360).SetEase(action.Ease);
                         break;
                     case DoorMoveAction.ActionType.Position:
-                        tween = transform.DOMove(action.Target, duration).SetEase(action.Ease);
+                        tween = transform.DOLocalMove(action.Target, duration).SetEase(action.Ease);
                         break;
                 }
                 sequence.Insert(currentTime, tween);

@@ -3,7 +3,6 @@ using UnityEngine;
 
 public class TweenScaleWiggle : MonoBehaviour
 {
-	[SerializeField] Ball ball;
 	[SerializeField] float delay;
 	[SerializeField] float duration;
 	[SerializeField] float targetScale;
@@ -14,7 +13,6 @@ public class TweenScaleWiggle : MonoBehaviour
 
 	private void Start()
 	{
-		ball.OnBallReleased += StopWiggle;
 		initialScale = transform.localScale;
 		seq = DOTween.Sequence(transform); 
 		seq.Append(transform.DOScale(targetScale, duration)).
