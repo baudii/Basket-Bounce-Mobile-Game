@@ -3,6 +3,7 @@ using UnityEngine;
 
 public class DollyCameraController : MonoBehaviour
 {
+	[SerializeField] float offsetFromFin;
 	[SerializeField] CinemachineSmoothPath dolly;
 	[SerializeField] CinemachineVirtualCamera cvc;
 
@@ -22,7 +23,7 @@ public class DollyCameraController : MonoBehaviour
 		var desiredPos = Vector3.zero;
 		if (finPos.y > 4.5f)
 		{
-			desiredPos = desiredPos.WhereY(finPos.y - 2);
+			desiredPos = desiredPos.WhereY(finPos.y - offsetFromFin);
 		}
 		dolly.m_Waypoints[1].position = desiredPos;
 	}

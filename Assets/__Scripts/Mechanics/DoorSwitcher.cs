@@ -32,7 +32,7 @@ public class DoorSwitcher : Switcher, IResetableItem
 		{
             if (ball == null)
 			    ball = FindObjectOfType<Ball>();
-			ball.OnBallReleased += SetActivation;
+			ball.OnBallReleased += Enable;
 		}
 	}
 
@@ -40,7 +40,7 @@ public class DoorSwitcher : Switcher, IResetableItem
 	{
         if (ball != null)
         {
-            ball.OnBallReleased -= SetActivation;
+            ball.OnBallReleased -= Enable;
         }
 	}
 

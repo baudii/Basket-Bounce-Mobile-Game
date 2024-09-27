@@ -6,6 +6,7 @@ public class LevelManager : MonoBehaviour
 {
 	[SerializeField] DollyCameraController dollyController;
 	[SerializeField] List<LevelData> levels;
+	[SerializeField] FinishIconHelper finishIconHelper;
 
 	#region Editor functionality
 #if UNITY_EDITOR
@@ -67,7 +68,7 @@ public class LevelManager : MonoBehaviour
 	#endregion
 
 	[HideInInspector]
-	public UnityEvent OnLevelSetup;
+	public UnityEvent<LevelData> OnLevelSetup;
 
 
 	public static LevelManager Instance => instance;
@@ -83,16 +84,15 @@ public class LevelManager : MonoBehaviour
 	public void ActivateReflection() => isReflectionMode = true;
 
 
-	private void Awake()
+	void Awake()
 	{
 		if (instance != null)
 			Destroy(gameObject);
 		instance = this;
-/*
-		ValidateLevels();
-#if UNITY_EDITOR
 
-#endif*/
+#if UNITY_EDITOR
+		ValidateLevels();
+#endif
 
 		GameManager.Instance.GetUILevelSelector().Init(levels.Count);
 	}
@@ -102,24 +102,65 @@ public class LevelManager : MonoBehaviour
 		bool isFirstTimeLoad = true;
 
 #if UNITY_EDITOR
-
 		isFirstTimeLoad = false;
-
 		CurrentLevel = testLevel;
-
 #endif
 
 		if (CurrentLevel < 0) 
 			CurrentLevel = 0;
 
 		LoadLevel(CurrentLevel, isFirstTimeLoad);
-
-		GameManager.Instance.UpdateLevelSelector();
 	}
 
-	private void OnDestroy()
+	void OnDestroy()
 	{
 		OnLevelSetup.RemoveAllListeners();
+	}
+
+	void SwapToNewLevel(int level)
+	{
+		// Переключение уровней через включение и выключение объектов
+		if (CurrentLevel >= 0)
+		{
+			levels[CurrentLevel].gameObject.SetActive(false);
+		}
+		CurrentLevelData = levels[level];
+		CurrentLevelData.ResetLevel();
+		CurrentLevelData.gameObject.SetActive(true);
+		CurrentLevel = level;
+
+		/*	Переключение через инстансы префабов
+				if (CurrentLevelData != null)
+					Destroy(CurrentLevelData.gameObject);
+				CurrentLevelData = Instantiate(levels[level], transform);
+				CurrentLevel = level;
+		*/
+	}
+
+
+	public void SetupLevel()
+	{
+		if (CurrentLevelData == null)
+		{
+			this.SmartLog("Current level data is NULL");
+			return;
+		}
+
+		this.SmartLog(CurrentLevelData.gameObject.name);
+		OnLevelSetup?.Invoke(CurrentLevelData);
+		dollyController.ResetDollyPathPos();
+		//isReflectionMode = false;
+	}
+
+	public void OnFinish(int stars)
+	{
+		int savedProgress = PlayerPrefs.GetInt(LEVEL_STARS_KEY + CurrentLevel, 0);
+		if (stars > savedProgress)
+			PlayerPrefs.SetInt(LEVEL_STARS_KEY + CurrentLevel, stars);
+
+		savedProgress = PlayerPrefs.GetInt(LAST_OPENED_LEVEL_KEY, 0);
+		if (CurrentLevel + 1 > savedProgress && CurrentLevel + 1 < levels.Count)
+			PlayerPrefs.SetInt(LAST_OPENED_LEVEL_KEY, CurrentLevel + 1);
 	}
 
 
@@ -147,11 +188,6 @@ public class LevelManager : MonoBehaviour
 		if (isFirstTimeLoad)
 			loadTime = 3f;
 
-		if (CurrentLevelData != null)
-		{
-			CurrentLevelData.ResetLevel();
-		}
-
 		SwapToNewLevel(level);
 
 		// update player's progress
@@ -159,62 +195,18 @@ public class LevelManager : MonoBehaviour
 		if (CurrentLevel > lastSavedLevel)
 			PlayerPrefs.SetInt(LAST_OPENED_LEVEL_KEY, CurrentLevel);
 
-		// update camera
+		// update dependencies
 		var finpos = CurrentLevelData.GetFinPos();
+		finishIconHelper.Init(finpos);
 		dollyController.UpdateDollyWaypoint(finpos);
 
 		SetupLevel();
-		GameManager.Instance.UpdateLevelSelector();
+		GameManager.Instance.UpodateUI();
 
 		this.Co_DelayedExecute(() =>
 		{
 			GameManager.Instance.SetActiveLoadingScreen(false);
 			GameManager.Instance.ResumeGame();
 		}, loadTime);
-	}
-
-	void SwapToNewLevel(int level)
-	{
-		// Переключение уровней через включение и выключение объектов
-		if (CurrentLevel >= 0)
-		{
-			levels[CurrentLevel].gameObject.SetActive(false);
-		}
-		CurrentLevelData = levels[level];
-		CurrentLevelData.gameObject.SetActive(true);
-		CurrentLevel = level;
-
-		/*	Переключение через инстансы префабов
-				if (CurrentLevelData != null)
-					Destroy(CurrentLevelData.gameObject);
-				CurrentLevelData = Instantiate(levels[level], transform);
-				CurrentLevel = level;
-		*/
-	}
-
-
-	public void SetupLevel()
-	{
-		if (CurrentLevelData == null)
-		{
-			this.SmartLog("Current level data is NULL");
-			return;
-		}
-
-		this.SmartLog(CurrentLevelData.gameObject.name);
-		OnLevelSetup?.Invoke();
-		dollyController.ResetDollyPathPos();
-		//isReflectionMode = false;
-	}
-
-	public void OnFinish(int stars)
-	{
-		int savedProgress = PlayerPrefs.GetInt(LEVEL_STARS_KEY + CurrentLevel, 0);
-		if (stars > savedProgress)
-			PlayerPrefs.SetInt(LEVEL_STARS_KEY + CurrentLevel, stars);
-
-		savedProgress = PlayerPrefs.GetInt(LAST_OPENED_LEVEL_KEY, 0);
-		if (CurrentLevel + 1 > savedProgress && CurrentLevel + 1 < levels.Count)
-			PlayerPrefs.SetInt(LAST_OPENED_LEVEL_KEY, CurrentLevel + 1);
 	}
 }

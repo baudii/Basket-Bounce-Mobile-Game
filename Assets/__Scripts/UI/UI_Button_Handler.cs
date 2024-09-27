@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.UI;
 
 public class UI_Button_Handler : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
 {
@@ -10,7 +11,7 @@ public class UI_Button_Handler : MonoBehaviour, IPointerDownHandler, IPointerUpH
 	{
 		if (iconRect == null)
 		{
-			iconRect = GetComponent<RectTransform>();
+			iconRect = (RectTransform)transform;
 		}
 	}
 	public void OnPointerDown(PointerEventData eventData)
@@ -27,10 +28,12 @@ public class UI_Button_Handler : MonoBehaviour, IPointerDownHandler, IPointerUpH
 	{
 		if (scaleIcon)
 		{
+		    // 20/19 = 1/0.95f - умножаем на обратную дробь, чтобы вернуть изначальный скейл
 			iconRect.transform.localScale *= (20f / 19f);
 			return;
 		}
 		iconRect.sizeDelta += new Vector2(0, 3);
+		GameManager.Instance.PlayButtonClickSound();
 	}
 
 	public void LevelSelect()
@@ -43,7 +46,6 @@ public class UI_Button_Handler : MonoBehaviour, IPointerDownHandler, IPointerUpH
 		GameManager.Instance.GetUILevelSelector().LoadLevel();
 	}
 
-
 	public void Restart()
 	{
 		var gm = GameManager.Instance;
@@ -55,9 +57,9 @@ public class UI_Button_Handler : MonoBehaviour, IPointerDownHandler, IPointerUpH
 		gm.ResumeGame();
 
 		// в будущем добавить лоадинг скрин в момент рестарта
-/*		gm.Co_DelayedExecute(() =>
-		{
-		}, 0.3f);*/
+		/*		gm.Co_DelayedExecute(() =>
+				{
+				}, 0.3f);*/
 	}
 
 	public void NextLevel()

@@ -7,8 +7,18 @@ public class LevelData : MonoBehaviour
 
 	[SerializeField] int bounces3star;
 	[SerializeField] int bounces2star;
+	[SerializeField] bool useThreshHold;
+	[SerializeField] bool canNotStuck;
+	[SerializeField] float overrideStuckTime;
+/*	[SerializeField] float time3star;
+	[SerializeField] float time2star;*/
+
+	public bool UseThreshold => useThreshHold;
+	public bool CanNotStuck => canNotStuck;
+	public float OverrideStuckTime => overrideStuckTime;
 
 #if UNITY_EDITOR
+	[Header("Editor Only")]
 	[SerializeField] bool validateShadows;
 	[SerializeField] bool shadowsEnabled;
 	private void OnValidate()
@@ -34,7 +44,6 @@ public class LevelData : MonoBehaviour
 
 	public void OnLevelLoad()
 	{
-
 	}
 
 	public void OnLevelUnload()
@@ -54,12 +63,14 @@ public class LevelData : MonoBehaviour
 		return fin.transform.position;
 	}
 
-	public int ConvertToStars(int bounces)
+	public ScoreData ConvertToStars(int bounces)
 	{
+		if (bounces2star == 0)
+			bounces2star = bounces3star + 3;
 		if (bounces <= bounces3star)
-			return 3;
+			return new ScoreData(3, 0);
 		if (bounces <= bounces2star)
-			return 2;
-		return 1;
+			return new ScoreData(2, bounces3star);
+		return new ScoreData(1, bounces2star);
 	}
 }

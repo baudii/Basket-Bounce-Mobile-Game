@@ -1,6 +1,6 @@
-using System;
 using System.Collections;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class SpriteTween
 {
@@ -9,7 +9,7 @@ public class SpriteTween
 	Vector2 targetSize;
 	float prevT;
 
-	Action OnUpdateAction;
+	UnityAction OnUpdateAction;
 
 	public SpriteTween(SpriteRenderer sr, MonoBehaviour caller)
 	{
@@ -26,14 +26,15 @@ public class SpriteTween
 		return this;
 	}
 
-	public void KillTween()
+	public void KillTween(bool complete = false)
 	{
 		caller.StopAllCoroutines();
 		prevT = 0;
-		sr.size = targetSize;
+		if (complete)
+			sr.size = targetSize;
 	}
 
-	public void OnUpdate(Action action)
+	public void OnUpdate(UnityAction action)
 	{
 		OnUpdateAction = action;
 	}

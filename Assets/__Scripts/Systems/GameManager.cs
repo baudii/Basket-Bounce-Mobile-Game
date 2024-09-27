@@ -20,6 +20,7 @@ public class GameManager : MonoBehaviour
 	public static GameManager Instance => instance;
 	static GameManager instance;
 
+	[Header("References")]
 	[SerializeField] GameObject gameOverScreen;
 	[SerializeField] UI_LevelCompleted levelCompleteScreen;
 	[SerializeField] UI_PauseController pauseScreen;
@@ -30,16 +31,28 @@ public class GameManager : MonoBehaviour
 	[SerializeField] Image gameCompleteBgImage;
 	[SerializeField] AudioSource src;
 	[SerializeField] UI_BounceCounter bounceCounter;
+	[SerializeField] FinishIconHelper finishIconHelper;
+
+	[Header("Assets")]
+	[SerializeField] GameAssets_SO gameAssets;
+	public GameAssets_SO GameAssets => gameAssets;
+
 
 	[HideInInspector]
-	public UnityEvent OnLevelComplete;
+	public UnityEvent OnLevelComplete;	
+	[HideInInspector]
+	public UnityEvent OnGameOver;	
+	[HideInInspector]
+	public UnityEvent OnRestart;
 	[HideInInspector]
 	public UnityEvent OnInGameStateEnter;
 	[HideInInspector]
 	public UnityEvent OnInGameStateExit;
+	
+	[HideInInspector]
+	public State currentState;
 	State prevState;
 
-	public State currentState;
 
 	InputMaster input;
 
@@ -80,8 +93,9 @@ public class GameManager : MonoBehaviour
 #if (UNITY_IOS || UNITY_ANDROID)
         Handheld.Vibrate();
 #endif
-
 	}
+
+	public void PlayButtonClickSound() => src.PlayOneShot(GameAssets.BlopSound);
 
 	void SetState(State state)
 	{
@@ -95,14 +109,18 @@ public class GameManager : MonoBehaviour
 				Time.timeScale = 1;
 				OnInGameStateEnter?.Invoke();
 				bounceCounter.gameObject.SetActive(true);
+				finishIconHelper.Enable();
 				break;
 			case State.Completed:
+				src.PlayOneShot(GameAssets.WinSound, 0.3f);
+				levelSelectorScreen.UpdateLevelSelector();
 				levelCompleteScreen.gameObject.SetActive(true);
 				OnLevelComplete?.Invoke();
 				break;
 			case State.GameOver:
 				if (currentState != State.InGame && currentState != State.LevelSelect)
 					return;
+				OnGameOver?.Invoke();
 				gameOverScreen.SetActive(true);
 				break;
 			case State.LevelSelect:
@@ -203,12 +221,16 @@ public class GameManager : MonoBehaviour
 	}
 
 	public UI_LevelSelector GetUILevelSelector() => levelSelectorScreen;
-	public void UpdateLevelSelector() => levelSelectorScreen.UpdateLevelSelector();
 
-	public void ShowLevelCompleteScreen(int stars)
+	public void UpodateUI()
+	{
+		levelSelectorScreen.UpdateLevelSelector();
+	}
+
+	public void ShowLevelCompleteScreen(ScoreData scoreData, int bounces)
 	{
 		SetState(State.Completed);
-		levelCompleteScreen.SetStars(stars);
+		levelCompleteScreen.SetStars(scoreData, bounces);
 	}
 
 	public void ShowPauseScreen()
@@ -231,6 +253,11 @@ public class GameManager : MonoBehaviour
 	public void FinishGame()
 	{
 		SetState(State.Finished);
+	}
+
+	public void SetFinishTime()
+	{
+
 	}
 
 	void DisableAll()

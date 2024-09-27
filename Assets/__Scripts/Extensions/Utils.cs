@@ -99,14 +99,31 @@ public static class Utils
 			return -1;
 		return 0;
 	}
+
+	public static Vector2 GetClosestDirection(Vector2 v, float threshHold = 0.1f)
+	{
+		if (Vector2.Dot(Vector2.up, v.normalized) > threshHold)
+			return Vector2.up;
+
+		if (Vector2.Dot(Vector2.right, v.normalized) > threshHold)
+			return Vector2.right;
+
+		if (Vector2.Dot(Vector2.left, v.normalized) > threshHold)
+			return Vector2.left;
+
+		if (Vector2.Dot(Vector2.down, v.normalized) > threshHold)
+			return Vector2.down;
+
+		return Vector2.zero;
+	}
 }
 
 [Serializable]
-public struct Vector4Int
+public struct Point4Int
 {
 	public int x, y, z, w;
 
-	public Vector4Int(int x, int y, int z, int w)
+	public Point4Int(int x, int y, int z, int w)
 	{
 		this.x = x;
 		this.y = y;

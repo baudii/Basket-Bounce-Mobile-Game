@@ -14,6 +14,7 @@ public class Ball : MonoBehaviour
     [SerializeField] float minSpeed;
     [SerializeField] float minStretchDistance, maxStretchDistance;
     [SerializeField] float inputReadOffset;
+    [SerializeField, Range(0,1), Tooltip("Will only be used on levels with \"Use Threshhold\" flag set to true!")] float threshHold;
     [SerializeField, Range(1, 15)] float speedMultiplier;
     [Header("Audio")]
     [SerializeField] AudioSource src;
@@ -39,8 +40,10 @@ public class Ball : MonoBehaviour
     public BallState CurrentState { get; private set; }
     Camera cam;
 
-    public Action<bool> OnBallReleased;
+    public Action OnBallReleased;
 
+    bool useThreshhold;
+    bool canNotStuck;
 
     Vector2 initialPosition;
     Vector2 initialScale;
@@ -51,19 +54,24 @@ public class Ball : MonoBehaviour
 
     // For time calcualtion in Update()
     float timeOutOfScreen;
-    float stuckTime;
+    float maxStuckTimeCurrent;
+    float currentStuckTime;
     float maxY;
 
 
     void Start()
     {
-        timeOutOfScreen = 0;
-        stuckTime = 0;
+        maxStuckTimeCurrent = maxStuckTime;
+		timeOutOfScreen = 0;
+        currentStuckTime = 0;
         cam = Camera.main;
         initialScale = transform.localScale;
         initialPosition = transform.position;
 
-        GestureDetector.OnDragStart += StartBallStretch;
+        lineController.Init(minSpeed);
+
+
+		GestureDetector.OnDragStart += StartBallStretch;
         GestureDetector.OnDragUpdate += UpdateBallPosition;
         GestureDetector.OnDragEnd += ReleaseBall;
 
@@ -87,18 +95,18 @@ public class Ball : MonoBehaviour
             timeOutOfScreen = 0;
         }
 
-        if (IsBallStuck())
+        if (IsBallStuck() && !canNotStuck)
         {
-            stuckTime += Time.deltaTime;
-            if (stuckTime > maxStuckTime)
+            currentStuckTime += Time.deltaTime;
+            if (currentStuckTime > maxStuckTimeCurrent && rb.velocity.y < 1)
             {
                 GameManager.Instance.ShowStuckScreen();
-                stuckTime = 0;
+                currentStuckTime = 0;
             }
         }
         else
         {
-            stuckTime = 0;
+            currentStuckTime = 0;
         }
     }
 
@@ -161,7 +169,7 @@ public class Ball : MonoBehaviour
 
         if (transform.position.y > maxY)
         {
-            maxY = transform.position.y + 0.1f;
+            maxY = transform.position.y + 0.5f;
             return false;
         }
 
@@ -175,7 +183,7 @@ public class Ball : MonoBehaviour
         return true;
     }
 
-    void ResetBall()
+    void ResetBall(LevelData levelData)
     {
         //transform
         transform.position = initialPosition;
@@ -190,10 +198,13 @@ public class Ball : MonoBehaviour
         animator.SetBool("IsRotating", false);
         animator.speed = 1;
         ui_bounceCounter.ResetState();
+        useThreshhold = levelData.UseThreshold;
+		canNotStuck = levelData.CanNotStuck;
+        maxStuckTimeCurrent = levelData.OverrideStuckTime <= 0 ? maxStuckTime : levelData.OverrideStuckTime;
 
         //private variables
         maxY = float.MinValue;
-        stuckTime = 0;
+        currentStuckTime = 0;
         timeOutOfScreen = 0;
         bounces = 0;
         SetState(BallState.Preparation);
@@ -248,8 +259,9 @@ public class Ball : MonoBehaviour
         transform.position = newPos;
 
         lineController.UpdateState(speed, direction.normalized);
+        float hasSpeed = speed >= minSpeed ? 1 : 0;
         if (reflectionLine.gameObject.activeSelf)
-            reflectionLine.UpdateWorldSpace(initialPosition, direction.normalized, clamped);
+            reflectionLine.UpdateReflections(initialPosition, direction.normalized, clamped * hasSpeed);
 
         return true;
     }
@@ -268,7 +280,17 @@ public class Ball : MonoBehaviour
             return;
         }
 
-        OnBallReleased?.Invoke(true);
+        OnBallReleased?.Invoke();
+
+        if (useThreshhold)
+        {
+            var dir = Utils.GetClosestDirection(direction, threshHold);
+			if (dir != Vector2.zero)
+            {
+                direction = dir;
+
+			}
+        }
 
         rb.velocity = direction.normalized * speed * speedMultiplier;
 
@@ -312,14 +334,15 @@ public class Ball : MonoBehaviour
     {
         SetState(BallState.Finished);
         rb.velocity *= 0;
+                
         return bounces;
     }
-    float lastBounce;
+    float lastBounceTime;
     public void OnBounce(Vector2 normalVector)
     {
-        if (Time.time - lastBounce < 0.1f || CurrentState != BallState.Roaming)
+        if (Time.time - lastBounceTime < 0.1f || CurrentState != BallState.Roaming)
             return;
-        lastBounce = Time.time;
+        lastBounceTime = Time.time;
 
         src.Play();
         var ang = Vector2.SignedAngle(normalVector, transform.up);

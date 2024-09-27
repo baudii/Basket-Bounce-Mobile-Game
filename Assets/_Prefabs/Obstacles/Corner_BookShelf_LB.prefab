@@ -80,7 +80,8 @@ PrefabInstance:
       propertyPath: validate
       value: 1
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 3830799330507171172, guid: 03ccc0b4db02c3941b10ba4d63ce93ec, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []

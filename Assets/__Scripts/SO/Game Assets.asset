@@ -1,0 +1,16 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 47c74baf171d0754692bc0000cc3bf12, type: 3}
+  m_Name: Game Assets
+  m_EditorClassIdentifier: 
+  blopSound: {fileID: 8300000, guid: dacce14cba76d5542a97433f2c302b22, type: 3}
+  winSound: {fileID: 8300000, guid: a1e6944a50810e941b6bf1ff1287e707, type: 3}

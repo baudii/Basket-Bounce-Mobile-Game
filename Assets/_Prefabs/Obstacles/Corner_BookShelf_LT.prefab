@@ -140,8 +140,41 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 9074870789547116258, guid: 96934a8bc3577dc49b8dd4f218e93d4b, type: 3}
+      propertyPath: m_SpriteTilingProperty.border.w
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9074870789547116258, guid: 96934a8bc3577dc49b8dd4f218e93d4b, type: 3}
+      propertyPath: m_SpriteTilingProperty.border.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9074870789547116258, guid: 96934a8bc3577dc49b8dd4f218e93d4b, type: 3}
+      propertyPath: m_SpriteTilingProperty.border.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9074870789547116258, guid: 96934a8bc3577dc49b8dd4f218e93d4b, type: 3}
+      propertyPath: m_SpriteTilingProperty.border.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9074870789547116258, guid: 96934a8bc3577dc49b8dd4f218e93d4b, type: 3}
+      propertyPath: m_SpriteTilingProperty.drawMode
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9074870789547116258, guid: 96934a8bc3577dc49b8dd4f218e93d4b, type: 3}
+      propertyPath: m_SpriteTilingProperty.newSize.x
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 9074870789547116258, guid: 96934a8bc3577dc49b8dd4f218e93d4b, type: 3}
+      propertyPath: m_SpriteTilingProperty.oldSize.x
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 9074870789547116258, guid: 96934a8bc3577dc49b8dd4f218e93d4b, type: 3}
+      propertyPath: m_SpriteTilingProperty.oldSize.y
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 1183410140968460001, guid: 96934a8bc3577dc49b8dd4f218e93d4b, type: 3}
+    - {fileID: 9074870789547116258, guid: 96934a8bc3577dc49b8dd4f218e93d4b, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents:

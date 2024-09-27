@@ -24,7 +24,7 @@ public class YandexMobileAdsInterstitialScript : MonoBehaviour
         interstitialAdLoader.OnAdFailedToLoad += HandleAdFailedToLoad;
     }
 
-    private void RequestInterstitial()
+    public void RequestInterstitial()
     {
         //Sets COPPA restriction for user age under 13
         MobileAds.SetAgeRestrictedUser(true);
@@ -41,7 +41,7 @@ public class YandexMobileAdsInterstitialScript : MonoBehaviour
         DisplayMessage("Interstitial is requested");
     }
 
-    private void ShowInterstitial()
+	public void ShowInterstitial()
     {
         if (interstitial == null)
         {
@@ -69,9 +69,8 @@ public class YandexMobileAdsInterstitialScript : MonoBehaviour
         print(message);
     }
 
-    #region Interstitial callback handlers
-
-    public void HandleAdLoaded(object sender, InterstitialAdLoadedEventArgs args)
+	#region Interstitial request callback handlers
+	public void HandleAdLoaded(object sender, InterstitialAdLoadedEventArgs args)
     {
         DisplayMessage("HandleAdLoaded event received");
 
@@ -81,13 +80,17 @@ public class YandexMobileAdsInterstitialScript : MonoBehaviour
     public void HandleAdFailedToLoad(object sender, AdFailedToLoadEventArgs args)
     {
         DisplayMessage($"HandleAdFailedToLoad event received with message: {args.Message}");
+        RequestInterstitial();
     }
-    public void HandleAdClicked(object sender, EventArgs args)
+	#endregion
+
+	#region Interstitial load callback handlers
+	public void HandleAdClicked(object sender, EventArgs args)
     {
         DisplayMessage("HandleAdClicked event received");
     }
 
-    public void HandleAdShown(object sender, EventArgs args)
+	public void HandleAdShown(object sender, EventArgs args)
     {
         DisplayMessage("HandleAdShown event received");
     }
@@ -98,6 +101,7 @@ public class YandexMobileAdsInterstitialScript : MonoBehaviour
 
         interstitial.Destroy();
         interstitial = null;
+        RequestInterstitial();
     }
 
     public void HandleImpression(object sender, ImpressionData impressionData)

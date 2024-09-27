@@ -32,7 +32,7 @@ namespace KK
 		[SerializeField] Vector2 cellSize;
 		[SerializeField] Vector2 spacing;
 		[Header("Set boundaries")]
-		[SerializeField, Tooltip("x=left, y=right, z=top, w=bottom")] Vector4Int minPading;
+		[SerializeField, Tooltip("x=left, y=right, z=top, w=bottom")] Point4Int minPading;
 		[SerializeField, Min(0)] float minSpacing, maxSpacing, minCellSize, maxCellSize;
 
 		public override void CalculateLayoutInputHorizontal()

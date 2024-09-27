@@ -1,4 +1,6 @@
+using System;
 using System.Collections;
+using System.Runtime.InteropServices.WindowsRuntime;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -73,12 +75,11 @@ public class Finish : MonoBehaviour
 		//сделать все остальное
 
 		LevelData levelData = LevelManager.Instance.CurrentLevelData;
-		int stars = levelData.ConvertToStars(bounces);
+		ScoreData scoreData = levelData.ConvertToStars(bounces);
 
-		LevelManager.Instance.OnFinish(stars);
+		LevelManager.Instance.OnFinish(scoreData.stars);
 
-		GameManager.Instance.UpdateLevelSelector();
-		GameManager.Instance.ShowLevelCompleteScreen(stars);
+		GameManager.Instance.ShowLevelCompleteScreen(scoreData, bounces);
 	}
 
 	/*
@@ -92,5 +93,58 @@ public class Finish : MonoBehaviour
 			Tween shrink = transform.DOSc
 
 		}*/
+}
+
+public struct ScoreData
+{
+	public int stars;
+	public int nextStarBounceRequirement;
+
+	public ScoreData(int stars, int nextStarBounceRequirement)
+	{
+		this.stars = stars;
+		this.nextStarBounceRequirement = nextStarBounceRequirement;
+	}
+	/* јвось пригодитьс€ ?
+   // «наки сравнени€ перевернуты, потому что формула расчета score тем больше, чем больше времени и баунсов.
+   // ј в игре надо минимизировать показатели. ћожно было развернуть дробь, но так проще и результат тот же
+   public static bool operator <=(ScoreData left, ScoreData right)
+   {
+	   return left.Score >= right.Score;
+   }
+   public static bool operator >=(ScoreData left, ScoreData right)
+   {
+	   return left.Score <= right.Score;
+   }
+   public static bool operator <(ScoreData left, ScoreData right)
+   {
+	   return left.Score > right.Score;
+   }
+   public static bool operator >(ScoreData left, ScoreData right)
+   {
+	   return left.Score < right.Score;
+   }
+   public static bool operator ==(ScoreData left, ScoreData right)
+   {
+	   return Equals(left, right);
+   }	
+   public static bool operator !=(ScoreData left, ScoreData right)
+   {
+	   return left.bounces != right.bounces || left.totalTime != right.totalTime;
+   }
+
+   public override bool Equals(object obj)
+   {
+	   if (obj is ScoreData score)
+	   {
+		   return totalTime == score.totalTime && bounces == score.bounces;
+	   }
+	   return false;
+   }
+
+   public override int GetHashCode()
+   {
+	   return HashCode.Combine(bounces, totalTime);
+   }*/
 }
 

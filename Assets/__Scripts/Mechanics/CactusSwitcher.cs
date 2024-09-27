@@ -4,10 +4,12 @@ public class CactusSwitcher : Switcher, IResetableItem
 {
 	[SerializeField] SpriteRenderer sr;
 	[SerializeField] SpriteRenderer shadowSr;
+	[SerializeField] bool oneWay;
 	[SerializeField] Vector2 targetSize;
 	[SerializeField] float targetTime;
 	Vector2 initialSize;
 	SpriteTween spriteTween;
+	bool grown;
 	private void Awake()
 	{
 		initialSize = sr.size;
@@ -16,6 +18,9 @@ public class CactusSwitcher : Switcher, IResetableItem
 
 	public override void Activation()
 	{
+		if (oneWay && grown)
+			return;
+
 		if (IsActivated)
 		{
 			spriteTween.TweenSize(initialSize, targetSize, targetTime).OnUpdate(() => shadowSr.size = sr.size);
@@ -24,11 +29,13 @@ public class CactusSwitcher : Switcher, IResetableItem
 		{
 			spriteTween.TweenSize(targetSize, initialSize, targetTime).OnUpdate(() => shadowSr.size = sr.size);
 		}
+		grown = true;
 	}
 
 	public void ResetState()
 	{
-		this.SmartLog("Resetting state of Cacts");
+		this.SmartLog("Resetting state of Cactus");
+		grown = false;
 		spriteTween.KillTween();
 		sr.size = initialSize;
 		shadowSr.size = initialSize;

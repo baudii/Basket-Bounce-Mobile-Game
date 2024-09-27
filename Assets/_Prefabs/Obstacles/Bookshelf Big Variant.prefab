@@ -170,7 +170,7 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 5150639610720940897, guid: 6eef6397fd2e386449d99515efca6d14, type: 3}
-      insertIndex: 2
+      insertIndex: -1
       addedObject: {fileID: 7744733601006990307}
   m_SourcePrefab: {fileID: 100100000, guid: 6eef6397fd2e386449d99515efca6d14, type: 3}
 --- !u!1 &6645730736388967984 stripped
@@ -221,5 +221,5 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 1
   serializedVersion: 2
-  m_Size: {x: 2.6666667, y: 2.6666667}
-  m_EdgeRadius: 0
+  m_Size: {x: 2.52, y: 2.52}
+  m_EdgeRadius: 0.06

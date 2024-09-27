@@ -22,6 +22,9 @@ public abstract class Switcher : MonoBehaviour
 		Activation();
 	}
 
+	public void Enable() => SetActivation(true);
+	public void Disable() => SetActivation(false);
+
 	protected void Deactivate()
 	{
 		isActivated = false;

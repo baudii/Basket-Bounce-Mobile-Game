@@ -18,6 +18,8 @@ public class ResetableManager : MonoBehaviour
 
 	public void ResetAll()
 	{
+		if (resetables == null)
+			return;
 		foreach (var resetable in resetables)
 		{
 			resetable.ResetState();

@@ -37,7 +37,7 @@ public class YandexMobileAdsBannerScript : MonoBehaviour
 		banner.OnImpression += HandleImpression;
 	}
 
-	private void RequestBanner()
+	public void RequestBanner()
     {
         if (banner != null)
         {
