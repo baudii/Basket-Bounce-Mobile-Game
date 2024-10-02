@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
+[DefaultExecutionOrder(-1)]
 public class LevelManager : MonoBehaviour
 {
 	[SerializeField] DollyCameraController dollyController;
@@ -161,6 +162,11 @@ public class LevelManager : MonoBehaviour
 		savedProgress = PlayerPrefs.GetInt(LAST_OPENED_LEVEL_KEY, 0);
 		if (CurrentLevel + 1 > savedProgress && CurrentLevel + 1 < levels.Count)
 			PlayerPrefs.SetInt(LAST_OPENED_LEVEL_KEY, CurrentLevel + 1);
+	}
+
+	public void OnBallReleased()
+	{
+		CurrentLevelData.OnBallRealeased();
 	}
 
 

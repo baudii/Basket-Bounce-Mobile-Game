@@ -8,12 +8,12 @@ public class ResetableManager : MonoBehaviour
 	private void Awake()
 	{
 		resetables = new List<IResetableItem>();
-		foreach (Transform t in transform)
+		transform.ForEachDescendant((descendant) =>
 		{
-			var resetables = t.GetComponents<IResetableItem>();
-			foreach (var imovable in resetables)
-				this.resetables.Add(imovable);
-		}
+			var components = descendant.GetComponents<IResetableItem>();
+			foreach (var component in components)
+				resetables.Add(component);
+		});
 	}
 
 	public void ResetAll()

@@ -280,6 +280,8 @@ public class Ball : MonoBehaviour
             return;
         }
 
+        LevelManager.Instance.OnBallReleased();
+
         OnBallReleased?.Invoke();
 
         if (useThreshhold)

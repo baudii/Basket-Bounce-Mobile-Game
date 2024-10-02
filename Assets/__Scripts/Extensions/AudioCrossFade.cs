@@ -41,9 +41,7 @@ public class AudioCrossFade : MonoBehaviour
 	[ContextMenu("Next")]
 	public void Next()
 	{
-		if (i >= audioSources.Length - 1)
-			return;
-		i++;
+		i = (i + 1) % audioSources.Length;
 		toBreak = true;
 		StartCoroutine(SwitchSourceTo(audioSources[i]));
 	}

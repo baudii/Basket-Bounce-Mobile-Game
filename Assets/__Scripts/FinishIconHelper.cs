@@ -2,10 +2,10 @@ using UnityEngine;
 
 public class FinishIconHelper : MonoBehaviour
 {
+	[SerializeField] GameObject body;
 	Camera cam;
 	float ScreenHeight;
 	Vector3 finishPos;
-
 
 	private void Awake()
 	{
@@ -15,10 +15,14 @@ public class FinishIconHelper : MonoBehaviour
 
 	private void Update()
 	{
-		this.SmartLog("Updating");
-		if (IsInScreen(finishPos))
+		bool isVisible = IsInScreen(finishPos);
+		if (isVisible && body.activeSelf)
 		{
-			Disable();
+			body.SetActive(false);
+		}
+		else if (!isVisible && !body.activeSelf)
+		{
+			body.SetActive(true);
 		}
 	}
 
@@ -26,17 +30,6 @@ public class FinishIconHelper : MonoBehaviour
 	{
 		finishPos = finishPosition;
 		transform.position = transform.position.WhereX(finishPos.x);
-		Enable();
-	}
-
-	public void Enable()
-	{
-		gameObject.SetActive(true);
-	}
-
-	public void Disable()
-	{
-		gameObject.SetActive(false);
 	}
 
 	bool IsInScreen(Vector3 pos)

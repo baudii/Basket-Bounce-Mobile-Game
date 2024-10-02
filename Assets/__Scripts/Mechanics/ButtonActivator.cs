@@ -19,13 +19,14 @@ public class ButtonActivator : Activator
 	{
 		if (touches > 0 && !isPressed)
 		{
-			Toggle();
+			ActivateAll(true);
 			if (sr != null)
 				sr.sprite = pressed;
 			isPressed = true;
 		}
 		else if (touches == 0 && isPressed)
 		{
+			ActivateAll(false);
 			if (sr != null)
 				sr.sprite = idle;
 			isPressed = false;

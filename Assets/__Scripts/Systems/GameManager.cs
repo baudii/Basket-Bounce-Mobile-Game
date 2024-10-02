@@ -6,7 +6,7 @@ using CandyCoded.HapticFeedback;
 #if UNITY_ANDROID || UNITY_IOS
 using CandyCoded;
 #endif
-[DefaultExecutionOrder(-1)]
+[DefaultExecutionOrder(-2)]
 
 public class GameManager : MonoBehaviour
 {
@@ -35,7 +35,6 @@ public class GameManager : MonoBehaviour
 	[SerializeField] Image gameCompleteBgImage;
 	[SerializeField] AudioSource src;
 	[SerializeField] UI_BounceCounter bounceCounter;
-	[SerializeField] FinishIconHelper finishIconHelper;
 
 	[Header("Assets")]
 	[SerializeField] GameAssets_SO gameAssets;
@@ -113,7 +112,6 @@ public class GameManager : MonoBehaviour
 				Time.timeScale = 1;
 				OnInGameStateEnter?.Invoke();
 				bounceCounter.gameObject.SetActive(true);
-				finishIconHelper.Enable();
 				break;
 			case State.Completed:
 				src.PlayOneShot(GameAssets.WinSound, 0.3f);

@@ -10,6 +10,7 @@ public class LevelData : MonoBehaviour
 	[SerializeField] bool useThreshHold;
 	[SerializeField] bool canNotStuck;
 	[SerializeField] float overrideStuckTime;
+	[SerializeField] GameObject tutorialToDisable;
 /*	[SerializeField] float time3star;
 	[SerializeField] float time2star;*/
 
@@ -31,7 +32,7 @@ public class LevelData : MonoBehaviour
 
 	public void AdjustShadows(bool enable = true)
 	{
-		transform.ForAllDescendants(child =>
+		transform.ForEachDescendant(child =>
 		{
 			if (child.TryGetComponent(out GFX_Shadow shadow))
 			{
@@ -42,8 +43,12 @@ public class LevelData : MonoBehaviour
 	}
 #endif
 
-	public void OnLevelLoad()
+	public void OnBallRealeased()
 	{
+		if (tutorialToDisable == null)
+			return;
+
+		tutorialToDisable.SetActive(false);
 	}
 
 	public void OnLevelUnload()

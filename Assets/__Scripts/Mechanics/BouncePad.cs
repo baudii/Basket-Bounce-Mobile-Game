@@ -5,10 +5,6 @@ public class BouncePad : MonoBehaviour
 	[SerializeField] float force;
 	[SerializeField] Animator animator;
 
-#if UNITY_EDITOR
-
-#endif
-
 	private void OnTriggerEnter2D(Collider2D collision)
 	{
 		if (collision.TryGetComponent(out Ball ball))

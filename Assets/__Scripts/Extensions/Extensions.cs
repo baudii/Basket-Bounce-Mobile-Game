@@ -162,20 +162,20 @@ public static class Extensions
 	/// <summary>
 	/// Perform action on every transform in the whole hierarchy of descendants including root parent
 	/// </summary>
-	public static void ForAllDescendants(this Transform parent, Action<Transform> action)
+	public static void ForEachDescendant(this Transform parent, Action<Transform> action)
 	{
 		action?.Invoke(parent);
 
 		foreach (Transform child in parent)
 		{
-			ForAllDescendants(child, action);
+			ForEachDescendant(child, action);
 		}
 	}
 
 	/// <summary>
 	/// Perform action on every direct child
 	/// </summary>
-	public static void ForEachChild(this Transform parent, Action<Transform> action)
+	public static void ForEach(this Transform parent, Action<Transform> action)
 	{
 		foreach (Transform child in parent)
 		{
