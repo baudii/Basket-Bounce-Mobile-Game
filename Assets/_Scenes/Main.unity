@@ -9272,6 +9272,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cc817e6c52ecfeb49986620fc6a74b02, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  checkDragCoroutine: 0
   threshHold: 0
   minSwipeLength: 0
   maxSwipeTime: 0

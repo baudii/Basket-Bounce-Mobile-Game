@@ -98,7 +98,7 @@ public class GameManager : MonoBehaviour
 #endif
 	}
 
-	public void PlayButtonClickSound() => src.PlayOneShot(GameAssets.BlopSound);
+	public void PlayButtonClickSound() => src.PlayOneShot(GameAssets.BlopSound, 0.6f);
 
 	void SetState(State state)
 	{

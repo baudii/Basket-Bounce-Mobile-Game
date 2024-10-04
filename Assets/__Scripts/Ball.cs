@@ -159,6 +159,8 @@ public class Ball : MonoBehaviour
         bounces++;
 		ui_bounceCounter.OnBounce(bounces);
 
+        HapticFeedback.LightFeedback();
+
 		// вылет с центра transform.position = position + (Vector3)direction * 0.3f;
 		rb.velocity = direction * speed * speedMultiplier;
         src.PlayOneShot(bouncePadSFX, 0.4f);
@@ -297,6 +299,8 @@ public class Ball : MonoBehaviour
             return;
         }
 
+        HapticFeedback.LightFeedback();
+
         LevelManager.Instance.OnBallReleased();
 
         OnBallReleased?.Invoke();
@@ -330,10 +334,8 @@ public class Ball : MonoBehaviour
     {
         if (CurrentState != BallState.Roaming)
             return;
-        /*        if (isDead || finished || !gameObject.activeSelf || !enabled)
-                    return;*/
 
-        CurrentState = BallState.Dead;
+		CurrentState = BallState.Dead;
         rb.velocity *= 0;
 
         if (showDeathAnimation)
@@ -341,8 +343,10 @@ public class Ball : MonoBehaviour
             src.PlayOneShot(deathSFX, 0.2f);
             GFX.gameObject.SetActive(false);
             explodeAnimator.gameObject.SetActive(true);
+			HapticFeedback.LightFeedback();
+
             this.Co_DelayedExecute(GameManager.Instance.GameOver, () => explodeAnimator.GetCurrentAnimatorStateInfo(0).IsName("Finished"));
-        }
+		}
         else
         {
             GameManager.Instance.GameOver();
@@ -363,7 +367,8 @@ public class Ball : MonoBehaviour
             return;
         lastBounceTime = Time.time;
 
-        src.Play();
+		HapticFeedback.LightFeedback();
+		src.Play();
         var ang = Vector2.SignedAngle(normalVector, transform.up);
         var angleOffset = new Vector3(0, 0, ang);
         transform.eulerAngles -= angleOffset;
