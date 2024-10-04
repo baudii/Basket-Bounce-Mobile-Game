@@ -34,7 +34,7 @@ public class Finish : MonoBehaviour
 	}
 	IEnumerator AnimateFinish(Ball ball)
 	{
-		int stars = ball.OnFinish();
+		int bounces = ball.OnFinish();
 		//подвинуть мяч к точке анимации
 		ball.transform.rotation = Quaternion.identity;
 		ball.ResetRotation();
@@ -74,12 +74,12 @@ public class Finish : MonoBehaviour
 
 		//сделать все остальное
 
-		//LevelData levelData = LevelManager.Instance.CurrentLevelData;
-		//ScoreData scoreData = levelData.ConvertToStars(bounces);
+		LevelData levelData = LevelManager.Instance.CurrentLevelData;
+		ScoreData scoreData = levelData.ConvertToStars(bounces);
 
-		LevelManager.Instance.OnFinish(stars);
+		LevelManager.Instance.OnFinish(scoreData.stars);
 
-		GameManager.Instance.ShowLevelCompleteScreen(stars);
+		GameManager.Instance.ShowLevelCompleteScreen(scoreData, bounces);
 	}
 
 	/*
