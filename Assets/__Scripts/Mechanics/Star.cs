@@ -1,7 +1,7 @@
 using DG.Tweening;
 using UnityEngine;
 
-public class Star : MonoBehaviour
+public class Star : MonoBehaviour, IResetableItem
 {
 	[SerializeField] float duration;
 	[SerializeField, Range(0,2)] float targetScale;
@@ -14,9 +14,14 @@ public class Star : MonoBehaviour
 		if (collision.TryGetComponent(out Ball ball))
 		{
 			ball.CollectStar();
-			Destroy(gameObject);
+			gameObject.SetActive(false);
 			// Создать анимацию
 			// Звук
 		}
+	}
+
+	public void ResetState()
+	{
+		gameObject.SetActive(true);
 	}
 }

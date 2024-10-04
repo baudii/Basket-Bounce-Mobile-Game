@@ -54,7 +54,6 @@ public class Ball : MonoBehaviour
 
     int bounces;
 	int currentStretchPower = 1;
-    int collectedStars;
 
 	// For time calcualtion in Update()
 	float timeOutOfScreen;
@@ -353,14 +352,13 @@ public class Ball : MonoBehaviour
             GameManager.Instance.GameOver();
         }
     }
-    public void CollectStar() => collectedStars++;
 
     public int OnFinish()
     {
         SetState(BallState.Finished);
         rb.velocity *= 0;
                 
-        return collectedStars;
+        return bounces;
     }
     float lastBounceTime;
     public void OnBounce(Vector2 normalVector)
