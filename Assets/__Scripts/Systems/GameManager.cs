@@ -229,10 +229,10 @@ public class GameManager : MonoBehaviour
 		levelSelectorScreen.UpdateLevelSelector();
 	}
 
-	public void ShowLevelCompleteScreen(ScoreData scoreData, int bounces)
+	public void ShowLevelCompleteScreen(int stars)
 	{
 		SetState(State.Completed);
-		levelCompleteScreen.SetStars(scoreData, bounces);
+		levelCompleteScreen.SetStars(stars);
 	}
 
 	public void ShowPauseScreen()
