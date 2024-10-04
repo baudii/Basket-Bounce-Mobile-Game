@@ -19,7 +19,7 @@ public class ReflectionLine : MonoBehaviour
 		int reflections = 0;
 
         // –авномерно уменьшаем максмальную длину, если м€ч нат€нут слабо
-		currentMaxLength *= Mathf.Clamp(stretchForce - 1, 0, 1);
+		currentMaxLength *= Mathf.Clamp(stretchForce, 0, 1);
 
 		// —начала записываем данные во временную переменную, потом передаем их компоненту LineRenderer
 		List<Vector3> positions = new List<Vector3>();

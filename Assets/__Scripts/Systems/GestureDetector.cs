@@ -5,6 +5,9 @@ using UnityEngine.Events;
 
 public class GestureDetector : MonoBehaviour
 {
+#if UNITY_EDITOR
+	[SerializeField] bool checkDragCoroutine;	
+#endif
 	[SerializeField, Range(0, 1)] private float threshHold;
 	[SerializeField] private float minSwipeLength;
 	[SerializeField] private float maxSwipeTime;
@@ -42,6 +45,7 @@ public class GestureDetector : MonoBehaviour
 
 	private void InitDrag()
 	{
+		this.SmartLog("Initializing drag input");
 		input.Gesture.FingerPressed.started += ctx => StartCoroutine(DragUpdate());
 		input.Gesture.FingerPressed.canceled += ctx =>
 		{
@@ -77,6 +81,7 @@ public class GestureDetector : MonoBehaviour
 
 	IEnumerator DragUpdate()
 	{
+		this.SmartLog("Started drag update coroutine");
 		isDragging = true;
 		yield return null;
 		Vector2 startPos = GetTouchPosition();
@@ -88,6 +93,12 @@ public class GestureDetector : MonoBehaviour
 
 		while (isDragging && isUpdateSuccessful)
 		{
+#if UNITY_EDITOR
+			if (checkDragCoroutine)
+			{
+				this.SmartLog("Inside drag update coroutine");
+			}
+#endif
 			direction = (startPos - GetTouchPosition());
 
 			if (OnDragUpdate != null)
@@ -98,6 +109,8 @@ public class GestureDetector : MonoBehaviour
 
 		if (isUpdateSuccessful)
 			OnDragEnd?.Invoke(direction);
+
+		this.SmartLog("Exiting drag update coroutine");
 	}
 
 	private void EndSwipe(Vector2 startPos, Vector2 endPos)
@@ -129,6 +142,7 @@ public class GestureDetector : MonoBehaviour
 
 	public void SetActive(bool isActive)
 	{
+		this.SmartLog("Setting input to: ", isActive);
 		if (isActive)
 			input.Enable();
 		else

@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using DG.Tweening;
 using System;
+using CandyCoded.HapticFeedback;
 
 public class Ball : MonoBehaviour
 {
@@ -13,6 +14,7 @@ public class Ball : MonoBehaviour
     [Header("Preparation phase")]
     [SerializeField] float minSpeed;
     [SerializeField] float minStretchDistance, maxStretchDistance;
+    [SerializeField, Range(0, 1), Tooltip("Feedback every (x * 100)%. Example: if 0.25 is set, then feedback will be given every 25% of maximum stretch distance")] float feedbackPersentage;
     [SerializeField] float inputReadOffset;
     [SerializeField, Range(0,1), Tooltip("Will only be used on levels with \"Use Threshhold\" flag set to true!")] float threshHold;
     [SerializeField, Range(1, 15)] float speedMultiplier;
@@ -51,9 +53,10 @@ public class Ball : MonoBehaviour
     float speed;
 
     int bounces;
+	int currentStretchPower = 1;
 
-    // For time calcualtion in Update()
-    float timeOutOfScreen;
+	// For time calcualtion in Update()
+	float timeOutOfScreen;
     float maxStuckTimeCurrent;
     float currentStuckTime;
     float maxY;
@@ -207,7 +210,8 @@ public class Ball : MonoBehaviour
         currentStuckTime = 0;
         timeOutOfScreen = 0;
         bounces = 0;
-        SetState(BallState.Preparation);
+        currentStretchPower = 1;
+		SetState(BallState.Preparation);
     }
 
     public void ResetRotation()
@@ -216,12 +220,13 @@ public class Ball : MonoBehaviour
         GFX.rotation = Quaternion.identity;
     }
 
-    void ResetBallSlow()
+    void AbortStretch()
     {
         transform.DOMove(initialPosition, 0.15f);
         lineController.gameObject.SetActive(false);
         reflectionLine.gameObject.SetActive(false);
-        SetState(BallState.Preparation);
+        currentStretchPower = 1;
+		SetState(BallState.Preparation);
     }
 
     void StartBallStretch(Vector2 startPos)
@@ -246,13 +251,14 @@ public class Ball : MonoBehaviour
         var dot = Vector2.Dot(direction, Vector2.up);
         if (dot < -0.5f)
         {
-            ResetBallSlow();
+            AbortStretch();
             return false;
         }
-
-        float clamped = Mathf.Clamp(direction.magnitude + 1, minStretchDistance, maxStretchDistance);
-        // speed = lnx, where x: 1 <= x <= 4, so 0 <= speed <= ln4
-        speed = Mathf.Log(clamped); 
+        float clamped = Mathf.Clamp(direction.magnitude, minStretchDistance, maxStretchDistance);
+        StretchFeedback(clamped);
+		// 0 <= clamped <= 3
+		// 0 <= speed <= ln4
+		speed = Mathf.Log(clamped + 1);
         //speed = Mathf.Sqrt(clamped);
         var newPos = (initialPosition - direction.normalized * speed);
 
@@ -266,6 +272,17 @@ public class Ball : MonoBehaviour
         return true;
     }
 
+
+	void StretchFeedback(float magnitude)
+    {
+        if (magnitude >= maxStretchDistance * feedbackPersentage * currentStretchPower)
+		{
+            HapticFeedback.LightFeedback();
+            this.SmartLog("Vibration");
+            currentStretchPower++;
+        }
+    }
+
     void ReleaseBall(Vector2 direction)
     {
         if (CurrentState != BallState.Stretching)
@@ -276,7 +293,7 @@ public class Ball : MonoBehaviour
 
         if (speed < minSpeed)
         {
-            ResetBallSlow();
+            AbortStretch();
             return;
         }
 

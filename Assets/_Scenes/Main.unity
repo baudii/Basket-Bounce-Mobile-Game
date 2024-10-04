@@ -20947,8 +20947,20 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 917619101}
     - target: {fileID: 9094525850128674861, guid: c730c84cc23c47e428dccfa2e7b49183, type: 3}
+      propertyPath: feedbackPersentage
+      value: 0.25
+      objectReference: {fileID: 0}
+    - target: {fileID: 9094525850128674861, guid: c730c84cc23c47e428dccfa2e7b49183, type: 3}
+      propertyPath: maxStretchDistance
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 9094525850128674861, guid: c730c84cc23c47e428dccfa2e7b49183, type: 3}
       propertyPath: maxTimeOutOfScreen
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 9094525850128674861, guid: c730c84cc23c47e428dccfa2e7b49183, type: 3}
+      propertyPath: minStretchDistance
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 9094525850128674861, guid: c730c84cc23c47e428dccfa2e7b49183, type: 3}
       propertyPath: bounceLayerMask.m_Bits
@@ -30231,7 +30243,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 382876129914526175, guid: 52dd8036f0eb93747856e3a9a6845a2e, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -2.95
+      value: -3.2
       objectReference: {fileID: 0}
     - target: {fileID: 382876129914526175, guid: 52dd8036f0eb93747856e3a9a6845a2e, type: 3}
       propertyPath: m_LocalPosition.z
@@ -32333,7 +32345,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5037845715610051442, guid: e2bed7e256565664eb2436ce2e5fe59d, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -2.95
+      value: -3.2
       objectReference: {fileID: 0}
     - target: {fileID: 5037845715610051442, guid: e2bed7e256565664eb2436ce2e5fe59d, type: 3}
       propertyPath: m_LocalPosition.z
