@@ -11,7 +11,6 @@ public class DoorSwitcher : Switcher, IResetableItem
     [SerializeField] UnityEvent OnMoveUpdate;
     [SerializeField] UnityEvent OnResetState;
     [SerializeField] bool activateOnAwake;
-    [SerializeField] float delay;
     [SerializeField] bool canClose;
     Ball ball;
     Sequence sequence;

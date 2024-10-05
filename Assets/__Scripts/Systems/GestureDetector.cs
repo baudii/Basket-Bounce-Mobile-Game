@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.EventSystems;
 
 public class GestureDetector : MonoBehaviour
 {
@@ -37,6 +38,13 @@ public class GestureDetector : MonoBehaviour
 		InitDrag();
 	}
 
+	private void OnDestroy()
+	{
+		OnDragStart = null;
+		OnDragUpdate = null;
+		OnDragEnd = null;
+	}
+
 	private void InitSwipes()
 	{
 		input.Gesture.FingerPressed.performed += ctx => StartCoroutine(SwipeCheck(GetTouchPosition()));
@@ -57,7 +65,7 @@ public class GestureDetector : MonoBehaviour
 	{
 		Vector3 screenPos = input.Gesture.Position.ReadValue<Vector2>();
 
-		return cam.ScreenToWorldPoint(screenPos.WhereZ(10));
+		return cam.ScreenToWorldPoint(screenPos.WhereZ(cam.nearClipPlane));
 	}
 
 	IEnumerator SwipeCheck(Vector2 startPos)
@@ -82,9 +90,16 @@ public class GestureDetector : MonoBehaviour
 	IEnumerator DragUpdate()
 	{
 		this.SmartLog("Started drag update coroutine");
+		LevelManager.Instance.OnClickAnywhere();
 		isDragging = true;
 		yield return null;
 		Vector2 startPos = GetTouchPosition();
+		if (EventSystem.current.currentSelectedGameObject != null)
+		{
+			this.SmartLog("Touching UI element");
+			yield break;
+		}
+
 		Vector2 direction = Vector2.zero;
 
 		OnDragStart?.Invoke(startPos);

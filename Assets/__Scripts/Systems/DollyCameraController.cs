@@ -37,4 +37,9 @@ public class DollyCameraController : MonoBehaviour
 		ctd.m_PathPosition = 0;
 		cvc.gameObject.SetActive(true);
 	}
+
+	public void SetPathPosition(float value)
+	{
+		ctd.m_PathPosition = value;
+	}
 }

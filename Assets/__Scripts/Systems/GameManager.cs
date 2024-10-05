@@ -1,7 +1,6 @@
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
-using CandyCoded.HapticFeedback;
 
 #if UNITY_ANDROID || UNITY_IOS
 using CandyCoded;
@@ -35,11 +34,11 @@ public class GameManager : MonoBehaviour
 	[SerializeField] Image gameCompleteBgImage;
 	[SerializeField] AudioSource src;
 	[SerializeField] UI_BounceCounter bounceCounter;
+	[SerializeField] UI_Overview overview;
 
 	[Header("Assets")]
 	[SerializeField] GameAssets_SO gameAssets;
 	public GameAssets_SO GameAssets => gameAssets;
-
 
 	[HideInInspector]
 	public UnityEvent OnLevelComplete;	
@@ -99,6 +98,8 @@ public class GameManager : MonoBehaviour
 	}
 
 	public void PlayButtonClickSound() => src.PlayOneShot(GameAssets.BlopSound, 0.6f);
+
+	public void PlayMainSound() => src.Play();
 
 	void SetState(State state)
 	{
@@ -205,6 +206,9 @@ public class GameManager : MonoBehaviour
 		SetState(prevState);
 		prevState = State.None;
 	}
+
+	public void HideOverview() => overview.Hide();
+	public void ShowOverview() => overview.Show();
 
 	public void GameOver()
 	{

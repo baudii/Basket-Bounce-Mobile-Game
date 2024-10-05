@@ -8,6 +8,7 @@ public class LevelManager : MonoBehaviour
 	[SerializeField] DollyCameraController dollyController;
 	[SerializeField] List<LevelData> levels;
 	[SerializeField] FinishIconHelper finishIconHelper;
+	[SerializeField] GameObject scrollGO;
 
 	#region Editor functionality
 #if UNITY_EDITOR
@@ -77,7 +78,7 @@ public class LevelManager : MonoBehaviour
 	public LevelData CurrentLevelData { get; private set; }
 	public int CurrentLevel { get; private set; }
 
-	public const string LAST_OPENED_LEVEL_KEY = "Player_Last_Level";
+	public const string LAST_OPENED_LEVEL_KEY = "Player_Last_Level"; // Last opened means the last level that can be chosen from level select - Switches to next when level is finished
 	public const string LEVEL_STARS_KEY = "Level_Stars_";
 
 	// Level specific powerup
@@ -126,7 +127,7 @@ public class LevelManager : MonoBehaviour
 			levels[CurrentLevel].gameObject.SetActive(false);
 		}
 		CurrentLevelData = levels[level];
-		CurrentLevelData.ResetLevel();
+		CurrentLevelData.Init();
 		CurrentLevelData.gameObject.SetActive(true);
 		CurrentLevel = level;
 
@@ -151,6 +152,11 @@ public class LevelManager : MonoBehaviour
 		OnLevelSetup?.Invoke(CurrentLevelData);
 		dollyController.ResetDollyPathPos();
 		//isReflectionMode = false;
+	}
+
+	public void OnClickAnywhere()
+	{
+		CurrentLevelData?.OnClickAnywhere();
 	}
 
 	public void OnFinish(int stars)
@@ -197,9 +203,14 @@ public class LevelManager : MonoBehaviour
 		SwapToNewLevel(level);
 
 		// update player's progress
-		int lastSavedLevel = PlayerPrefs.GetInt(LAST_OPENED_LEVEL_KEY, -1);
-		if (CurrentLevel > lastSavedLevel)
+		int lastOpenedLevel = PlayerPrefs.GetInt(LAST_OPENED_LEVEL_KEY, -1);
+		if (CurrentLevel >= lastOpenedLevel)
+		{
+			// Level is not yet finished!
+			this.SmartLog("First time loading level", CurrentLevel);
+			CurrentLevelData.OnFirstTimeLoad();
 			PlayerPrefs.SetInt(LAST_OPENED_LEVEL_KEY, CurrentLevel);
+		}
 
 		// update dependencies
 		var finpos = CurrentLevelData.GetFinPos();
@@ -211,6 +222,7 @@ public class LevelManager : MonoBehaviour
 
 		this.Co_DelayedExecute(() =>
 		{
+			scrollGO.SetActive(!FinishIconHelper.IsInScreen(finpos));
 			GameManager.Instance.SetActiveLoadingScreen(false);
 			GameManager.Instance.ResumeGame();
 		}, loadTime);

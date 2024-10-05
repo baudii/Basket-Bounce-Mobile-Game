@@ -3,8 +3,8 @@ using UnityEngine;
 public class FinishIconHelper : MonoBehaviour
 {
 	[SerializeField] GameObject body;
-	Camera cam;
-	float ScreenHeight;
+	static Camera cam;
+	static float ScreenHeight;
 	Vector3 finishPos;
 
 	private void Awake()
@@ -32,7 +32,7 @@ public class FinishIconHelper : MonoBehaviour
 		transform.position = transform.position.WhereX(finishPos.x);
 	}
 
-	bool IsInScreen(Vector3 pos)
+	public static bool IsInScreen(Vector3 pos)
 	{
 		Vector3 screenPos = cam.WorldToScreenPoint(pos);
 		if (screenPos.y <= ScreenHeight)

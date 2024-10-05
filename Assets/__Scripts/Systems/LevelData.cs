@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.Events;
 
 public class LevelData : MonoBehaviour
 {
@@ -11,6 +12,8 @@ public class LevelData : MonoBehaviour
 	[SerializeField] bool canNotStuck;
 	[SerializeField] float overrideStuckTime;
 	[SerializeField] GameObject tutorialToDisable;
+	[SerializeField] GameObject[] disableOnClickAnywhere;
+	[SerializeField] UnityEvent OnFirstTimeLoadEvemt;
 /*	[SerializeField] float time3star;
 	[SerializeField] float time2star;*/
 
@@ -43,12 +46,44 @@ public class LevelData : MonoBehaviour
 	}
 #endif
 
+	public void Init()
+	{
+		ResetLevel();
+		if (tutorialToDisable != null)
+			tutorialToDisable.SetActive(false);
+		foreach (var item in disableOnClickAnywhere)
+		{
+			if (item != null)
+				item.SetActive(false);
+		}
+
+	}
+
+	public void OnFirstTimeLoad()
+	{
+		if (tutorialToDisable != null)
+			tutorialToDisable.SetActive(true);
+		foreach (var item in disableOnClickAnywhere)
+		{
+			if (item != null)
+				item.SetActive(true);
+		}
+		OnFirstTimeLoadEvemt?.Invoke();
+	}
+
 	public void OnBallRealeased()
 	{
-		if (tutorialToDisable == null)
-			return;
+		if (tutorialToDisable != null)
+			tutorialToDisable.SetActive(false);
+	}
 
-		tutorialToDisable.SetActive(false);
+	public void OnClickAnywhere()
+	{
+		foreach(var item in disableOnClickAnywhere)
+		{
+			if (item != null)
+				item.SetActive(false);
+		}
 	}
 
 	public void OnLevelUnload()
