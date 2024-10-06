@@ -3,6 +3,8 @@ using UnityEngine.Events;
 
 public class LevelData : MonoBehaviour
 {
+	[SerializeField] string levelHeader;
+	[SerializeField] string russianLevelHeader;
 	[SerializeField] Finish fin;
 	[SerializeField] ResetableManager resetableManager;
 
@@ -11,15 +13,16 @@ public class LevelData : MonoBehaviour
 	[SerializeField] bool useThreshHold;
 	[SerializeField] bool canNotStuck;
 	[SerializeField] float overrideStuckTime;
-	[SerializeField] GameObject tutorialToDisable;
-	[SerializeField] GameObject[] disableOnClickAnywhere;
+	[SerializeField] UnityEvent OnBallReleasedEvent;
 	[SerializeField] UnityEvent OnFirstTimeLoadEvemt;
+	[SerializeField] UnityEvent OnClickAnywhereEvent;
 /*	[SerializeField] float time3star;
 	[SerializeField] float time2star;*/
 
 	public bool UseThreshold => useThreshHold;
 	public bool CanNotStuck => canNotStuck;
 	public float OverrideStuckTime => overrideStuckTime;
+	public string LevelHeader => levelHeader;
 
 #if UNITY_EDITOR
 	[Header("Editor Only")]
@@ -49,41 +52,21 @@ public class LevelData : MonoBehaviour
 	public void Init()
 	{
 		ResetLevel();
-		if (tutorialToDisable != null)
-			tutorialToDisable.SetActive(false);
-		foreach (var item in disableOnClickAnywhere)
-		{
-			if (item != null)
-				item.SetActive(false);
-		}
-
 	}
 
 	public void OnFirstTimeLoad()
 	{
-		if (tutorialToDisable != null)
-			tutorialToDisable.SetActive(true);
-		foreach (var item in disableOnClickAnywhere)
-		{
-			if (item != null)
-				item.SetActive(true);
-		}
 		OnFirstTimeLoadEvemt?.Invoke();
 	}
 
-	public void OnBallRealeased()
+	public void OnBallReleased()
 	{
-		if (tutorialToDisable != null)
-			tutorialToDisable.SetActive(false);
+		OnBallReleasedEvent?.Invoke();
 	}
 
 	public void OnClickAnywhere()
 	{
-		foreach(var item in disableOnClickAnywhere)
-		{
-			if (item != null)
-				item.SetActive(false);
-		}
+		OnClickAnywhereEvent?.Invoke();
 	}
 
 	public void OnLevelUnload()

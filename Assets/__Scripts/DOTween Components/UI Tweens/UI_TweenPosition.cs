@@ -4,6 +4,7 @@ public class UI_TweenPosition : MonoBehaviour
 {
 	[SerializeField] Vector2 newPos;
 	[SerializeField] float duration;
+	[SerializeField] float delay;
 	[SerializeField] Ease ease;
 	[SerializeField] bool activateOnEnable;
 	RectTransform rectToMove;
@@ -26,7 +27,7 @@ public class UI_TweenPosition : MonoBehaviour
 		// установить в начальную позицию
 		rectToMove.position = initialPosition;
 		// санимировать
-		rectToMove.DOLocalMove(newPos, duration).SetEase(ease);
+		rectToMove.DOLocalMove(newPos, duration).SetEase(ease).SetDelay(delay);
 
 	}
 }

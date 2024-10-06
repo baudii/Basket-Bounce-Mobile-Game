@@ -1,9 +1,11 @@
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
+using TMPro;
+
 
 #if UNITY_ANDROID || UNITY_IOS
-using CandyCoded;
+using CandyCoded.HapticFeedback;
 #endif
 [DefaultExecutionOrder(-2)]
 
@@ -35,6 +37,9 @@ public class GameManager : MonoBehaviour
 	[SerializeField] AudioSource src;
 	[SerializeField] UI_BounceCounter bounceCounter;
 	[SerializeField] UI_Overview overview;
+
+	[Header("Level Header")]
+	[SerializeField] UI_TweenFadeInOut levelNameMainUI;
 
 	[Header("Assets")]
 	[SerializeField] GameAssets_SO gameAssets;
@@ -221,6 +226,12 @@ public class GameManager : MonoBehaviour
 		loadingScreen.SetActive(isActive);
 	}
 
+	public void OnLevelLoad(string header, int level)
+	{
+		levelNameMainUI.gameObject.SetActive(true);
+		levelNameMainUI.StartAnimation(header, level);
+	}
+
 	public void ShowLevelSelect()
 	{
 		SetState(State.LevelSelect);
@@ -259,11 +270,6 @@ public class GameManager : MonoBehaviour
 	public void FinishGame()
 	{
 		SetState(State.Finished);
-	}
-
-	public void SetFinishTime()
-	{
-
 	}
 
 	void DisableAll()

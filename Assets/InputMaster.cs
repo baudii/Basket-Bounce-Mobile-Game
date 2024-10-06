@@ -29,7 +29,7 @@ public partial class @InputMaster: IInputActionCollection2, IDisposable
             ""actions"": [
                 {
                     ""name"": ""FingerPressed"",
-                    ""type"": ""Value"",
+                    ""type"": ""Button"",
                     ""id"": ""e8b507fe-c639-465d-8e07-6f98fb7bf484"",
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
@@ -60,7 +60,7 @@ public partial class @InputMaster: IInputActionCollection2, IDisposable
                 },
                 {
                     ""name"": """",
-                    ""id"": ""d72efaea-ba9e-4410-a41f-1b6b1738194e"",
+                    ""id"": ""eaa705b2-5db9-4d2f-9e9b-e5ff6487bdc8"",
                     ""path"": ""<Mouse>/press"",
                     ""interactions"": """",
                     ""processors"": """",
@@ -82,7 +82,7 @@ public partial class @InputMaster: IInputActionCollection2, IDisposable
                 },
                 {
                     ""name"": """",
-                    ""id"": ""a9a23d4a-c3e7-49b8-b4e1-5c0598717a48"",
+                    ""id"": ""1c6d18fc-2ec6-4629-b268-9dcc813c459d"",
                     ""path"": ""<Mouse>/position"",
                     ""interactions"": """",
                     ""processors"": """",
@@ -121,7 +121,7 @@ public partial class @InputMaster: IInputActionCollection2, IDisposable
                 },
                 {
                     ""name"": """",
-                    ""id"": ""26c1329b-872d-4649-8a75-b97867f718c5"",
+                    ""id"": ""f2494b22-9225-4793-9c91-8721c335a665"",
                     ""path"": ""<Mouse>/press"",
                     ""interactions"": """",
                     ""processors"": """",

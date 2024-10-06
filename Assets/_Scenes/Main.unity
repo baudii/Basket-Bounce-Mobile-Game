@@ -941,6 +941,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e9ecc6a0828cf5c49bc03feb8628d45b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  levelHeader: Breaking glass ceiling
+  russianLevelHeader: "\u041B\u043E\u043C\u0430\u0435\u043C \u0441\u0442\u0435\u043A\u043B\u044F\u043D\u043D\u044B\u0439
+    \u043F\u043E\u0442\u043E\u043B\u043E\u043A"
   fin: {fileID: 626266053}
   resetableManager: {fileID: 1047857410}
   bounces3star: 23
@@ -948,9 +951,13 @@ MonoBehaviour:
   useThreshHold: 1
   canNotStuck: 1
   overrideStuckTime: 0
-  tutorialToDisable: {fileID: 0}
-  disableOnClickAnywhere: []
+  OnBallReleasedEvent:
+    m_PersistentCalls:
+      m_Calls: []
   OnFirstTimeLoadEvemt:
+    m_PersistentCalls:
+      m_Calls: []
+  OnClickAnywhereEvent:
     m_PersistentCalls:
       m_Calls: []
   validateShadows: 0
@@ -1916,6 +1923,102 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c6750d24ef2ffc34896d76a7e3470f34, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!1 &77438779
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 77438780}
+  - component: {fileID: 77438783}
+  - component: {fileID: 77438782}
+  - component: {fileID: 77438784}
+  m_Layer: 5
+  m_Name: LevelNameUI
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &77438780
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 77438779}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 284145260}
+  m_Father: {fileID: 322953859}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &77438782
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 77438779}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Material: {fileID: 0}
+  m_Color: {r: 0, g: 0, b: 0, a: 0}
+  m_RaycastTarget: 1
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_Sprite: {fileID: 0}
+  m_Type: 0
+  m_PreserveAspect: 0
+  m_FillCenter: 1
+  m_FillMethod: 4
+  m_FillAmount: 1
+  m_FillClockwise: 1
+  m_FillOrigin: 0
+  m_UseSpriteMesh: 0
+  m_PixelsPerUnitMultiplier: 1
+--- !u!222 &77438783
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 77438779}
+  m_CullTransparentMesh: 1
+--- !u!114 &77438784
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 77438779}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 248d0407027af37419848239d18de822, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  headerTextField: {fileID: 1550933370}
+  levelTextField: {fileID: 1053643906}
+  textRect: {fileID: 284145260}
+  target: {fileID: 77438782}
+  targetAlpha: 0.4
+  duration: 1
+  delay: 2
 --- !u!1 &79436924
 GameObject:
   m_ObjectHideFlags: 0
@@ -2409,6 +2512,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e9ecc6a0828cf5c49bc03feb8628d45b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  levelHeader: Oh no, it's a trap!
+  russianLevelHeader: "\u041E \u043D\u0435\u0442, \u044D\u0442\u043E \u043B\u043E\u0432\u0443\u0448\u043A\u0430!"
   fin: {fileID: 1029543609}
   resetableManager: {fileID: 1795118960}
   bounces3star: 16
@@ -2416,9 +2521,13 @@ MonoBehaviour:
   useThreshHold: 1
   canNotStuck: 0
   overrideStuckTime: 11
-  tutorialToDisable: {fileID: 0}
-  disableOnClickAnywhere: []
+  OnBallReleasedEvent:
+    m_PersistentCalls:
+      m_Calls: []
   OnFirstTimeLoadEvemt:
+    m_PersistentCalls:
+      m_Calls: []
+  OnClickAnywhereEvent:
     m_PersistentCalls:
       m_Calls: []
   validateShadows: 0
@@ -5236,6 +5345,70 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 5592605553555065575, guid: 524c42a134e09a94b8d3f23b1b79869b, type: 3}
   m_PrefabInstance: {fileID: 1143042972}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &284145259
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 284145260}
+  - component: {fileID: 284145261}
+  m_Layer: 5
+  m_Name: Text Rect
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &284145260
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 284145259}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 1053643904}
+  - {fileID: 1550933369}
+  m_Father: {fileID: 77438780}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 457, y: -5.7163}
+  m_SizeDelta: {x: 350.86, y: 305.31}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &284145261
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 284145259}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 59f8146938fff824cb5fd77236b75775, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Padding:
+    m_Left: 0
+    m_Right: 0
+    m_Top: 0
+    m_Bottom: 0
+  m_ChildAlignment: 0
+  m_Spacing: 0
+  m_ChildForceExpandWidth: 1
+  m_ChildForceExpandHeight: 1
+  m_ChildControlWidth: 1
+  m_ChildControlHeight: 1
+  m_ChildScaleWidth: 0
+  m_ChildScaleHeight: 0
+  m_ReverseArrangement: 0
 --- !u!1001 &285602418
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -5962,6 +6135,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e9ecc6a0828cf5c49bc03feb8628d45b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  levelHeader: Clearing the way
+  russianLevelHeader: "\u0420\u0430\u0441\u0447\u0438\u0449\u0430\u0435\u043C \u043F\u0443\u0442\u044C"
   fin: {fileID: 1283082944}
   resetableManager: {fileID: 1835024912}
   bounces3star: 6
@@ -5969,9 +6144,37 @@ MonoBehaviour:
   useThreshHold: 0
   canNotStuck: 0
   overrideStuckTime: 0
-  tutorialToDisable: {fileID: 1845332777}
-  disableOnClickAnywhere: []
+  OnBallReleasedEvent:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 1845332777}
+        m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
+        m_MethodName: SetActive
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   OnFirstTimeLoadEvemt:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 1845332777}
+        m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
+        m_MethodName: SetActive
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 1
+        m_CallState: 2
+  OnClickAnywhereEvent:
     m_PersistentCalls:
       m_Calls: []
   validateShadows: 0
@@ -6135,6 +6338,7 @@ MonoBehaviour:
   src: {fileID: 322953854}
   bounceCounter: {fileID: 917619101}
   overview: {fileID: 31320941}
+  levelNameMainUI: {fileID: 77438784}
   gameAssets: {fileID: 11400000, guid: 609a584ea6cf8984a9754e4a270af90f, type: 2}
   OnLevelComplete:
     m_PersistentCalls:
@@ -6227,6 +6431,7 @@ RectTransform:
   m_LocalScale: {x: 0, y: 0, z: 0}
   m_ConstrainProportionsScale: 0
   m_Children:
+  - {fileID: 77438780}
   - {fileID: 51382132}
   - {fileID: 1959500911}
   - {fileID: 917619097}
@@ -9459,10 +9664,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cc817e6c52ecfeb49986620fc6a74b02, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  checkDragCoroutine: 0
-  threshHold: 0
-  minSwipeLength: 0
-  maxSwipeTime: 0
+  checkDragCoroutine: 1
   cam: {fileID: 519420031}
 --- !u!114 &519420034
 MonoBehaviour:
@@ -12315,6 +12517,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e9ecc6a0828cf5c49bc03feb8628d45b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  levelHeader: Wrong way...
+  russianLevelHeader: "\u041D\u0435 \u0442\u0443\u0434\u0430..."
   fin: {fileID: 399492905}
   resetableManager: {fileID: 1106424021}
   bounces3star: 8
@@ -12322,9 +12526,13 @@ MonoBehaviour:
   useThreshHold: 0
   canNotStuck: 0
   overrideStuckTime: 0
-  tutorialToDisable: {fileID: 0}
-  disableOnClickAnywhere: []
+  OnBallReleasedEvent:
+    m_PersistentCalls:
+      m_Calls: []
   OnFirstTimeLoadEvemt:
+    m_PersistentCalls:
+      m_Calls: []
+  OnClickAnywhereEvent:
     m_PersistentCalls:
       m_Calls: []
   validateShadows: 0
@@ -14681,6 +14889,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e9ecc6a0828cf5c49bc03feb8628d45b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  levelHeader: Shatter and Explore
+  russianLevelHeader: "\u041B\u043E\u043C\u0430\u0439 \u0438 \u0438\u0441\u0441\u043B\u0435\u0434\u0443\u0439"
   fin: {fileID: 239843663}
   resetableManager: {fileID: 873602799}
   bounces3star: 6
@@ -14688,9 +14898,13 @@ MonoBehaviour:
   useThreshHold: 1
   canNotStuck: 0
   overrideStuckTime: 0
-  tutorialToDisable: {fileID: 0}
-  disableOnClickAnywhere: []
+  OnBallReleasedEvent:
+    m_PersistentCalls:
+      m_Calls: []
   OnFirstTimeLoadEvemt:
+    m_PersistentCalls:
+      m_Calls: []
+  OnClickAnywhereEvent:
     m_PersistentCalls:
       m_Calls: []
   validateShadows: 0
@@ -16206,7 +16420,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 2147483647
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &914636222
 Transform:
   m_ObjectHideFlags: 0
@@ -18881,6 +19095,142 @@ Transform:
   - {fileID: 1715757203}
   m_Father: {fileID: 46971322}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1053643903
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1053643904}
+  - component: {fileID: 1053643907}
+  - component: {fileID: 1053643906}
+  m_Layer: 5
+  m_Name: Level Num
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &1053643904
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1053643903}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 284145260}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &1053643906
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1053643903}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Material: {fileID: 0}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_RaycastTarget: 1
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_text: 'Level 1
+
+'
+  m_isRightToLeft: 0
+  m_fontAsset: {fileID: 11400000, guid: 6535f1f35f264574596c5448a540d550, type: 2}
+  m_sharedMaterial: {fileID: 6849488978922243846, guid: 6535f1f35f264574596c5448a540d550, type: 2}
+  m_fontSharedMaterials: []
+  m_fontMaterial: {fileID: 0}
+  m_fontMaterials: []
+  m_fontColor32:
+    serializedVersion: 2
+    rgba: 4294967295
+  m_fontColor: {r: 1, g: 1, b: 1, a: 1}
+  m_enableVertexGradient: 0
+  m_colorMode: 3
+  m_fontColorGradient:
+    topLeft: {r: 1, g: 1, b: 1, a: 1}
+    topRight: {r: 1, g: 1, b: 1, a: 1}
+    bottomLeft: {r: 1, g: 1, b: 1, a: 1}
+    bottomRight: {r: 1, g: 1, b: 1, a: 1}
+  m_fontColorGradientPreset: {fileID: 0}
+  m_spriteAsset: {fileID: 0}
+  m_tintAllSprites: 0
+  m_StyleSheet: {fileID: 0}
+  m_TextStyleHashCode: -1183493901
+  m_overrideHtmlColors: 0
+  m_faceColor:
+    serializedVersion: 2
+    rgba: 4294967295
+  m_fontSize: 40
+  m_fontSizeBase: 40
+  m_fontWeight: 400
+  m_enableAutoSizing: 0
+  m_fontSizeMin: 18
+  m_fontSizeMax: 72
+  m_fontStyle: 0
+  m_HorizontalAlignment: 2
+  m_VerticalAlignment: 512
+  m_textAlignment: 65535
+  m_characterSpacing: 0
+  m_wordSpacing: 0
+  m_lineSpacing: 88.97
+  m_lineSpacingMax: 0
+  m_paragraphSpacing: 0
+  m_charWidthMaxAdj: 0
+  m_enableWordWrapping: 1
+  m_wordWrappingRatios: 0.4
+  m_overflowMode: 0
+  m_linkedTextComponent: {fileID: 0}
+  parentLinkedComponent: {fileID: 0}
+  m_enableKerning: 1
+  m_enableExtraPadding: 0
+  checkPaddingRequired: 0
+  m_isRichText: 1
+  m_parseCtrlCharacters: 1
+  m_isOrthographic: 1
+  m_isCullingEnabled: 0
+  m_horizontalMapping: 0
+  m_verticalMapping: 0
+  m_uvLineOffset: 0
+  m_geometrySortingOrder: 0
+  m_IsTextObjectScaleStatic: 0
+  m_VertexBufferAutoSizeReduction: 0
+  m_useMaxVisibleDescender: 1
+  m_pageToDisplay: 1
+  m_margin: {x: 0, y: 0, z: 0, w: 0}
+  m_isUsingLegacyAnimationComponent: 0
+  m_isVolumetricText: 0
+  m_hasFontAssetChanged: 0
+  m_baseMaterial: {fileID: 0}
+  m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!222 &1053643907
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1053643903}
+  m_CullTransparentMesh: 1
 --- !u!4 &1057000743 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 1770741278272953156, guid: 7485f4043f8612749b90e3427a39cf24, type: 3}
@@ -21761,6 +22111,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e9ecc6a0828cf5c49bc03feb8628d45b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  levelHeader: Better than it looks
+  russianLevelHeader: "\u041F\u0440\u043E\u0449\u0435, \u0447\u0435\u043C \u043A\u0430\u0436\u0435\u0442\u0441\u044F"
   fin: {fileID: 606996792}
   resetableManager: {fileID: 0}
   bounces3star: 3
@@ -21768,9 +22120,13 @@ MonoBehaviour:
   useThreshHold: 0
   canNotStuck: 0
   overrideStuckTime: 0
-  tutorialToDisable: {fileID: 0}
-  disableOnClickAnywhere: []
+  OnBallReleasedEvent:
+    m_PersistentCalls:
+      m_Calls: []
   OnFirstTimeLoadEvemt:
+    m_PersistentCalls:
+      m_Calls: []
+  OnClickAnywhereEvent:
     m_PersistentCalls:
       m_Calls: []
   validateShadows: 0
@@ -24839,7 +25195,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &1404394187
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -27222,6 +27578,140 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 5212324925915739485, guid: 22fd1384023f6144bb8d22e653a1865f, type: 3}
   m_PrefabInstance: {fileID: 3639280404089373844}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1550933368
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1550933369}
+  - component: {fileID: 1550933371}
+  - component: {fileID: 1550933370}
+  m_Layer: 5
+  m_Name: Text
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &1550933369
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1550933368}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 284145260}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &1550933370
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1550933368}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Material: {fileID: 0}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_RaycastTarget: 1
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_text: 
+  m_isRightToLeft: 0
+  m_fontAsset: {fileID: 11400000, guid: 6535f1f35f264574596c5448a540d550, type: 2}
+  m_sharedMaterial: {fileID: 6849488978922243846, guid: 6535f1f35f264574596c5448a540d550, type: 2}
+  m_fontSharedMaterials: []
+  m_fontMaterial: {fileID: 0}
+  m_fontMaterials: []
+  m_fontColor32:
+    serializedVersion: 2
+    rgba: 4294967295
+  m_fontColor: {r: 1, g: 1, b: 1, a: 1}
+  m_enableVertexGradient: 0
+  m_colorMode: 3
+  m_fontColorGradient:
+    topLeft: {r: 1, g: 1, b: 1, a: 1}
+    topRight: {r: 1, g: 1, b: 1, a: 1}
+    bottomLeft: {r: 1, g: 1, b: 1, a: 1}
+    bottomRight: {r: 1, g: 1, b: 1, a: 1}
+  m_fontColorGradientPreset: {fileID: 0}
+  m_spriteAsset: {fileID: 0}
+  m_tintAllSprites: 0
+  m_StyleSheet: {fileID: 0}
+  m_TextStyleHashCode: -1183493901
+  m_overrideHtmlColors: 0
+  m_faceColor:
+    serializedVersion: 2
+    rgba: 4294967295
+  m_fontSize: 35
+  m_fontSizeBase: 40
+  m_fontWeight: 400
+  m_enableAutoSizing: 1
+  m_fontSizeMin: 25
+  m_fontSizeMax: 35
+  m_fontStyle: 0
+  m_HorizontalAlignment: 2
+  m_VerticalAlignment: 512
+  m_textAlignment: 65535
+  m_characterSpacing: 0
+  m_wordSpacing: 0
+  m_lineSpacing: 0
+  m_lineSpacingMax: 0
+  m_paragraphSpacing: 0
+  m_charWidthMaxAdj: 0
+  m_enableWordWrapping: 1
+  m_wordWrappingRatios: 0.4
+  m_overflowMode: 0
+  m_linkedTextComponent: {fileID: 0}
+  parentLinkedComponent: {fileID: 0}
+  m_enableKerning: 1
+  m_enableExtraPadding: 0
+  checkPaddingRequired: 0
+  m_isRichText: 1
+  m_parseCtrlCharacters: 1
+  m_isOrthographic: 1
+  m_isCullingEnabled: 0
+  m_horizontalMapping: 0
+  m_verticalMapping: 0
+  m_uvLineOffset: 0
+  m_geometrySortingOrder: 0
+  m_IsTextObjectScaleStatic: 0
+  m_VertexBufferAutoSizeReduction: 0
+  m_useMaxVisibleDescender: 1
+  m_pageToDisplay: 1
+  m_margin: {x: 0, y: 0, z: 0, w: 0}
+  m_isUsingLegacyAnimationComponent: 0
+  m_isVolumetricText: 0
+  m_hasFontAssetChanged: 0
+  m_baseMaterial: {fileID: 0}
+  m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!222 &1550933371
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1550933368}
+  m_CullTransparentMesh: 1
 --- !u!224 &1552722618 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 5592605553555065575, guid: 524c42a134e09a94b8d3f23b1b79869b, type: 3}
@@ -29873,10 +30363,25 @@ MonoBehaviour:
   - {fileID: 127728740}
   finishIconHelper: {fileID: 412797103}
   scrollGO: {fileID: 51382131}
+  OnClickAnywhereEvent:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 77438784}
+        m_TargetAssemblyTypeName: UI_TweenFadeInOut, Assembly-CSharp
+        m_MethodName: SlowStop
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   validate: 0
   testReflectionMode: 0
   testLevel: -1
-  testLastOpenedLevel: 0
+  testLastOpenedLevel: 1
   OnLevelSetup:
     m_PersistentCalls:
       m_Calls: []
@@ -31201,7 +31706,8 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: <b><color=#C30000>Glowing platforms</color></b> break after a single hit!
+  m_text: <b><color=#C30000>flickering platforms</color></b> break after a single
+    hit!
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 7d67fcf901ff2c34fb2a5eed95a2b2b9, type: 2}
   m_sharedMaterial: {fileID: -8920101004258488224, guid: 7d67fcf901ff2c34fb2a5eed95a2b2b9, type: 2}
@@ -34526,6 +35032,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e9ecc6a0828cf5c49bc03feb8628d45b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  levelHeader: Bouncing Through Thorns
+  russianLevelHeader: "\u041E\u0442\u0441\u043A\u043E\u043A\u0438 \u0441\u043A\u0432\u043E\u0437\u044C
+    \u0448\u0438\u043F\u044B"
   fin: {fileID: 1105535265}
   resetableManager: {fileID: 0}
   bounces3star: 3
@@ -34533,9 +35042,13 @@ MonoBehaviour:
   useThreshHold: 0
   canNotStuck: 0
   overrideStuckTime: 0
-  tutorialToDisable: {fileID: 0}
-  disableOnClickAnywhere: []
+  OnBallReleasedEvent:
+    m_PersistentCalls:
+      m_Calls: []
   OnFirstTimeLoadEvemt:
+    m_PersistentCalls:
+      m_Calls: []
+  OnClickAnywhereEvent:
     m_PersistentCalls:
       m_Calls: []
   validateShadows: 0
@@ -35968,6 +36481,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e9ecc6a0828cf5c49bc03feb8628d45b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  levelHeader: Spiky problem
+  russianLevelHeader: "\u0428\u0438\u043F\u0430\u0441\u0442\u044B\u0435 \u043F\u0440\u043E\u0431\u043B\u0435\u043C\u044B"
   fin: {fileID: 1292754657}
   resetableManager: {fileID: 0}
   bounces3star: 3
@@ -35975,9 +36490,37 @@ MonoBehaviour:
   useThreshHold: 0
   canNotStuck: 0
   overrideStuckTime: 0
-  tutorialToDisable: {fileID: 763088308}
-  disableOnClickAnywhere: []
+  OnBallReleasedEvent:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 763088308}
+        m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
+        m_MethodName: SetActive
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   OnFirstTimeLoadEvemt:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 763088308}
+        m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
+        m_MethodName: SetActive
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 1
+        m_CallState: 2
+  OnClickAnywhereEvent:
     m_PersistentCalls:
       m_Calls: []
   validateShadows: 0
@@ -37340,6 +37883,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e9ecc6a0828cf5c49bc03feb8628d45b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  levelHeader: Reflection land
+  russianLevelHeader: "\u0417\u0435\u043C\u043B\u044F \u043E\u0442\u0440\u0430\u0436\u0435\u043D\u0438\u0439"
   fin: {fileID: 1011218073}
   resetableManager: {fileID: 1384674991}
   bounces3star: 5
@@ -37347,9 +37892,13 @@ MonoBehaviour:
   useThreshHold: 0
   canNotStuck: 0
   overrideStuckTime: 0
-  tutorialToDisable: {fileID: 0}
-  disableOnClickAnywhere: []
+  OnBallReleasedEvent:
+    m_PersistentCalls:
+      m_Calls: []
   OnFirstTimeLoadEvemt:
+    m_PersistentCalls:
+      m_Calls: []
+  OnClickAnywhereEvent:
     m_PersistentCalls:
       m_Calls: []
   validateShadows: 0
@@ -37950,6 +38499,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e9ecc6a0828cf5c49bc03feb8628d45b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  levelHeader: Library
+  russianLevelHeader: 
   fin: {fileID: 611563665}
   resetableManager: {fileID: 0}
   bounces3star: 1
@@ -37957,9 +38508,13 @@ MonoBehaviour:
   useThreshHold: 0
   canNotStuck: 0
   overrideStuckTime: 0
-  tutorialToDisable: {fileID: 0}
-  disableOnClickAnywhere: []
+  OnBallReleasedEvent:
+    m_PersistentCalls:
+      m_Calls: []
   OnFirstTimeLoadEvemt:
+    m_PersistentCalls:
+      m_Calls: []
+  OnClickAnywhereEvent:
     m_PersistentCalls:
       m_Calls: []
   validateShadows: 0
@@ -38042,6 +38597,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e9ecc6a0828cf5c49bc03feb8628d45b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  levelHeader: Trickier than it looks
+  russianLevelHeader: "\u0425\u0438\u0442\u0440\u0435\u0435, \u0447\u0435\u043C \u043A\u0430\u0436\u0435\u0442\u0441\u044F"
   fin: {fileID: 360103170}
   resetableManager: {fileID: 0}
   bounces3star: 1
@@ -38049,9 +38606,13 @@ MonoBehaviour:
   useThreshHold: 0
   canNotStuck: 0
   overrideStuckTime: 0
-  tutorialToDisable: {fileID: 0}
-  disableOnClickAnywhere: []
+  OnBallReleasedEvent:
+    m_PersistentCalls:
+      m_Calls: []
   OnFirstTimeLoadEvemt:
+    m_PersistentCalls:
+      m_Calls: []
+  OnClickAnywhereEvent:
     m_PersistentCalls:
       m_Calls: []
   validateShadows: 0
@@ -39547,6 +40108,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e9ecc6a0828cf5c49bc03feb8628d45b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  levelHeader: You're not scary from this side!
+  russianLevelHeader: "\u0422\u044B \u043D\u0435 \u0441\u0442\u0440\u0430\u0448\u043D\u044B\u0439
+    \u0441 \u0442\u0430\u043A\u043E\u0433\u043E \u0440\u0430\u043A\u0443\u0440\u0441\u0430!"
   fin: {fileID: 978071278}
   resetableManager: {fileID: 0}
   bounces3star: 3
@@ -39554,9 +40118,13 @@ MonoBehaviour:
   useThreshHold: 0
   canNotStuck: 0
   overrideStuckTime: 0
-  tutorialToDisable: {fileID: 0}
-  disableOnClickAnywhere: []
+  OnBallReleasedEvent:
+    m_PersistentCalls:
+      m_Calls: []
   OnFirstTimeLoadEvemt:
+    m_PersistentCalls:
+      m_Calls: []
+  OnClickAnywhereEvent:
     m_PersistentCalls:
       m_Calls: []
   validateShadows: 0
@@ -40001,6 +40569,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e9ecc6a0828cf5c49bc03feb8628d45b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  levelHeader: Intuitive geometry
+  russianLevelHeader: "\u0418\u043D\u0442\u0443\u0438\u0442\u0438\u0432\u043D\u0430\u044F
+    \u0433\u0435\u043E\u043C\u0435\u0442\u0440\u0438\u044F"
   fin: {fileID: 4451287753888874260}
   resetableManager: {fileID: 879346763}
   bounces3star: 2
@@ -40008,9 +40579,13 @@ MonoBehaviour:
   useThreshHold: 0
   canNotStuck: 0
   overrideStuckTime: 0
-  tutorialToDisable: {fileID: 0}
-  disableOnClickAnywhere: []
+  OnBallReleasedEvent:
+    m_PersistentCalls:
+      m_Calls: []
   OnFirstTimeLoadEvemt:
+    m_PersistentCalls:
+      m_Calls: []
+  OnClickAnywhereEvent:
     m_PersistentCalls:
       m_Calls: []
   validateShadows: 0
@@ -40258,6 +40833,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e9ecc6a0828cf5c49bc03feb8628d45b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  levelHeader: Diagonal challenge
+  russianLevelHeader: "\u0414\u0438\u0430\u0433\u043E\u043D\u0430\u043B\u044C\u043D\u044B\u0439
+    \u0432\u044B\u0437\u043E\u0432"
   fin: {fileID: 64277978}
   resetableManager: {fileID: 0}
   bounces3star: 1
@@ -40265,9 +40843,13 @@ MonoBehaviour:
   useThreshHold: 0
   canNotStuck: 0
   overrideStuckTime: 0
-  tutorialToDisable: {fileID: 0}
-  disableOnClickAnywhere: []
+  OnBallReleasedEvent:
+    m_PersistentCalls:
+      m_Calls: []
   OnFirstTimeLoadEvemt:
+    m_PersistentCalls:
+      m_Calls: []
+  OnClickAnywhereEvent:
     m_PersistentCalls:
       m_Calls: []
   validateShadows: 0
@@ -40815,6 +41397,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e9ecc6a0828cf5c49bc03feb8628d45b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  levelHeader: Left or right?
+  russianLevelHeader: "\u0412\u043B\u0435\u0432\u043E \u0438\u043B\u0438 \u0432\u043F\u0440\u0430\u0432\u043E?"
   fin: {fileID: 596897548}
   resetableManager: {fileID: 0}
   bounces3star: 3
@@ -40822,9 +41406,13 @@ MonoBehaviour:
   useThreshHold: 0
   canNotStuck: 0
   overrideStuckTime: 0
-  tutorialToDisable: {fileID: 0}
-  disableOnClickAnywhere: []
+  OnBallReleasedEvent:
+    m_PersistentCalls:
+      m_Calls: []
   OnFirstTimeLoadEvemt:
+    m_PersistentCalls:
+      m_Calls: []
+  OnClickAnywhereEvent:
     m_PersistentCalls:
       m_Calls: []
   validateShadows: 0
@@ -40841,6 +41429,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e9ecc6a0828cf5c49bc03feb8628d45b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  levelHeader: Springing Surfaces
+  russianLevelHeader: "\u041F\u0440\u0443\u0436\u0438\u043D\u0438\u0441\u0442\u044B\u0435
+    \u043F\u043E\u0432\u0435\u0440\u0445\u043D\u043E\u0441\u0442\u0438"
   fin: {fileID: 1233856551}
   resetableManager: {fileID: 0}
   bounces3star: 3
@@ -40848,9 +41439,37 @@ MonoBehaviour:
   useThreshHold: 0
   canNotStuck: 0
   overrideStuckTime: 0
-  tutorialToDisable: {fileID: 660802062}
-  disableOnClickAnywhere: []
+  OnBallReleasedEvent:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 660802062}
+        m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
+        m_MethodName: SetActive
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   OnFirstTimeLoadEvemt:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 660802062}
+        m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
+        m_MethodName: SetActive
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 1
+        m_CallState: 2
+  OnClickAnywhereEvent:
     m_PersistentCalls:
       m_Calls: []
   validateShadows: 0
@@ -41096,6 +41715,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e9ecc6a0828cf5c49bc03feb8628d45b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  levelHeader: New Beginnings
+  russianLevelHeader: 
   fin: {fileID: 1672319745}
   resetableManager: {fileID: 0}
   bounces3star: 0
@@ -41103,9 +41724,37 @@ MonoBehaviour:
   useThreshHold: 0
   canNotStuck: 0
   overrideStuckTime: 0
-  tutorialToDisable: {fileID: 0}
-  disableOnClickAnywhere: []
+  OnBallReleasedEvent:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 6294104472324946522}
+        m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
+        m_MethodName: SetActive
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   OnFirstTimeLoadEvemt:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 6294104472324946522}
+        m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
+        m_MethodName: SetActive
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 1
+        m_CallState: 2
+  OnClickAnywhereEvent:
     m_PersistentCalls:
       m_Calls: []
   validateShadows: 0
@@ -41598,6 +42247,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e9ecc6a0828cf5c49bc03feb8628d45b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  levelHeader: Hm... A button?
+  russianLevelHeader: "\u0425\u043C.... \u041A\u043D\u043E\u043F\u043A\u0430?"
   fin: {fileID: 617331525}
   resetableManager: {fileID: 6684747943017066533}
   bounces3star: 2
@@ -41605,9 +42256,13 @@ MonoBehaviour:
   useThreshHold: 0
   canNotStuck: 0
   overrideStuckTime: 0
-  tutorialToDisable: {fileID: 0}
-  disableOnClickAnywhere: []
+  OnBallReleasedEvent:
+    m_PersistentCalls:
+      m_Calls: []
   OnFirstTimeLoadEvemt:
+    m_PersistentCalls:
+      m_Calls: []
+  OnClickAnywhereEvent:
     m_PersistentCalls:
       m_Calls: []
   validateShadows: 0
@@ -42025,6 +42680,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e9ecc6a0828cf5c49bc03feb8628d45b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  levelHeader: Height Trials
+  russianLevelHeader: "\u0418\u0441\u043F\u044B\u0442\u0430\u043D\u0438\u0435 \u0432\u044B\u0441\u043E\u0442\u044B"
   fin: {fileID: 1139242141}
   resetableManager: {fileID: 0}
   bounces3star: 5
@@ -42032,9 +42689,13 @@ MonoBehaviour:
   useThreshHold: 0
   canNotStuck: 0
   overrideStuckTime: 0
-  tutorialToDisable: {fileID: 0}
-  disableOnClickAnywhere: []
+  OnBallReleasedEvent:
+    m_PersistentCalls:
+      m_Calls: []
   OnFirstTimeLoadEvemt:
+    m_PersistentCalls:
+      m_Calls: []
+  OnClickAnywhereEvent:
     m_PersistentCalls:
       m_Calls: []
   validateShadows: 0
@@ -42129,6 +42790,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e9ecc6a0828cf5c49bc03feb8628d45b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  levelHeader: Cactuses can do that?
+  russianLevelHeader: "\u041A\u0430\u043A\u0442\u0443\u0441\u044B \u0442\u0430\u043A
+    \u043C\u043E\u0433\u0443\u0442?"
   fin: {fileID: 25178760}
   resetableManager: {fileID: 6901579164586869439}
   bounces3star: 6
@@ -42136,9 +42800,13 @@ MonoBehaviour:
   useThreshHold: 0
   canNotStuck: 0
   overrideStuckTime: 0
-  tutorialToDisable: {fileID: 0}
-  disableOnClickAnywhere: []
+  OnBallReleasedEvent:
+    m_PersistentCalls:
+      m_Calls: []
   OnFirstTimeLoadEvemt:
+    m_PersistentCalls:
+      m_Calls: []
+  OnClickAnywhereEvent:
     m_PersistentCalls:
       m_Calls: []
   validateShadows: 0
@@ -42334,6 +43002,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e9ecc6a0828cf5c49bc03feb8628d45b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  levelHeader: Ascending to the top
+  russianLevelHeader: "\u0412\u043E\u0441\u0445\u043E\u0436\u0434\u0435\u043D\u0438\u0435
+    \u0432\u0432\u044B\u0441\u044C"
   fin: {fileID: 669635588}
   resetableManager: {fileID: 0}
   bounces3star: 4
@@ -42341,8 +43012,21 @@ MonoBehaviour:
   useThreshHold: 0
   canNotStuck: 0
   overrideStuckTime: 0
-  tutorialToDisable: {fileID: 0}
-  disableOnClickAnywhere: []
+  OnBallReleasedEvent:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 1588239767}
+        m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
+        m_MethodName: SetActive
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   OnFirstTimeLoadEvemt:
     m_PersistentCalls:
       m_Calls:
@@ -42358,6 +43042,9 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 1
         m_CallState: 2
+  OnClickAnywhereEvent:
+    m_PersistentCalls:
+      m_Calls: []
   validateShadows: 0
   shadowsEnabled: 1
 --- !u!61 &4296497182928251790
@@ -42606,6 +43293,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e9ecc6a0828cf5c49bc03feb8628d45b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  levelHeader: Maze Bound
+  russianLevelHeader: "\u0421\u0432\u044F\u0437\u0430\u043D\u043D\u044B\u0439 \u043B\u0430\u0431\u0438\u0440\u0438\u043D\u0442\u043E\u043C"
   fin: {fileID: 963230094}
   resetableManager: {fileID: 0}
   bounces3star: 3
@@ -42613,9 +43302,13 @@ MonoBehaviour:
   useThreshHold: 1
   canNotStuck: 0
   overrideStuckTime: 0
-  tutorialToDisable: {fileID: 0}
-  disableOnClickAnywhere: []
+  OnBallReleasedEvent:
+    m_PersistentCalls:
+      m_Calls: []
   OnFirstTimeLoadEvemt:
+    m_PersistentCalls:
+      m_Calls: []
+  OnClickAnywhereEvent:
     m_PersistentCalls:
       m_Calls: []
   validateShadows: 0
@@ -43216,6 +43909,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e9ecc6a0828cf5c49bc03feb8628d45b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  levelHeader: High up in the skies!
+  russianLevelHeader: "\u0412\u0432\u0435\u0440\u0445, \u043A \u043D\u0435\u0431\u0435\u0441\u0430\u043C!"
   fin: {fileID: 311761327}
   resetableManager: {fileID: 0}
   bounces3star: 4
@@ -43223,9 +43918,13 @@ MonoBehaviour:
   useThreshHold: 0
   canNotStuck: 0
   overrideStuckTime: 0
-  tutorialToDisable: {fileID: 0}
-  disableOnClickAnywhere: []
+  OnBallReleasedEvent:
+    m_PersistentCalls:
+      m_Calls: []
   OnFirstTimeLoadEvemt:
+    m_PersistentCalls:
+      m_Calls: []
+  OnClickAnywhereEvent:
     m_PersistentCalls:
       m_Calls: []
   validateShadows: 0
@@ -43286,6 +43985,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e9ecc6a0828cf5c49bc03feb8628d45b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  levelHeader: Which one do I choose?
+  russianLevelHeader: "\u041A\u0430\u043A\u0443\u044E \u0432\u044B\u0431\u0440\u0430\u0442\u044C?"
   fin: {fileID: 1391990206}
   resetableManager: {fileID: 4331356866604914752}
   bounces3star: 4
@@ -43293,9 +43994,13 @@ MonoBehaviour:
   useThreshHold: 0
   canNotStuck: 0
   overrideStuckTime: 0
-  tutorialToDisable: {fileID: 0}
-  disableOnClickAnywhere: []
+  OnBallReleasedEvent:
+    m_PersistentCalls:
+      m_Calls: []
   OnFirstTimeLoadEvemt:
+    m_PersistentCalls:
+      m_Calls: []
+  OnClickAnywhereEvent:
     m_PersistentCalls:
       m_Calls: []
   validateShadows: 0
@@ -43653,6 +44358,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e9ecc6a0828cf5c49bc03feb8628d45b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  levelHeader: Diagonal Springs
+  russianLevelHeader: "\u0414\u0438\u0430\u0433\u043E\u043D\u0430\u043B\u044C\u043D\u044B\u0435
+    \u043F\u0440\u0443\u0436\u0438\u043D\u044B"
   fin: {fileID: 1818109792}
   resetableManager: {fileID: 0}
   bounces3star: 4
@@ -43660,9 +44368,13 @@ MonoBehaviour:
   useThreshHold: 0
   canNotStuck: 0
   overrideStuckTime: 0
-  tutorialToDisable: {fileID: 0}
-  disableOnClickAnywhere: []
+  OnBallReleasedEvent:
+    m_PersistentCalls:
+      m_Calls: []
   OnFirstTimeLoadEvemt:
+    m_PersistentCalls:
+      m_Calls: []
+  OnClickAnywhereEvent:
     m_PersistentCalls:
       m_Calls: []
   validateShadows: 0
@@ -43679,6 +44391,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e9ecc6a0828cf5c49bc03feb8628d45b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  levelHeader: The first bounce
+  russianLevelHeader: 
   fin: {fileID: 806739220}
   resetableManager: {fileID: 0}
   bounces3star: 1
@@ -43686,9 +44400,37 @@ MonoBehaviour:
   useThreshHold: 0
   canNotStuck: 0
   overrideStuckTime: 0
-  tutorialToDisable: {fileID: 0}
-  disableOnClickAnywhere: []
+  OnBallReleasedEvent:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 914636221}
+        m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
+        m_MethodName: SetActive
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   OnFirstTimeLoadEvemt:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 914636221}
+        m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
+        m_MethodName: SetActive
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 1
+        m_CallState: 2
+  OnClickAnywhereEvent:
     m_PersistentCalls:
       m_Calls: []
   validateShadows: 0
@@ -44005,6 +44747,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e9ecc6a0828cf5c49bc03feb8628d45b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  levelHeader: Rising Difficulty
+  russianLevelHeader: "\u041F\u043E\u0432\u044B\u0448\u0430\u0435\u043C \u0441\u043B\u043E\u0436\u043D\u043E\u0441\u0442\u044C"
   fin: {fileID: 729668240159106036}
   resetableManager: {fileID: 0}
   bounces3star: 4
@@ -44012,9 +44756,13 @@ MonoBehaviour:
   useThreshHold: 0
   canNotStuck: 0
   overrideStuckTime: 0
-  tutorialToDisable: {fileID: 0}
-  disableOnClickAnywhere: []
+  OnBallReleasedEvent:
+    m_PersistentCalls:
+      m_Calls: []
   OnFirstTimeLoadEvemt:
+    m_PersistentCalls:
+      m_Calls: []
+  OnClickAnywhereEvent:
     m_PersistentCalls:
       m_Calls: []
   validateShadows: 0
@@ -44212,7 +44960,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 2147483647
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!1 &6327671515092087312 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 7475001574593579825, guid: 96934a8bc3577dc49b8dd4f218e93d4b, type: 3}
@@ -44230,6 +44978,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e9ecc6a0828cf5c49bc03feb8628d45b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  levelHeader: Cactus Climb
+  russianLevelHeader: "\u0412\u043E\u0441\u0445\u043E\u0436\u0434\u0435\u043D\u0438\u0435
+    \u043D\u0430 \u043A\u0430\u043A\u0442\u0443\u0441"
   fin: {fileID: 1035960794}
   resetableManager: {fileID: 0}
   bounces3star: 5
@@ -44237,9 +44988,13 @@ MonoBehaviour:
   useThreshHold: 0
   canNotStuck: 0
   overrideStuckTime: 0
-  tutorialToDisable: {fileID: 0}
-  disableOnClickAnywhere: []
+  OnBallReleasedEvent:
+    m_PersistentCalls:
+      m_Calls: []
   OnFirstTimeLoadEvemt:
+    m_PersistentCalls:
+      m_Calls: []
+  OnClickAnywhereEvent:
     m_PersistentCalls:
       m_Calls: []
   validateShadows: 0
@@ -44755,6 +45510,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e9ecc6a0828cf5c49bc03feb8628d45b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  levelHeader: Echoing Turns
+  russianLevelHeader: "\u042D\u0445\u043E \u0432\u0438\u0440\u0430\u0436\u0435\u0439"
   fin: {fileID: 205014488}
   resetableManager: {fileID: 0}
   bounces3star: 5
@@ -44762,9 +45519,13 @@ MonoBehaviour:
   useThreshHold: 0
   canNotStuck: 0
   overrideStuckTime: 0
-  tutorialToDisable: {fileID: 0}
-  disableOnClickAnywhere: []
+  OnBallReleasedEvent:
+    m_PersistentCalls:
+      m_Calls: []
   OnFirstTimeLoadEvemt:
+    m_PersistentCalls:
+      m_Calls: []
+  OnClickAnywhereEvent:
     m_PersistentCalls:
       m_Calls: []
   validateShadows: 0
@@ -45047,6 +45808,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e9ecc6a0828cf5c49bc03feb8628d45b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  levelHeader: Bounce dunk
+  russianLevelHeader: 
   fin: {fileID: 722465480}
   resetableManager: {fileID: 0}
   bounces3star: 1
@@ -45054,9 +45817,13 @@ MonoBehaviour:
   useThreshHold: 0
   canNotStuck: 0
   overrideStuckTime: 0
-  tutorialToDisable: {fileID: 0}
-  disableOnClickAnywhere: []
+  OnBallReleasedEvent:
+    m_PersistentCalls:
+      m_Calls: []
   OnFirstTimeLoadEvemt:
+    m_PersistentCalls:
+      m_Calls: []
+  OnClickAnywhereEvent:
     m_PersistentCalls:
       m_Calls: []
   validateShadows: 0

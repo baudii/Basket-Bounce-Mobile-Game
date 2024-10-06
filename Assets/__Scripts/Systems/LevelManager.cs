@@ -9,6 +9,7 @@ public class LevelManager : MonoBehaviour
 	[SerializeField] List<LevelData> levels;
 	[SerializeField] FinishIconHelper finishIconHelper;
 	[SerializeField] GameObject scrollGO;
+	[SerializeField] UnityEvent OnClickAnywhereEvent;
 
 	#region Editor functionality
 #if UNITY_EDITOR
@@ -157,6 +158,7 @@ public class LevelManager : MonoBehaviour
 	public void OnClickAnywhere()
 	{
 		CurrentLevelData?.OnClickAnywhere();
+		OnClickAnywhereEvent?.Invoke();
 	}
 
 	public void OnFinish(int stars)
@@ -172,7 +174,7 @@ public class LevelManager : MonoBehaviour
 
 	public void OnBallReleased()
 	{
-		CurrentLevelData.OnBallRealeased();
+		CurrentLevelData.OnBallReleased();
 	}
 
 
@@ -224,6 +226,7 @@ public class LevelManager : MonoBehaviour
 		{
 			scrollGO.SetActive(!FinishIconHelper.IsInScreen(finpos));
 			GameManager.Instance.SetActiveLoadingScreen(false);
+			GameManager.Instance.OnLevelLoad(CurrentLevelData.LevelHeader, CurrentLevel + 1);
 			GameManager.Instance.ResumeGame();
 		}, loadTime);
 	}

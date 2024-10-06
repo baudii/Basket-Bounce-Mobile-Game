@@ -17,7 +17,6 @@ public class Ball : MonoBehaviour
 	[SerializeField] float minSpeed;
 	[SerializeField] float minStretchDistance, maxStretchDistance;
 	[SerializeField, Range(0, 1), Tooltip("Feedback every (x * 100)%. Example: if 0.25 is set, then feedback will be given every 25% of maximum stretch distance")] float feedbackPersentage;
-	[SerializeField] float inputReadOffset;
 	[SerializeField, Range(0, 1), Tooltip("Will only be used on levels with \"Use Threshhold\" flag set to true!")] float threshHold;
 	[SerializeField, Range(1, 15)] float speedMultiplier;
 	[Header("Audio")]
@@ -194,6 +193,7 @@ public class Ball : MonoBehaviour
 
 	void ResetBall(LevelData levelData)
 	{
+		this.SmartLog("Resetting ball");
 		//transform
 		transform.position = initialPosition;
 		ResetRotation();
@@ -229,6 +229,7 @@ public class Ball : MonoBehaviour
 
 	void AbortStretch()
 	{
+		this.SmartLog("Abort stretch");
 		transform.DOMove(initialPosition, 0.15f);
 		lineController.gameObject.SetActive(false);
 		reflectionLine.gameObject.SetActive(false);
@@ -239,8 +240,8 @@ public class Ball : MonoBehaviour
 
 	void StartBallStretch(Vector2 startPos)
 	{
-		this.SmartLog("Started stretching the ball. ", "StartPos:", startPos, "InputReadOffset:", inputReadOffset, "CurrentState:", CurrentState);
-		if (CurrentState != BallState.Preparation || startPos.y > inputReadOffset)
+		this.SmartLog("Started stretching the ball. ", "StartPos:", startPos, "CurrentState:", CurrentState);
+		if (CurrentState != BallState.Preparation)
 			return;
 
 		GameManager.Instance.HideOverview();

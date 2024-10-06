@@ -9,9 +9,6 @@ public class GestureDetector : MonoBehaviour
 #if UNITY_EDITOR
 	[SerializeField] bool checkDragCoroutine;	
 #endif
-	[SerializeField, Range(0, 1)] private float threshHold;
-	[SerializeField] private float minSwipeLength;
-	[SerializeField] private float maxSwipeTime;
 	[SerializeField] private Camera cam;
 
 	public static UnityAction<Vector2> OnSwipePerformed;
@@ -35,6 +32,8 @@ public class GestureDetector : MonoBehaviour
 
 	private void Start()
 	{
+		if (cam == null)
+			cam = Camera.main;
 		InitDrag();
 	}
 
@@ -45,16 +44,10 @@ public class GestureDetector : MonoBehaviour
 		OnDragEnd = null;
 	}
 
-	private void InitSwipes()
-	{
-		input.Gesture.FingerPressed.performed += ctx => StartCoroutine(SwipeCheck(GetTouchPosition()));
-		input.Gesture.FingerPressed.canceled += ctx => StopAllCoroutines();
-	}
-
 	private void InitDrag()
 	{
 		this.SmartLog("Initializing drag input");
-		input.Gesture.FingerPressed.started += ctx => StartCoroutine(DragUpdate());
+		input.Gesture.FingerPressed.performed += ctx => StartCoroutine(DragUpdate());
 		input.Gesture.FingerPressed.canceled += ctx =>
 		{
 			isDragging = false;
@@ -68,54 +61,41 @@ public class GestureDetector : MonoBehaviour
 		return cam.ScreenToWorldPoint(screenPos.WhereZ(cam.nearClipPlane));
 	}
 
-	IEnumerator SwipeCheck(Vector2 startPos)
-	{
-		var endPos = Vector2.zero;
-		var distance = 0f;
-		var time = 0f;
-
-		while (distance < minSwipeLength)
-		{
-			endPos = GetTouchPosition();
-			distance = Vector2.Distance(endPos, startPos);
-			time += Time.deltaTime;
-
-			if (time > maxSwipeTime) yield break;
-			yield return null;
-		}
-
-		EndSwipe(startPos, endPos);
-	}
 
 	IEnumerator DragUpdate()
 	{
 		this.SmartLog("Started drag update coroutine");
 		LevelManager.Instance.OnClickAnywhere();
 		isDragging = true;
+
 		yield return null;
+
 		Vector2 startPos = GetTouchPosition();
+
 		if (EventSystem.current.currentSelectedGameObject != null)
 		{
 			this.SmartLog("Touching UI element");
 			yield break;
 		}
 
-		Vector2 direction = Vector2.zero;
-
 		OnDragStart?.Invoke(startPos);
+
+		Vector2 direction = Vector2.zero;
 
 		bool isUpdateSuccessful = true;
 
 		while (isDragging && isUpdateSuccessful)
 		{
+
+			direction = (startPos - GetTouchPosition());
+
 #if UNITY_EDITOR
 			if (checkDragCoroutine)
 			{
-				this.SmartLog("Inside drag update coroutine");
+				this.SmartLog("Inside drag update while loop");
+				this.SmartLog("Direction:", direction);
 			}
 #endif
-			direction = (startPos - GetTouchPosition());
-
 			if (OnDragUpdate != null)
 				isUpdateSuccessful = OnDragUpdate.Invoke(direction);
 
@@ -128,32 +108,7 @@ public class GestureDetector : MonoBehaviour
 		this.SmartLog("Exiting drag update coroutine");
 	}
 
-	private void EndSwipe(Vector2 startPos, Vector2 endPos)
-	{
-		Vector2 swipe = (endPos - startPos).normalized;
-		var direction = GetSwipeDirection(swipe);
 
-		if (direction == Vector2.zero) return;
-
-		OnSwipePerformed?.Invoke(direction);
-	}
-
-	private Vector2 GetSwipeDirection(Vector2 swipe)
-	{
-		if (Vector2.Dot(Vector2.up, swipe) > threshHold)
-			return Vector2.up;
-
-		if (Vector2.Dot(Vector2.right, swipe) > threshHold)
-			return Vector2.right;
-
-		if (Vector2.Dot(Vector2.left, swipe) > threshHold)
-			return Vector2.left;
-
-		if (Vector2.Dot(Vector2.down, swipe) > threshHold)
-			return Vector2.down;
-
-		return Vector2.zero;
-	}
 
 	public void SetActive(bool isActive)
 	{
