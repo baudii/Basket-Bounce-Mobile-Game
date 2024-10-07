@@ -3,7 +3,7 @@ using UnityEngine;
 using UnityEngine.Events;
 
 [DefaultExecutionOrder(-1)]
-public class LevelManager : MonoBehaviour
+public class LevelManager : Singleton<LevelManager>
 {
 	[SerializeField] DollyCameraController dollyController;
 	[SerializeField] List<LevelData> levels;
@@ -73,9 +73,6 @@ public class LevelManager : MonoBehaviour
 	[HideInInspector]
 	public UnityEvent<LevelData> OnLevelSetup;
 
-
-	public static LevelManager Instance => instance;
-	static LevelManager instance;
 	public LevelData CurrentLevelData { get; private set; }
 	public int CurrentLevel { get; private set; }
 
@@ -87,12 +84,8 @@ public class LevelManager : MonoBehaviour
 	public void ActivateReflection() => isReflectionMode = true;
 
 
-	void Awake()
+	protected override void  OnAwake()
 	{
-		if (instance != null)
-			Destroy(gameObject);
-		instance = this;
-
 #if UNITY_EDITOR
 		ValidateLevels();
 #endif

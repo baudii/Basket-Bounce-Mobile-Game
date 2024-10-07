@@ -57,7 +57,11 @@ public class GestureDetector : MonoBehaviour
 	private Vector2 GetTouchPosition()
 	{
 		Vector3 screenPos = input.Gesture.Position.ReadValue<Vector2>();
-
+		if (screenPos.magnitude == Mathf.Infinity)
+		{
+			Debug.LogError("-------- Invalid value --------");
+			return Vector2.zero;
+		}
 		return cam.ScreenToWorldPoint(screenPos.WhereZ(cam.nearClipPlane));
 	}
 

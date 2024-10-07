@@ -9,7 +9,7 @@ using CandyCoded.HapticFeedback;
 #endif
 [DefaultExecutionOrder(-2)]
 
-public class GameManager : MonoBehaviour
+public class GameManager : Singleton<GameManager>
 {
 	public enum State
 	{
@@ -22,8 +22,8 @@ public class GameManager : MonoBehaviour
 		None
 	}
 
-	public static GameManager Instance => instance;
-	static GameManager instance;
+/*	public static GameManager Instance => instance;
+	static GameManager instance;*/
 
 	[Header("References")]
 	[SerializeField] GameObject gameOverScreen;
@@ -64,12 +64,22 @@ public class GameManager : MonoBehaviour
 	InputMaster input;
 
 
-	private void Awake()
-	{
-		if (instance != null)
-			Destroy(gameObject);
+	/*	private void Awake()
+		{
+			if (instance != null)
+				Destroy(gameObject);
 
-		instance = this;
+			instance = this;
+			currentState = State.InGame;
+			Application.targetFrameRate = 120;
+
+			input = new InputMaster();
+			input.Enable();
+			input.Taps.Tap.performed += ctx => Vibrate();
+		}*/
+
+	protected override void OnAwake()
+	{
 		currentState = State.InGame;
 		Application.targetFrameRate = 120;
 

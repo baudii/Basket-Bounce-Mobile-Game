@@ -1,31 +1,22 @@
 using System.Collections;
 using UnityEngine;
 
-public class AudioCrossFade : MonoBehaviour
+public class AudioCrossFade : Singleton<AudioCrossFade>
 {
 	[SerializeField] AudioSourceInfo[] audioSources;
 	[SerializeField] float transitionSpeed;
 	int i = 0;
 	AudioSourceInfo currentSource;
-	public static AudioCrossFade Instance;
 	bool toBreak;
 
-	void Awake()
+	protected override void OnAwake()
 	{
 		if (audioSources.Length == 0)
 			return;
 
-		if (Instance != null)
-			Destroy(gameObject);
-		else
-		{
-			Instance = this;
-			DontDestroyOnLoad(this);
-
-			currentSource = audioSources[0];
-			currentSource.src.volume = currentSource.maxVolume;
-			currentSource.src.Play();
-		}
+		currentSource = audioSources[0];
+		currentSource.src.volume = currentSource.maxVolume;
+		currentSource.src.Play();
 	}
 
 	public void SetExactSourse(int index)
