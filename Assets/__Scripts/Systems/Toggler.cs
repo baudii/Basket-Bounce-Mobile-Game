@@ -1,28 +1,23 @@
 using UnityEngine;
 
-public class Toggler : MonoBehaviour
+namespace BasketBounce.Systems
 {
-	[SerializeField] GameObject[] toggles;
-
-	private void OnDisable()
+	public class Toggler : MonoBehaviour
 	{
-		foreach (GameObject go in toggles)
+		[SerializeField] GameObject[] toggles;
+
+		private void OnDisable()
 		{
-			if (go != null) // This checks if the GameObject is not destroyed
-			{
-				go.SetActive(false);
-			}
+			foreach (GameObject go in toggles)
+				if (go != null)
+					go.SetActive(false);
 		}
-	}
 
-	private void OnEnable()
-	{
-		foreach (GameObject go in toggles)
+		private void OnEnable()
 		{
-			if (go != null) // This checks if the GameObject is not destroyed
-			{
-				go.SetActive(true);
-			}
+			foreach (GameObject go in toggles)
+				if (go != null)
+					go.SetActive(true);
 		}
 	}
 }

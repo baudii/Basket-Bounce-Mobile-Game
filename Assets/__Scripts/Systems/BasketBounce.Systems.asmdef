@@ -1,0 +1,24 @@
+{
+    "name": "BasketBounce.Systems",
+    "rootNamespace": "BasketBounce.Systems",
+    "references": [
+        "GUID:07f86cff6f088e3439f11d0262ad3915",
+        "GUID:4307f53044263cf4b835bd812fc161a4",
+        "GUID:e990c6d3770ac6b4e911746e2b03c2a3",
+        "GUID:b7a16d9f27dfd4770805a4cdc942c190",
+        "GUID:6055be8ebefd69e48b49212b09b47b2f",
+        "GUID:b3c0df8a34fa04d4aa30bf17b47941eb",
+        "GUID:3bcb3956cb8f5df42988706bb5d41281",
+        "GUID:75469ad4d38634e559750d17036d5f7c",
+        "GUID:7ee385f8feab40d4a9b0e611b753d96b"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

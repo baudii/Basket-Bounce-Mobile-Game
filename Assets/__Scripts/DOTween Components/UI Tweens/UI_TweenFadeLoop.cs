@@ -1,34 +1,36 @@
 using UnityEngine;
 using DG.Tweening;
 using UnityEngine.UI;
-
-public class UI_TweenFadeLoop : MonoBehaviour
+namespace BasketBounce.DOTweenComponents.UI
 {
-	[SerializeField] MaskableGraphic target;
-    [SerializeField] float oneWayDuration;
-	[SerializeField] float startTargetValue;
-	[SerializeField] Ease ease;
-	float initialAlpha;
-	private void Start()
+	public class UI_TweenFadeLoop : MonoBehaviour
 	{
-		initialAlpha = target.color.a;
-		FadeLoop();
-	}
+		[SerializeField] MaskableGraphic target;
+		[SerializeField] float oneWayDuration;
+		[SerializeField] float startTargetValue;
+		[SerializeField] Ease ease;
+		float initialAlpha;
+		private void Start()
+		{
+			initialAlpha = target.color.a;
+			FadeLoop();
+		}
 
-	void FadeLoop()
-	{
-		target.DOFade(startTargetValue, oneWayDuration).SetEase(ease).SetLoops(-1, LoopType.Yoyo);
-	}
+		void FadeLoop()
+		{
+			target.DOFade(startTargetValue, oneWayDuration).SetEase(ease).SetLoops(-1, LoopType.Yoyo);
+		}
 
-	public void Fade(float duration)
-	{
-		target.DOKill();
-		target.DOFade(0, duration).SetEase(Ease.Linear);
-	}
+		public void Fade(float duration)
+		{
+			target.DOKill();
+			target.DOFade(0, duration).SetEase(Ease.Linear);
+		}
 
-	public void UnFade()
-	{
-		target.DOKill(true);
-		target.DOFade(initialAlpha, oneWayDuration).SetEase(ease).SetLoops(-1, LoopType.Yoyo);
+		public void UnFade()
+		{
+			target.DOKill(true);
+			target.DOFade(initialAlpha, oneWayDuration).SetEase(ease).SetLoops(-1, LoopType.Yoyo);
+		}
 	}
 }

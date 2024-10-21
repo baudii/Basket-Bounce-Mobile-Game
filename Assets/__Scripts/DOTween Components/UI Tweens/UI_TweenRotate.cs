@@ -1,29 +1,32 @@
 using DG.Tweening;
 using UnityEngine;
-public class UI_TweenRotate : MonoBehaviour
+namespace BasketBounce.DOTweenComponents.UI
 {
-	[SerializeField] float duration;
-
-	Quaternion initialRotation;
-	private void Awake()
+	public class UI_TweenRotate : MonoBehaviour
 	{
-		initialRotation = transform.rotation;
-	}
+		[SerializeField] float duration;
 
-	private void OnEnable()
-	{
-		RotateLoop();
-	}
+		Quaternion initialRotation;
+		private void Awake()
+		{
+			initialRotation = transform.rotation;
+		}
 
-	private void OnDisable()
-	{
-		transform.DOKill();
-		transform.rotation = initialRotation;
-	}
+		private void OnEnable()
+		{
+			RotateLoop();
+		}
 
-	private void RotateLoop()
-	{
-		transform.DORotate(new Vector3(0, 0, 360), duration, RotateMode.WorldAxisAdd).SetEase(Ease.Linear).SetLoops(-1).SetUpdate(true);
-	}
+		private void OnDisable()
+		{
+			transform.DOKill();
+			transform.rotation = initialRotation;
+		}
 
+		private void RotateLoop()
+		{
+			transform.DORotate(new Vector3(0, 0, 360), duration, RotateMode.WorldAxisAdd).SetEase(Ease.Linear).SetLoops(-1).SetUpdate(true);
+		}
+
+	}
 }

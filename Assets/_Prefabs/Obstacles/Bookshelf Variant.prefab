@@ -68,6 +68,10 @@ PrefabInstance:
       propertyPath: m_LocalPosition.y
       value: -0.099999905
       objectReference: {fileID: 0}
+    - target: {fileID: 4236323694601463066, guid: 6eef6397fd2e386449d99515efca6d14, type: 3}
+      propertyPath: mainSr
+      value: 
+      objectReference: {fileID: 7162021895071595125}
     - target: {fileID: 4873644438653420069, guid: 6eef6397fd2e386449d99515efca6d14, type: 3}
       propertyPath: m_FlipX
       value: 0
@@ -169,6 +173,11 @@ PrefabInstance:
       insertIndex: -1
       addedObject: {fileID: 9074870789547116258}
   m_SourcePrefab: {fileID: 100100000, guid: 6eef6397fd2e386449d99515efca6d14, type: 3}
+--- !u!212 &7162021895071595125 stripped
+SpriteRenderer:
+  m_CorrespondingSourceObject: {fileID: 4873644438653420069, guid: 6eef6397fd2e386449d99515efca6d14, type: 3}
+  m_PrefabInstance: {fileID: 2361633587057473616}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &7475001574593579825 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 5150639610720940897, guid: 6eef6397fd2e386449d99515efca6d14, type: 3}

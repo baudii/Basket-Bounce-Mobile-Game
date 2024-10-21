@@ -1,33 +1,36 @@
 using UnityEngine;
 using DG.Tweening;
-public class UI_TweenPosition : MonoBehaviour
+namespace BasketBounce.DOTweenComponents.UI
 {
-	[SerializeField] Vector2 newPos;
-	[SerializeField] float duration;
-	[SerializeField] float delay;
-	[SerializeField] Ease ease;
-	[SerializeField] bool activateOnEnable;
-	RectTransform rectToMove;
-	Vector2 initialPosition;
-
-	private void Awake()
+	public class UI_TweenPosition : MonoBehaviour
 	{
-		rectToMove = (RectTransform)transform;
-		initialPosition = rectToMove.position;
-	}
+		[SerializeField] Vector2 newPos;
+		[SerializeField] float duration;
+		[SerializeField] float delay;
+		[SerializeField] Ease ease;
+		[SerializeField] bool activateOnEnable;
+		RectTransform rectToMove;
+		Vector2 initialPosition;
 
-	private void OnEnable()
-	{
-		if (activateOnEnable)
-			Move();
-	}
+		private void Awake()
+		{
+			rectToMove = (RectTransform)transform;
+			initialPosition = rectToMove.position;
+		}
 
-	public void Move()
-	{
-		// установить в начальную позицию
-		rectToMove.position = initialPosition;
-		// санимировать
-		rectToMove.DOLocalMove(newPos, duration).SetEase(ease).SetDelay(delay);
+		private void OnEnable()
+		{
+			if (activateOnEnable)
+				Move();
+		}
 
+		public void Move()
+		{
+			// установить в начальную позицию
+			rectToMove.position = initialPosition;
+			// санимировать
+			rectToMove.DOLocalMove(newPos, duration).SetEase(ease).SetDelay(delay);
+
+		}
 	}
 }
