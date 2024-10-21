@@ -87,10 +87,6 @@ namespace BasketBounce.Systems
 		public void Init()
 		{
 			resetableManager.Fill();
-			if (resetableManager == null)
-			{
-				resetableManager = gameObject.AddComponent<ResetableManager>();
-			}
 			resetableManager.ResetAll();
 		}
 

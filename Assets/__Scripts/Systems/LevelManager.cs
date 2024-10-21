@@ -126,8 +126,8 @@ namespace BasketBounce.Systems
 				levels[CurrentLevel].gameObject.SetActive(false);
 			}
 			CurrentLevelData = levels[level];
-			CurrentLevelData.Init();
 			CurrentLevelData.gameObject.SetActive(true);
+			CurrentLevelData.Init();
 			CurrentLevel = level;
 
 			/*	Переключение через инстансы префабов
