@@ -33,9 +33,9 @@ namespace BasketBounce.UI
 		public Tween[] GetTweens(float duration, Ease ease)
 		{
 			Tween[] tweens = new Tween[3];
-			tweens[0] = transform.DOLocalMove(Vector2.zero, duration).SetUpdate(true).SetEase(ease).OnStart(() => gameObject.SetActive(true));
-			tweens[1] = transform.DOScale(Vector2.one, duration).SetUpdate(true).SetEase(ease);
-			tweens[2] = mainGraphic.DOFade(1, duration).SetUpdate(true).SetEase(ease);
+			tweens[0] = transform.DOLocalMove(Vector2.zero, duration).SetUpdate(true).SetEase(ease).OnStart(() => gameObject.SetActive(true)).SetAutoKill(false);
+			tweens[1] = transform.DOScale(Vector2.one, duration).SetUpdate(true).SetEase(ease).SetAutoKill(false);
+			tweens[2] = mainGraphic.DOFade(1, duration).SetUpdate(true).SetEase(ease).SetAutoKill(false);
 
 			return tweens;
 		}

@@ -6,7 +6,7 @@ namespace KK.Common.Gameplay
 {
 	public abstract class Activator : MonoBehaviour
 	{
-		[SerializeField] List<Switcher> switchers;
+		[SerializeField] protected List<Switcher> switchers;
 
 		protected void ActivateAll(bool value)
 		{

@@ -13,6 +13,8 @@ namespace BasketBounce.UI
 		[SerializeField] GameObject screenBlocker;
 		[SerializeField] AudioSource src;
 
+		Sequence seq;
+
 		public void SetStars(int stars)
 		{
 
@@ -22,29 +24,28 @@ namespace BasketBounce.UI
 			}
 			screenBlocker.SetActive(true);
 			int n = 0;
-			this.Co_DelayedExecute(() =>
+			if (seq != null)
+				seq.Kill();
+			seq = DOTween.Sequence(transform);
+			for (int i = 0; i < stars; i++)
 			{
-				var seq = DOTween.Sequence(transform);
-				for (int i = 0; i < stars; i++)
-				{
-					float delay = i * animDuration / 3f;
+				float delay = i * animDuration / 3f;
 
-					Tween[] tweens = starAnimations[i].GetTweens(animDuration, ease);
-					foreach (var tween in tweens)
-					{
-						seq.Insert(delay, tween);
-					}
-					seq.InsertCallback(delay + animDuration * 0.8f, () =>
-					{
-						src.pitch = 1 + 3f * 0.1f * n;
-						src.PlayOneShot(src.clip);
-						n++;
-					});
+				Tween[] tweens = starAnimations[i].GetTweens(animDuration, ease);
+				foreach (var tween in tweens)
+				{
+					seq.Insert(delay, tween);
 				}
-				seq.SetUpdate(true);
-				seq.OnComplete(() => screenBlocker.SetActive(false));
-				seq.Play();
-			}, 1);
+				seq.InsertCallback(delay + animDuration * 0.8f, () =>
+				{
+					src.pitch = 1 + 3f * 0.1f * n;
+					src.PlayOneShot(src.clip);
+					n++;
+				});
+			}
+			seq.SetUpdate(true).SetAutoKill(false);
+			seq.OnComplete(() => screenBlocker.SetActive(false));
+			seq.Play();
 		}
 
 		public void KillTween()

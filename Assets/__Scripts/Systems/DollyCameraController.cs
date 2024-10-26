@@ -12,6 +12,8 @@ namespace BasketBounce.Systems
 
 		CinemachineTrackedDolly ctd;
 
+		public float PathLength { get; private set; }
+
 		private void Awake()
 		{
 			var waypoints = new CinemachineSmoothPath.Waypoint[2];
@@ -21,24 +23,18 @@ namespace BasketBounce.Systems
 			waypoints[1].position = Vector3.zero.WhereY(2);
 
 			dolly.m_Waypoints = waypoints;
-
-			LevelManager.Instance.OnLevelSetup.AddListener(UpdateDollyWaypoint);
 		}
 
-		private void OnDestroy()
+		public void UpdateDollyWaypoint(Vector3 finPos)
 		{
-			LevelManager.Instance.OnLevelSetup.RemoveListener(UpdateDollyWaypoint);
-		}
-
-		public void UpdateDollyWaypoint(LevelData levelData)
-		{
-			var desiredPos = Vector3.zero.WhereY(2);
-			var finPos = levelData.GetFinPos();
+			var desiredPos = Vector2.zero.WhereY(2 + Mathf.Epsilon);
+			var desiredY = finPos.y - offsetFromFin - 2 + Mathf.Epsilon;
 			if (finPos.y > 10)
 			{
-				desiredPos = desiredPos.WhereY(finPos.y - offsetFromFin - 2);
+				desiredPos = desiredPos.WhereY(desiredY);
 			}
 			dolly.m_Waypoints[1].position = desiredPos;
+			PathLength = desiredPos.y - 2;
 		}
 
 		public void ResetDollyPathPos()

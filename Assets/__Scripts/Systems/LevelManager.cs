@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 using KK.Common;
+using System;
 
 namespace BasketBounce.Systems
 {
@@ -130,12 +131,27 @@ namespace BasketBounce.Systems
 			CurrentLevelData.Init();
 			CurrentLevel = level;
 
+			SetupLevel();
+
 			/*	Переключение через инстансы префабов
 					if (CurrentLevelData != null)
 						Destroy(CurrentLevelData.gameObject);
 					CurrentLevelData = Instantiate(levels[level], transform);
 					CurrentLevel = level;
 			*/
+		}
+
+		void TryUpdateSaveData()
+		{
+			// update player's progress
+			int lastOpenedLevel = PlayerPrefs.GetInt(LAST_OPENED_LEVEL_KEY, -1);
+			if (CurrentLevel >= lastOpenedLevel)
+			{
+				// Level is not yet finished!
+				this.SmartLog("First time loading level", CurrentLevel);
+				CurrentLevelData.OnFirstTimeLoad();
+				PlayerPrefs.SetInt(LAST_OPENED_LEVEL_KEY, CurrentLevel);
+			}
 		}
 
 
@@ -148,8 +164,9 @@ namespace BasketBounce.Systems
 			}
 
 			this.SmartLog(CurrentLevelData.gameObject.name);
-			OnLevelSetup?.Invoke(CurrentLevelData);
 			dollyController.ResetDollyPathPos();
+			dollyController.UpdateDollyWaypoint(CurrentLevelData.GetFinPos());
+			OnLevelSetup?.Invoke(CurrentLevelData);
 			//isReflectionMode = false;
 		}
 
@@ -193,26 +210,18 @@ namespace BasketBounce.Systems
 		{
 			this.SmartLog("Loading level: Level ", level);
 			if (level >= levels.Count)
-				return;
+				throw new ArgumentException("Incorrect level was provided");
 
 			GameManager.Instance.SetActiveLoadingScreen(true);
+
 			float loadTime = 1f;
 			if (isFirstTimeLoad)
 				loadTime = 3f;
 
 			SwapToNewLevel(level);
 
-			// update player's progress
-			int lastOpenedLevel = PlayerPrefs.GetInt(LAST_OPENED_LEVEL_KEY, -1);
-			if (CurrentLevel >= lastOpenedLevel)
-			{
-				// Level is not yet finished!
-				this.SmartLog("First time loading level", CurrentLevel);
-				CurrentLevelData.OnFirstTimeLoad();
-				PlayerPrefs.SetInt(LAST_OPENED_LEVEL_KEY, CurrentLevel);
-			}
+			TryUpdateSaveData();
 
-			SetupLevel();
 			GameManager.Instance.UpodateUI();
 
 			this.Co_DelayedExecute(() =>

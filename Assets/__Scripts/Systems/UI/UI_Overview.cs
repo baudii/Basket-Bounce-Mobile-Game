@@ -6,6 +6,7 @@ using UnityEngine.UI;
 using DG.Tweening;
 using BasketBounce.DOTweenComponents.UI;
 using BasketBounce.Systems;
+using KK.Common;
 
 
 namespace BasketBounce.UI
@@ -48,7 +49,7 @@ namespace BasketBounce.UI
 
 		private void SetActive(LevelData levelData)
 		{
-			if (levelData.IsFinishInScreen())
+			if (dolly.PathLength <= 3f)
 				gameObject.SetActive(false);
 			else
 				Enable();
@@ -64,8 +65,22 @@ namespace BasketBounce.UI
 			inivisbleButtonDisabler.SetActive(false);
 			scrollbar.value = 0;
 			vcam.Follow = ballTransform;
-			gestureDetector.SetActive(true);
 			scrollbar.interactable = true;
+		}
+
+		public void Show()
+		{
+			for (int i = 0; i < maskableGraphics.Length; i++)
+			{
+				maskableGraphics[i].DOKill(false);
+				maskableGraphics[i].DOFade(initialAlphas[i], duration).OnComplete(() =>
+				{
+					scrollbar.interactable = true;
+					if (fadeLoop.gameObject.activeSelf)
+						fadeLoop.UnFade();
+					inivisbleButtonDisabler.SetActive(false);
+				});
+			}
 		}
 
 		public void Hide()
@@ -84,7 +99,6 @@ namespace BasketBounce.UI
 
 		public void OnPointerDown(PointerEventData _)
 		{
-			gestureDetector.SetActive(false);
 			vcam.Follow = null;
 			OnClick?.Invoke();
 			for (int i = 0; i < maskableGraphics.Length; i++)
@@ -95,7 +109,6 @@ namespace BasketBounce.UI
 
 		public void OnPointerUp(PointerEventData _)
 		{
-			gestureDetector.SetActive(true);
 			vcam.Follow = ballTransform;
 			scrollbar.value = 0; 
 			for (int i = 0; i < maskableGraphics.Length; i++)
@@ -109,21 +122,6 @@ namespace BasketBounce.UI
 		public void OnValueChanged(float value)
 		{
 			dolly.SetPathPosition(value);
-		}
-
-		public void Show()
-		{
-			for (int i = 0; i < maskableGraphics.Length; i++)
-			{
-				maskableGraphics[i].DOKill(false);
-				maskableGraphics[i].DOFade(initialAlphas[i], duration).OnComplete(() =>
-				{
-					scrollbar.interactable = true;
-					if (fadeLoop.gameObject.activeSelf)
-						fadeLoop.UnFade();
-					inivisbleButtonDisabler.SetActive(false);
-				});
-			}
 		}
 	}
 }

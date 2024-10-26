@@ -1,26 +1,12 @@
 using DG.Tweening;
 using UnityEngine;
 
-public class SimpleMoveTween : MonoBehaviour
+public class SimpleMoveTween : AbstractTween
 {
-	[SerializeField] bool activateOnStart;
-	[SerializeField] bool isLooping;
-	[SerializeField] bool isUnscaledTime;
-	[SerializeField] Vector3 targetPosition;
-	[SerializeField] float duration;
-	[SerializeField] float delay;
-	[SerializeField] Ease ease;
+	[SerializeField] Vector3 targetLocalPos;
 
-	private void Start()
+	protected override Tween GetTween()
 	{
-		if (activateOnStart)
-			Move();
-	}
-
-	public void Move()
-	{
-		var i = transform.DOMove(targetPosition, duration).SetUpdate(isUnscaledTime).SetEase(ease).SetDelay(delay);
-		if (isLooping)
-			i.SetLoops(-1, LoopType.Yoyo);
+		return transform.DOLocalMove(targetLocalPos, duration);
 	}
 }
