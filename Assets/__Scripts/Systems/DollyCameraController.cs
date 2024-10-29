@@ -9,6 +9,7 @@ namespace BasketBounce.Systems
 		[SerializeField] float offsetFromFin;
 		[SerializeField] CinemachineSmoothPath dolly;
 		[SerializeField] CinemachineVirtualCamera cvc;
+		[SerializeField] Transform followTranform;
 
 		CinemachineTrackedDolly ctd;
 
@@ -50,6 +51,16 @@ namespace BasketBounce.Systems
 		public void SetPathPosition(float value)
 		{
 			ctd.m_PathPosition = value;
+		}
+
+		public void EnableFollow()
+		{
+			cvc.Follow = followTranform;
+		}
+
+		public void DisableFollow()
+		{
+			cvc.Follow = null;
 		}
 	}
 }

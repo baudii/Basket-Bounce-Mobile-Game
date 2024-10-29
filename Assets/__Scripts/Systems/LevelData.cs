@@ -11,19 +11,18 @@ namespace BasketBounce.Systems
 		[SerializeField] string levelHeader;
 		[SerializeField] string russianLevelHeader;
 		[SerializeField] Transform finTransform;
-		[SerializeField] ResetableManager resetableManager;
 
 		[SerializeField] int bounces3star;
 		[SerializeField] int bounces2star;
 		[SerializeField] bool useThreshHold;
 		[SerializeField] bool canNotStuck;
 		[SerializeField] float overrideStuckTime;
-		[SerializeField] UnityEvent OnBallReleasedEvent;
-		[SerializeField] UnityEvent OnFirstTimeLoadEvemt;
-		[SerializeField] UnityEvent OnClickAnywhereEvent;
-		/*	[SerializeField] float time3star;
-			[SerializeField] float time2star;*/
+		[SerializeField] public UnityEvent OnBallReleasedEvent;
+		[SerializeField] public UnityEvent OnFirstTimeLoadEvemt;
+		[SerializeField] public UnityEvent OnClickAnywhereEvent;
+		[SerializeField] public UnityEvent OnResetEvent;
 
+		ResetableManager resetableManager;
 		public bool UseThreshold => useThreshHold;
 		public bool CanNotStuck => canNotStuck;
 		public float OverrideStuckTime => overrideStuckTime;
@@ -58,8 +57,6 @@ namespace BasketBounce.Systems
 		{
 			if (validateLevel)
 			{
-				if (resetableManager == null)
-					resetableManager = GetComponent<ResetableManager>();
 				transform.ForEachDescendant(child =>
 				{
 					if (child.TryGetComponent(out ILevelValidator levelValidator))
@@ -86,7 +83,7 @@ namespace BasketBounce.Systems
 
 		public void Init()
 		{
-			resetableManager.Fill();
+			resetableManager = new ResetableManager(transform);
 			resetableManager.ResetAll();
 		}
 
@@ -113,6 +110,7 @@ namespace BasketBounce.Systems
 		public void ResetLevel()
 		{
 			resetableManager.ResetAll();
+			OnResetEvent?.Invoke();
 		}
 
 		public Vector3 GetFinPos()

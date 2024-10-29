@@ -1,12 +1,10 @@
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.EventSystems;
-using Cinemachine;
 using UnityEngine.UI;
 using DG.Tweening;
 using BasketBounce.DOTweenComponents.UI;
 using BasketBounce.Systems;
-using KK.Common;
 
 
 namespace BasketBounce.UI
@@ -15,10 +13,7 @@ namespace BasketBounce.UI
 	{
 		[SerializeField] Scrollbar scrollbar;
 		[SerializeField] DollyCameraController dolly;
-		[SerializeField] CinemachineVirtualCamera vcam;
-		[SerializeField] GestureDetector gestureDetector;
 		[SerializeField] UI_TweenFadeLoop fadeLoop;
-		[SerializeField] Transform ballTransform;
 		[SerializeField] GameObject inivisbleButtonDisabler;
 		[SerializeField] UnityEvent OnClick;
 
@@ -64,7 +59,7 @@ namespace BasketBounce.UI
 			}
 			inivisbleButtonDisabler.SetActive(false);
 			scrollbar.value = 0;
-			vcam.Follow = ballTransform;
+			dolly.EnableFollow();
 			scrollbar.interactable = true;
 		}
 
@@ -99,7 +94,7 @@ namespace BasketBounce.UI
 
 		public void OnPointerDown(PointerEventData _)
 		{
-			vcam.Follow = null;
+			dolly.DisableFollow();
 			OnClick?.Invoke();
 			for (int i = 0; i < maskableGraphics.Length; i++)
 			{
@@ -109,7 +104,7 @@ namespace BasketBounce.UI
 
 		public void OnPointerUp(PointerEventData _)
 		{
-			vcam.Follow = ballTransform;
+			dolly.EnableFollow();
 			scrollbar.value = 0; 
 			for (int i = 0; i < maskableGraphics.Length; i++)
 			{

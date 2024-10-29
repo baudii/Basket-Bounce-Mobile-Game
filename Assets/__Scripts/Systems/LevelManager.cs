@@ -6,7 +6,6 @@ using System;
 
 namespace BasketBounce.Systems
 {
-
 	[DefaultExecutionOrder(-1)]
 	public class LevelManager : Singleton<LevelManager>
 	{

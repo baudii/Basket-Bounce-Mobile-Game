@@ -5,25 +5,22 @@ using BasketBounce.Systems.Interfaces;
 
 namespace BasketBounce.Systems
 {
-	public class ResetableManager : MonoBehaviour
+	public class ResetableManager
 	{
 		private List<IResetableItem> resetables;
 
-		public void Fill()
+		public ResetableManager(Transform transform)
 		{
 			resetables = new List<IResetableItem>();
 			transform.ForEachDescendant((descendant) =>
 			{
 				var components = descendant.GetComponents<IResetableItem>();
-				foreach (var component in components)
-					resetables.Add(component);
+				resetables.AddRange(components);
 			});
 		}
 
 		public void ResetAll()
 		{
-			if (resetables == null)
-				return;
 			foreach (var resetable in resetables)
 			{
 				resetable.ResetState();

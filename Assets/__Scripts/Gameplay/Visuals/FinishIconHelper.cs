@@ -14,6 +14,7 @@ namespace BasketBounce.Gameplay.Visuals
 		{
 			LevelManager.Instance.OnLevelSetup.AddListener(Setup);
 		}
+
 		private void OnDestroy()
 		{
 			LevelManager.Instance.OnLevelSetup.RemoveListener(Setup);
@@ -37,6 +38,5 @@ namespace BasketBounce.Gameplay.Visuals
 			transform.position = transform.position.WhereX(levelData.GetFinPos().x);
 			currentLevelData = levelData;
 		}
-
 	}
 }

@@ -27,17 +27,16 @@ namespace BasketBounce.Gameplay.Mechanics
 		[SerializeField] UnityEvent OnFall;
 		[SerializeField] UnityEvent OnReset;
 		[SerializeField] Color blinkColor;
-		[SerializeField] Vector3 textOffset;
+		[SerializeField] Vector3 overrideTextPosition;
+		[SerializeField] Vector3 localOffsetTextPosition;
 		private static GameObject _textPrefab;
 		private BreakableCounter_WorldUI _textObj;
 		private async Task<GameObject> GetTextPrefabAsync()
 		{
 			if (_textPrefab == null)
 			{
-				this.SmartLog("Getting item");
 				var result = Addressables.LoadAssetAsync<GameObject>(key: "WT_Counter");
 				await result.Task;
-				this.SmartLog("Got item!");
 				_textPrefab = result.Result;
 			}
 
@@ -91,15 +90,31 @@ namespace BasketBounce.Gameplay.Mechanics
 		{
 			if (hitsToFall > 1)
 			{
-				var prefab = await GetTextPrefabAsync();
-				var obj = Instantiate(prefab);
-				obj.transform.rotation = Quaternion.identity;
-				obj.transform.SetParent(transform);
-				obj.transform.localPosition = textOffset;
-				_textObj = obj.GetComponent<BreakableCounter_WorldUI>();
+				var textPrefab = await GetTextPrefabAsync();
+				var textObj = Instantiate(textPrefab);
+				textObj.transform.rotation = Quaternion.identity;
+				textObj.transform.SetParent(transform);
+				textObj.transform.localPosition = localOffsetTextPosition;
+				OverridePosition(textObj);
+				_textObj = textObj.GetComponent<BreakableCounter_WorldUI>();
 				this.SmartLog(_textObj.name);
 			}
 			UpdateBlinkColor();
+		}
+
+		private void OverridePosition(GameObject textObj)
+		{
+			if (overrideTextPosition.sqrMagnitude == 0)
+				return;
+
+			if (overrideTextPosition.x != 0)
+				textObj.transform.position = textObj.transform.position.WhereX(overrideTextPosition.x);
+
+			if (overrideTextPosition.y != 0)
+				textObj.transform.position = textObj.transform.position.WhereY(overrideTextPosition.y);
+
+			if (overrideTextPosition.z != 0)
+				textObj.transform.position = textObj.transform.position.WhereZ(overrideTextPosition.z);
 		}
 
 		private void OnCollisionEnter2D(Collision2D collision)
