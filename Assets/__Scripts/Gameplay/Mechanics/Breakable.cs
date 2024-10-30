@@ -70,6 +70,14 @@ namespace BasketBounce.Gameplay.Mechanics
 				blinkColor = new Color32(12 * 16 + 1, 5 * 16 + 13, 32, 255);
 			}
 		}
+
+		private void OnDrawGizmos()
+		{
+			var position = transform.position + localOffsetTextPosition;
+			position = GetOverridenPosition(position);
+
+			Gizmos.DrawIcon(position, "breakable_icon.png");
+		}
 #endif
 		const float blinkDuration = 1;
 
@@ -88,33 +96,32 @@ namespace BasketBounce.Gameplay.Mechanics
 
 		private async void Start()
 		{
-			if (hitsToFall > 1)
+			if (hitsToFall > 0)
 			{
 				var textPrefab = await GetTextPrefabAsync();
 				var textObj = Instantiate(textPrefab);
 				textObj.transform.rotation = Quaternion.identity;
 				textObj.transform.SetParent(transform);
 				textObj.transform.localPosition = localOffsetTextPosition;
-				OverridePosition(textObj);
+				transform.position = GetOverridenPosition(transform.position);
 				_textObj = textObj.GetComponent<BreakableCounter_WorldUI>();
 				this.SmartLog(_textObj.name);
 			}
 			UpdateBlinkColor();
 		}
 
-		private void OverridePosition(GameObject textObj)
+		private Vector3 GetOverridenPosition(Vector3 position)
 		{
-			if (overrideTextPosition.sqrMagnitude == 0)
-				return;
-
 			if (overrideTextPosition.x != 0)
-				textObj.transform.position = textObj.transform.position.WhereX(overrideTextPosition.x);
+				position.x = overrideTextPosition.x;
 
 			if (overrideTextPosition.y != 0)
-				textObj.transform.position = textObj.transform.position.WhereY(overrideTextPosition.y);
+				position.y = overrideTextPosition.y;
 
 			if (overrideTextPosition.z != 0)
-				textObj.transform.position = textObj.transform.position.WhereZ(overrideTextPosition.z);
+				position.z = overrideTextPosition.z;
+			
+			return position;
 		}
 
 		private void OnCollisionEnter2D(Collision2D collision)
