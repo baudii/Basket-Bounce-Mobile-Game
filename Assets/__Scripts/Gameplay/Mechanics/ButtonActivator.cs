@@ -34,16 +34,6 @@ namespace BasketBounce.Gameplay.Mechanics
 			{
 				wires = new WireBender[switchers.Count];
 			}
-
-			for (int i = 0; i < wires.Length; i++)
-			{
-				if (wires[i] == null || wires[i].gameObject == null)
-				{
-					this.SmartLog("Length:", wires.Length, "i:", i);
-					wires[i] = Instantiate(wirePrefab, transform);
-				}
-				wires[i].Init(transform.position, switchers[i].transform.position);
-			}
 		}
 
 		private void UpdateState()

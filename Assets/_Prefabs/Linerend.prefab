@@ -73,7 +73,7 @@ LineRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: -11
   m_Positions:
   - {x: 0, y: 0, z: 0}
   - {x: 4, y: 0, z: 0}
@@ -85,7 +85,7 @@ LineRenderer:
       m_Curve:
       - serializedVersion: 3
         time: 0
-        value: 0.16216278
+        value: 0.059043884
         inSlope: 0
         outSlope: 0
         tangentMode: 0

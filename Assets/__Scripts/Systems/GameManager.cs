@@ -271,7 +271,7 @@ namespace BasketBounce.Systems
 			SetState(State.InGame);
 		}
 
-		public void FinishGame()
+		public void FinishLevelSet()
 		{
 			SetState(State.Finished);
 		}

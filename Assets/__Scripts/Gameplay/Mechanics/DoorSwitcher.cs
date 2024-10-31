@@ -5,6 +5,9 @@ using UnityEngine.Events;
 using BasketBounce.Systems.Interfaces;
 using KK.Common;
 using KK.Common.Gameplay;
+using UnityEngine.AddressableAssets;
+using BasketBounce.Gameplay.Visuals;
+using System.Linq;
 
 namespace BasketBounce.Gameplay.Mechanics
 {
@@ -17,6 +20,9 @@ namespace BasketBounce.Gameplay.Mechanics
 		[SerializeField] UnityEvent OnResetState;
 		[SerializeField] bool activateOnAwake;
 		[SerializeField] bool canClose;
+		[Header("Wire")]
+		[SerializeField] bool disableWire;
+		[SerializeField] Vector3 wireLocalOffset;
 		Ball ball;
 		Sequence sequence;
 
@@ -24,10 +30,48 @@ namespace BasketBounce.Gameplay.Mechanics
 
 		bool isOpened = false;
 
+		GameObject _wirePrefab;
+		const string _assetKey = "Door_Wire";
+
 		private void Awake()
 		{
 			initialPosition = transform.position;
 			initialRotation = transform.eulerAngles;
+		}
+
+		private async void Start()
+		{
+			if (disableWire ||
+				!doorMovements.Any(movement => movement.MoveActions
+								.Any(action => action.Type == DoorMoveAction.ActionType.Position)))
+				return;
+
+			if (_wirePrefab == null)
+			{
+				var res = Addressables.LoadAssetAsync<GameObject>(_assetKey);
+				await res.Task;
+
+				_wirePrefab = res.Result;
+			}
+			var wireGo = Instantiate(_wirePrefab, transform.parent);
+			var wire = wireGo.GetComponent<WireBender>();
+			var currentPos = transform.position + wireLocalOffset;
+			wire.Init(currentPos);
+			int i = 1;
+			foreach (var movement in doorMovements)
+			{
+				var pos = movement.MoveActions.Where(item => item.Type == DoorMoveAction.ActionType.Position)
+											  .Select(item => item.Target)
+											  .FirstOrDefault();
+				if (pos != Vector3.zero)
+				{
+					currentPos += pos;
+					wire.AddIntermediate(currentPos);
+				}
+				i++;
+			}
+			wire.Finish();
+			wire.Bend();
 		}
 
 		private void OnEnable()
@@ -67,6 +111,7 @@ namespace BasketBounce.Gameplay.Mechanics
 			sequence?.Kill();
 			sequence = DOTween.Sequence(transform);
 			float currentTime = 0;
+			Vector3 positionOffset = transform.localPosition;
 			foreach (var doorMovement in doorMovements)
 			{
 				float duration = doorMovement.Duration;
@@ -80,7 +125,8 @@ namespace BasketBounce.Gameplay.Mechanics
 							tween = transform.DORotate(action.Target, duration, RotateMode.FastBeyond360).SetEase(action.Ease);
 							break;
 						case DoorMoveAction.ActionType.Position:
-							tween = transform.DOLocalMove(action.Target, duration).SetEase(action.Ease);
+							positionOffset += action.Target;
+							tween = transform.DOLocalMove(positionOffset, duration).SetEase(action.Ease);
 							break;
 					}
 					sequence.Insert(currentTime, tween);
