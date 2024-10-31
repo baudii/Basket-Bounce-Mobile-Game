@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace KK.Common
@@ -192,6 +193,32 @@ namespace KK.Common
 		public static bool Contains(this LayerMask mask, int layer)
 		{
 			return mask == (mask | (1 << layer));
+		}
+
+		/// <summary>
+		/// Checks if index is within the give array
+		/// </summary>
+		/// <param name="array">Array to test</param>
+		/// <param name="index">Index</param>
+		/// <returns></returns>
+		public static bool IsWithinBoundaries(this Array array, int index)
+		{
+			if (index < 0 || index >= array.Length)
+				return false;
+			return true;
+		}
+
+		/// <summary>
+		/// Checks if index is within the give array
+		/// </summary>
+		/// <param name="collection">Collection to test</param>
+		/// <param name="index">Index</param>
+		/// <returns></returns>
+		public static bool IsWithinBoundaries(this ICollection collection, int index)
+		{
+			if (index < 0 || index >= collection.Count)
+				return false;
+			return true;
 		}
 	}
 }

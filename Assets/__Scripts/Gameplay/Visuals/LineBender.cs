@@ -1,5 +1,6 @@
 using KK.Common;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 namespace BasketBounce.Gameplay.Visuals
@@ -8,18 +9,16 @@ namespace BasketBounce.Gameplay.Visuals
     {
 		[SerializeField] LineRenderer linePrefab;
 		[SerializeField] protected Transform startPoint, endPoint;
-		[SerializeField] protected Vector3[] intermediatePoints;
+		
+		Stack<Vector3> intermediatePoints;
 		LineRenderer[] lines;
 
-#if UNITY_EDITOR
-		[SerializeField] bool validate;		
-		private void OnValidate()
+		public void Init(Vector3 start)
 		{
-			if (validate)
-				Bend();	
+			startPoint.position = start;
+			intermediatePoints = new Stack<Vector3>();
 		}
-#endif
-
+		
 		private LineRenderer GetItem(int i)
 		{
 			if (lines[i] == null)
@@ -28,31 +27,38 @@ namespace BasketBounce.Gameplay.Visuals
 			return lines[i];
 		}
 
-		protected void Bend()
+		public void Bend()
 		{
 			if (lines == null)
-				lines = new LineRenderer[2 + intermediatePoints.Length];
+				lines = new LineRenderer[2 + intermediatePoints.Count];
 
-			this.SmartLog("Positions count:", lines.Length);
 			lines[0] = GetItem(0);
 			lines[0].positionCount = 2;
 			lines[0].SetPosition(0, startPoint.position);
-			this.SmartLog("Set start of point:", 1);
 
 			int i = 0;
-			for (i = 0; i < intermediatePoints.Length; ++i)
+			for (i = 0; i < intermediatePoints.Count; ++i)
 			{
-				lines[i].SetPosition(1, intermediatePoints[i]);
-				this.SmartLog("Set end of point:", i + 1);
+				lines[i].SetPosition(1, intermediatePoints.ElementAt(i));
 
 				lines[i + 1] = GetItem(i + 1);
 				lines[i + 1].positionCount = 2;
-				lines[i + 1].SetPosition(0, intermediatePoints[i]);
-				this.SmartLog("Set start of point:", i + 2);
+				lines[i + 1].SetPosition(0, intermediatePoints.ElementAt(i));
 			}
 
 			lines[i].SetPosition(1, endPoint.position);
-			this.SmartLog("Set end of point:", i + 2);
+		}
+
+		public void AddIntermediate(Vector3 point)
+		{
+			intermediatePoints.Push(point);
+		}
+
+		public void Finish()
+		{
+			var endPos = intermediatePoints.Pop();
+
+			endPoint.position = endPos;
 		}
     }
 }

@@ -31,7 +31,7 @@ namespace BasketBounce.UI
 
 			for (int i = 0; i < levels.Count; i++)
 			{
-				totalStars += PlayerPrefs.GetInt(LevelManager.LEVEL_STARS_KEY + i, 0);
+				totalStars += PlayerPrefs.GetInt(LevelManager.LEVEL_EARNED_STARS_KEY + i, 0);
 			}
 
 			return totalStars;
@@ -41,11 +41,11 @@ namespace BasketBounce.UI
 		{
 			int currentLevel = LevelManager.Instance.CurrentLevel;
 
-			int lastLevel = PlayerPrefs.GetInt(LevelManager.LAST_OPENED_LEVEL_KEY, 0);
+			int lastLevel = PlayerPrefs.GetInt(LevelManager.LAST_DISCOVERED_LEVEL_KEY, 0);
 
 			for (int i = 0; i < levels.Count; i++)
 			{
-				int stars = PlayerPrefs.GetInt(LevelManager.LEVEL_STARS_KEY + i, 0);
+				int stars = PlayerPrefs.GetInt(LevelManager.LEVEL_EARNED_STARS_KEY + i, 0);
 
 				levels[i].UpdateCell(stars, i, i <= lastLevel, currentLevel == i);
 			}
