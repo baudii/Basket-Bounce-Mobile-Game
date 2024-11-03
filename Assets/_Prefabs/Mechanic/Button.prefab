@@ -150,3 +150,4 @@ MonoBehaviour:
   layerMask:
     serializedVersion: 2
     m_Bits: 192
+  wirePrefab: {fileID: 7122290865880849414, guid: f081d06ab0ac4ad48a5c45f5fedabea0, type: 3}

@@ -2,150 +2,124 @@ using System;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.EventSystems;
+using KK.Common;
 
-public class GestureDetector : MonoBehaviour
+namespace BasketBounce.Systems
 {
+	public class GestureDetector : MonoBehaviour
+	{
 #if UNITY_EDITOR
-	[SerializeField] bool checkDragCoroutine;	
+		[SerializeField] bool checkDragCoroutine;
 #endif
-	[SerializeField, Range(0, 1)] private float threshHold;
-	[SerializeField] private float minSwipeLength;
-	[SerializeField] private float maxSwipeTime;
-	[SerializeField] private Camera cam;
+		[SerializeField] private Camera cam;
 
-	public static UnityAction<Vector2> OnSwipePerformed;
+		public static UnityAction<Vector2> OnSwipePerformed;
 
-	public static UnityAction<Vector2> OnDragStart;
-	public static Func<Vector2, bool> OnDragUpdate;
-	public static UnityAction<Vector2> OnDragEnd;
+		public static UnityAction<Vector2> OnDragStart;
+		public static Func<Vector2, bool> OnDragUpdate;
+		public static UnityAction<Vector2> OnDragEnd;
 
-	private InputMaster input;
+		private InputMaster input;
 
-	bool isDragging;
+		bool isDragging;
 
-	private void Awake()
-	{
-		input = new InputMaster();
-		input.Enable();
-
-		GameManager.Instance.OnInGameStateEnter.AddListener(() => input.Enable());
-		GameManager.Instance.OnInGameStateExit.AddListener(() => input.Disable());
-	}
-
-	private void Start()
-	{
-		InitDrag();
-	}
-
-	private void InitSwipes()
-	{
-		input.Gesture.FingerPressed.performed += ctx => StartCoroutine(SwipeCheck(GetTouchPosition()));
-		input.Gesture.FingerPressed.canceled += ctx => StopAllCoroutines();
-	}
-
-	private void InitDrag()
-	{
-		this.SmartLog("Initializing drag input");
-		input.Gesture.FingerPressed.started += ctx => StartCoroutine(DragUpdate());
-		input.Gesture.FingerPressed.canceled += ctx =>
+		private void Awake()
 		{
-			isDragging = false;
-		};
-	}
-
-	private Vector2 GetTouchPosition()
-	{
-		Vector3 screenPos = input.Gesture.Position.ReadValue<Vector2>();
-
-		return cam.ScreenToWorldPoint(screenPos.WhereZ(10));
-	}
-
-	IEnumerator SwipeCheck(Vector2 startPos)
-	{
-		var endPos = Vector2.zero;
-		var distance = 0f;
-		var time = 0f;
-
-		while (distance < minSwipeLength)
-		{
-			endPos = GetTouchPosition();
-			distance = Vector2.Distance(endPos, startPos);
-			time += Time.deltaTime;
-
-			if (time > maxSwipeTime) yield break;
-			yield return null;
-		}
-
-		EndSwipe(startPos, endPos);
-	}
-
-	IEnumerator DragUpdate()
-	{
-		this.SmartLog("Started drag update coroutine");
-		isDragging = true;
-		yield return null;
-		Vector2 startPos = GetTouchPosition();
-		Vector2 direction = Vector2.zero;
-
-		OnDragStart?.Invoke(startPos);
-
-		bool isUpdateSuccessful = true;
-
-		while (isDragging && isUpdateSuccessful)
-		{
-#if UNITY_EDITOR
-			if (checkDragCoroutine)
-			{
-				this.SmartLog("Inside drag update coroutine");
-			}
-#endif
-			direction = (startPos - GetTouchPosition());
-
-			if (OnDragUpdate != null)
-				isUpdateSuccessful = OnDragUpdate.Invoke(direction);
-
-			yield return null;
-		}
-
-		if (isUpdateSuccessful)
-			OnDragEnd?.Invoke(direction);
-
-		this.SmartLog("Exiting drag update coroutine");
-	}
-
-	private void EndSwipe(Vector2 startPos, Vector2 endPos)
-	{
-		Vector2 swipe = (endPos - startPos).normalized;
-		var direction = GetSwipeDirection(swipe);
-
-		if (direction == Vector2.zero) return;
-
-		OnSwipePerformed?.Invoke(direction);
-	}
-
-	private Vector2 GetSwipeDirection(Vector2 swipe)
-	{
-		if (Vector2.Dot(Vector2.up, swipe) > threshHold)
-			return Vector2.up;
-
-		if (Vector2.Dot(Vector2.right, swipe) > threshHold)
-			return Vector2.right;
-
-		if (Vector2.Dot(Vector2.left, swipe) > threshHold)
-			return Vector2.left;
-
-		if (Vector2.Dot(Vector2.down, swipe) > threshHold)
-			return Vector2.down;
-
-		return Vector2.zero;
-	}
-
-	public void SetActive(bool isActive)
-	{
-		this.SmartLog("Setting input to: ", isActive);
-		if (isActive)
+			input = new InputMaster();
 			input.Enable();
-		else
-			input.Disable();
+
+			GameManager.Instance.OnInGameStateEnter.AddListener(() => input.Enable());
+			GameManager.Instance.OnInGameStateExit.AddListener(() => input.Disable());
+		}
+
+		private void Start()
+		{
+			if (cam == null)
+				cam = Camera.main;
+			InitDrag();
+		}
+
+		private void OnDestroy()
+		{
+			OnDragStart = null;
+			OnDragUpdate = null;
+			OnDragEnd = null;
+		}
+
+		private void InitDrag()
+		{
+			input.Gesture.FingerPressed.performed += ctx => StartCoroutine(DragUpdate());
+			input.Gesture.FingerPressed.canceled += ctx =>
+			{
+				isDragging = false;
+			};
+		}
+
+		private Vector2 GetTouchPosition()
+		{
+			Vector3 screenPos = input.Gesture.Position.ReadValue<Vector2>();
+			if (screenPos.magnitude == Mathf.Infinity)
+				return Vector2.zero;
+
+			return cam.ScreenToWorldPoint(screenPos.WhereZ(cam.nearClipPlane));
+		}
+
+
+		IEnumerator DragUpdate()
+		{
+			LevelManager.Instance.OnClickAnywhere();
+			isDragging = true;
+
+			yield return null;
+
+			Vector2 startPos = GetTouchPosition();
+
+			if (EventSystem.current.currentSelectedGameObject != null)
+			{
+				this.SmartLog("Touching UI element");
+				yield break;
+			}
+
+			OnDragStart?.Invoke(startPos);
+
+			Vector2 direction = Vector2.zero;
+
+			bool isUpdateSuccessful = true;
+
+			while (isDragging && isUpdateSuccessful)
+			{
+
+				direction = (startPos - GetTouchPosition());
+
+#if UNITY_EDITOR
+				if (checkDragCoroutine)
+				{
+					this.SmartLog("Inside drag update while loop");
+					this.SmartLog("Direction:", direction);
+				}
+#endif
+				if (OnDragUpdate != null)
+					isUpdateSuccessful = OnDragUpdate.Invoke(direction);
+
+				yield return null;
+			}
+
+			if (isUpdateSuccessful)
+				OnDragEnd?.Invoke(direction);
+
+			this.SmartLog("Exiting drag update coroutine");
+		}
+
+
+
+		public void SetActive(bool isActive)
+		{
+			this.SmartLog("Setting input to: ", isActive);
+			if (isActive)
+				input.Enable();
+			else
+				input.Disable();
+		}
 	}
 }
