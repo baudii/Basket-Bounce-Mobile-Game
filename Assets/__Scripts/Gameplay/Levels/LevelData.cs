@@ -67,6 +67,7 @@ namespace BasketBounce.Gameplay.Levels
 			}
 		}
 
+#endif
 		public void ValidateLevel()
 		{
 			transform.ForEachDescendant(child =>
@@ -75,13 +76,9 @@ namespace BasketBounce.Gameplay.Levels
 				{
 					levelValidator.Validate();
 				}
-				if (child.name.Contains("Finish"))
-				{
-					finTransform = child;
-				}
 			});
 		}
-#endif
+
 		public bool IsFinishInScreen()
 		{
 			Vector3 screenPos = Cam.WorldToScreenPoint(finTransform.position);
@@ -137,7 +134,7 @@ namespace BasketBounce.Gameplay.Levels
 
 		public Vector3 GetFinPos()
 		{
-			return finTransform.position;
+			return finTransform.localPosition;
 		}
 		public ScoreData ConvertToStars(int bounces)
 		{

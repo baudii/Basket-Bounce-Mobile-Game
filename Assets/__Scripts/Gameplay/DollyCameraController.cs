@@ -19,18 +19,19 @@ namespace BasketBounce.Gameplay
 
 		public void Init(LevelManager levelManager, Transform followTarget)
 		{
+			this.followTarget = followTarget;
+			this.levelManager = levelManager;
+			
 			var waypoints = new CinemachineSmoothPath.Waypoint[2];
 			waypoints[0] = new CinemachineSmoothPath.Waypoint();
 			waypoints[0].position = Vector3.zero.WhereY(2);
 			waypoints[1] = new CinemachineSmoothPath.Waypoint();
-			waypoints[1].position = Vector3.zero.WhereY(2);
-			ctd = cvc.GetCinemachineComponent<CinemachineTrackedDolly>();
+			waypoints[1].position = Vector3.zero.WhereY(2 + 0.001f);
 
 			dolly.m_Waypoints = waypoints;
 
-			this.followTarget = followTarget;
+			ctd = cvc.GetCinemachineComponent<CinemachineTrackedDolly>();
 
-			this.levelManager = levelManager;
 			this.levelManager.OnLevelSetupEvent.AddListener(OnLevelSetup);
 
 			EnableFollow();
@@ -46,14 +47,16 @@ namespace BasketBounce.Gameplay
 
 		public void UpdateDollyWaypoint(Vector3 finPos)
 		{
-			var desiredPos = Vector2.zero.WhereY(2 + 0.01f);
-			var desiredY = finPos.y - offsetFromFin - 2 + 0.01f;
+			var desiredPos = Vector2.zero.WhereY(2 + 0.001f);
+			var desiredY = finPos.y - offsetFromFin - 2 + 0.001f;
 			if (finPos.y > 10)
 			{
 				desiredPos = desiredPos.WhereY(desiredY);
 			}
+			// this.Log("desiredY:", desiredY, "desiredPos.y:", desiredPos.y, "finPos.y:", finPos.y);
 			dolly.m_Waypoints[1].position = desiredPos;
 			PathLength = desiredPos.y - 2;
+			dolly.InvalidateDistanceCache();
 		}
 
 		public void ResetDollyPathPos()

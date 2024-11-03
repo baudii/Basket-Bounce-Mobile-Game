@@ -1,8 +1,6 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Runtime.CompilerServices;
-using System.Threading;
 using System.Threading.Tasks;
 using UnityEngine;
 
@@ -170,79 +168,96 @@ namespace KK.Common
 		/// </summary>
 		public static void ForEachDescendant(this Transform parent, Action<Transform> action)
 		{
-			action?.Invoke(parent);
+			var stack = new Stack<Transform>();
+			stack.Push(parent);
 
-			foreach (Transform child in parent)
+			while (stack.Count > 0)
 			{
-				ForEachDescendant(child, action);
+				var current = stack.Pop();
+
+				action(current);
+
+				foreach (Transform child in current)
+				{
+					stack.Push(child);
+				}
 			}
 		}
 
 		/// <summary>
-		/// Perform action on every transform in the whole hierarchy of descendants including root parent
+		/// Perform action on every transform in the whole hierarchy of descendants including root parent.
 		/// Includes break functionality: return true from the delegate to break out of the loop, false to continue iterating
 		/// </summary>
-		public static void ForEachDescendant(this Transform parent, Func<Transform, bool> func, bool toBreak = false)
+		public static void ForEachDescendant(this Transform parent, Func<Transform, bool> func)
 		{
-			if (toBreak)
-				return;
+			var stack = new Stack<Transform>();
+			stack.Push(parent);
 
-			toBreak = func.Invoke(parent);
-
-			foreach (Transform child in parent)
+			while (stack.Count > 0)
 			{
-				ForEachDescendant(child, func, toBreak);
+				var current = stack.Pop();
+
+				if (func(current))
+					break;
+
+				foreach (Transform child in current)
+				{
+					stack.Push(child);
+				}
 			}
 		}
 
 		/// <summary>
-		/// Asynchronously perform action on every transform in the whole hierarchy of descendants including root parent
-		/// Includes break functionality: return true from the delegate to break out of the loop, false to continue iterating
+		/// Asynchronously perform action on every transform in the whole hierarchy of descendants including root parent.
+		/// Includes break functionality: return true from the delegate to break out of the loop, false to continue iterating.
 		/// </summary>
-		public static async Task ForEachDescendantAsync(this Transform parent, Func<Transform, Task<bool>> func, bool toBreak = false)
+		public static async Task ForEachDescendantAsync(this Transform parent, Func<Transform, Task<bool>> func)
 		{
-			if (toBreak)
-				return;
+			var stack = new Stack<Transform>();
+			stack.Push(parent);
 
-			toBreak = await func.Invoke(parent);
-
-			List<Task> tasks = new List<Task>();
-
-			foreach (Transform child in parent)
+			while (stack.Count > 0)
 			{
-				tasks.Add(child.ForEachDescendantAsync(func, toBreak));
-			}
+				var current = stack.Pop();
 
-			await Task.WhenAll(tasks);
+				if (await func(current))
+					break;
+
+				foreach (Transform child in current)
+				{
+					stack.Push(child);
+				}
+			}
 		}
 
+
 		/// <summary>
-		/// Perform action on every direct child
+		/// Perform action on every direct child.
 		/// </summary>
 		public static void ForEach(this Transform parent, Action<Transform> action)
 		{
 			foreach (Transform child in parent)
 			{
-				action?.Invoke(child);
+				action(child);
 			}
 		}
 
 		/// <summary>
-		/// Perform action on every direct child
+		/// Perform action on every direct child.
 		/// Includes break functionality: return true from the delegate to break out of the loop, false to continue iterating
 		/// </summary>
 		public static void ForEach(this Transform parent, Func<Transform, bool> func)
 		{
 			foreach (Transform child in parent)
 			{
-				if (func.Invoke(child))
+				if (func(child))
 					break;
 			}
 		}
 		#endregion
 
 		/// <summary>
-		/// Check if layermask contains layer (int)
+		/// Check if layermask contains layer (int).
 		/// </summary>
 		public static bool Contains(this LayerMask mask, int layer)
 		{

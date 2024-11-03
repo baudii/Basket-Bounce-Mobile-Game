@@ -34,9 +34,13 @@ namespace BasketBounce.Gameplay.Levels
 		public void Init(int level)
 		{
 			this.Log("Init with level", level);
+			foreach (var chunk in chunks)
+			{
+				chunk.ValidateChunk();
+			}
+
 			currentChunkIndex = level / chunkSize;
 			currentChunk = Instantiate(chunks[currentChunkIndex], transform);
-			
 			chunkSize = currentChunk.LevelCount;
 		}
 

@@ -36,6 +36,7 @@ namespace BasketBounce.Gameplay.Levels
 					levels.Add(levelData);
 					if (levelData.gameObject.activeSelf)
 					{
+						levelData.ValidateLevel();
 						levelData.gameObject.SetActive(false);
 					}
 					i++;
