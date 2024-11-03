@@ -4,9 +4,9 @@ using UnityEngine.AddressableAssets;
 using UnityEngine.Events;
 using System.Threading.Tasks;
 
-using BasketBounce.Systems.Interfaces;
 using BasketBounce.UI;
 using BasketBounce.Gameplay.Visuals;
+using BasketBounce.Systems;
 using KK.Common;
 using KK.Common.Gameplay;
 
@@ -105,7 +105,7 @@ namespace BasketBounce.Gameplay.Mechanics
 				textObj.transform.localPosition = localOffsetTextPosition;
 				transform.position = GetOverridenPosition(transform.position);
 				_textObj = textObj.GetComponent<BreakableCounter_WorldUI>();
-				this.SmartLog(_textObj.name);
+				this.Log(_textObj.name);
 			}
 			UpdateBlinkColor();
 		}

@@ -6,9 +6,9 @@ namespace BasketBounce.Gameplay.Mechanics
 	{
 		private void OnTriggerEnter2D(Collider2D collision)
 		{
-			if (collision.TryGetComponent(out Ball circle))
+			if (collision.TryGetComponent(out Ball ball))
 			{
-				circle.Die(true);
+				ball.Die(true);
 			}
 		}
 	}

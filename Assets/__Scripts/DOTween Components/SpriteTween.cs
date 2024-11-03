@@ -2,56 +2,59 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.Events;
 
-public class SpriteTween
+namespace BasketBounce.DOTweenComponents
 {
-	MonoBehaviour caller;
-	SpriteRenderer sr;
-	Vector2 targetSize;
-	float prevT;
-
-	UnityAction OnUpdateAction;
-
-	public SpriteTween(SpriteRenderer sr, MonoBehaviour caller)
+	public class SpriteTween
 	{
-		this.sr = sr;
-		this.caller = caller;
-	}
+		MonoBehaviour caller;
+		SpriteRenderer sr;
+		Vector2 targetSize;
+		float prevT;
 
-	public SpriteTween TweenSize(Vector2 initialSize, Vector2 targetSize, float targetTime)
-	{
-		caller.StopAllCoroutines();
+		UnityAction OnUpdateAction;
 
-		this.targetSize = targetSize;
-		caller.StartCoroutine(TweenCoroutine(initialSize, targetTime));
-		return this;
-	}
-
-	public void KillTween(bool complete = false)
-	{
-		caller.StopAllCoroutines();
-		prevT = 0;
-		if (complete)
-			sr.size = targetSize;
-	}
-
-	public void OnUpdate(UnityAction action)
-	{
-		OnUpdateAction = action;
-	}
-
-	IEnumerator TweenCoroutine(Vector2 startSize, float targetTime)
-	{
-		float t = 0;
-			
-		if (prevT != 0)
-			t = 1 - prevT;
-		do
+		public SpriteTween(SpriteRenderer sr, MonoBehaviour caller)
 		{
-			t += Time.deltaTime / targetTime;
-			prevT = t;
-			sr.size = Vector2.Lerp(startSize, targetSize, t);
-			OnUpdateAction?.Invoke();
-			yield return null;
-		} while (t < 1);
+			this.sr = sr;
+			this.caller = caller;
+		}
+
+		public SpriteTween TweenSize(Vector2 initialSize, Vector2 targetSize, float targetTime)
+		{
+			caller.StopAllCoroutines();
+
+			this.targetSize = targetSize;
+			caller.StartCoroutine(TweenCoroutine(initialSize, targetTime));
+			return this;
+		}
+
+		public void KillTween(bool complete = false)
+		{
+			caller.StopAllCoroutines();
+			prevT = 0;
+			if (complete)
+				sr.size = targetSize;
+		}
+
+		public void OnUpdate(UnityAction action)
+		{
+			OnUpdateAction = action;
+		}
+
+		IEnumerator TweenCoroutine(Vector2 startSize, float targetTime)
+		{
+			float t = 0;
+
+			if (prevT != 0)
+				t = 1 - prevT;
+			do
+			{
+				t += Time.deltaTime / targetTime;
+				prevT = t;
+				sr.size = Vector2.Lerp(startSize, targetSize, t);
+				OnUpdateAction?.Invoke();
+				yield return null;
+			} while (t < 1);
+		}
 	}
 }

@@ -5,11 +5,15 @@ namespace BasketBounce.DOTweenComponents.UI
 	public class UI_TweenRotate : MonoBehaviour
 	{
 		[SerializeField] float duration;
+		[SerializeField] bool independantUpdate = true;
+		[SerializeField] Transform target;
 
 		Quaternion initialRotation;
 		private void Awake()
 		{
-			initialRotation = transform.rotation;
+			if (target == null)
+				target = transform;
+			initialRotation = target.rotation;
 		}
 
 		private void OnEnable()
@@ -19,13 +23,13 @@ namespace BasketBounce.DOTweenComponents.UI
 
 		private void OnDisable()
 		{
-			transform.DOKill();
-			transform.rotation = initialRotation;
+			target.DOKill();
+			target.rotation = initialRotation;
 		}
 
 		private void RotateLoop()
 		{
-			transform.DORotate(new Vector3(0, 0, 360), duration, RotateMode.WorldAxisAdd).SetEase(Ease.Linear).SetLoops(-1).SetUpdate(true);
+			target.DORotate(new Vector3(0, 0, 360), duration, RotateMode.WorldAxisAdd).SetEase(Ease.Linear).SetLoops(-1).SetUpdate(independantUpdate);
 		}
 
 	}

@@ -2,7 +2,7 @@ using UnityEngine;
 
 
 
-namespace BasketBounce.SO
+namespace BasketBounce.Systems
 {
 	[CreateAssetMenu(fileName = "Game Assets", menuName = "SO/Game Assets")]
 	public class GameAssets_SO : ScriptableObject

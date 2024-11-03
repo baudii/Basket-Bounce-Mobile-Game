@@ -1,12 +1,15 @@
 using DG.Tweening;
 using UnityEngine;
 
-public class SimpleMoveTween : AbstractTween
+namespace BasketBounce.DOTweenComponents
 {
-	[SerializeField] Vector3 targetLocalPos;
-
-	protected override Tween GetTween()
+	public class SimpleMoveTween : AbstractTween
 	{
-		return transform.DOLocalMove(targetLocalPos, duration);
+		[SerializeField] Vector3 targetLocalPos;
+
+		protected override Tween GetTween()
+		{
+			return transform.DOLocalMove(targetLocalPos, duration);
+		}
 	}
 }

@@ -2,7 +2,7 @@ using DG.Tweening;
 using System;
 using UnityEngine;
 using UnityEngine.Events;
-using BasketBounce.Systems.Interfaces;
+using BasketBounce.Systems;
 using KK.Common;
 using KK.Common.Gameplay;
 using UnityEngine.AddressableAssets;
@@ -146,7 +146,7 @@ namespace BasketBounce.Gameplay.Mechanics
 				float duration = doorMovements[i].Duration;
 				if (i == 0)
 				{
-					this.SmartLog(initialPosition, initialRotation);
+					this.Log(initialPosition, initialRotation);
 					Tween tween = null;
 					tween = transform.DOMove(initialPosition, duration);
 					sequence.Insert(currentTime, tween);

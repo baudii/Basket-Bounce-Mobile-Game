@@ -1,13 +1,16 @@
 using UnityEngine;
 using DG.Tweening;
 
-public class FadeTween : AbstractTween
+namespace BasketBounce.DOTweenComponents
 {
-	[SerializeField] SpriteRenderer rend;
-	[SerializeField] protected float targetAlpha;
-
-	protected override Tween GetTween()
+	public class FadeTween : AbstractTween
 	{
-		return rend.DOFade(targetAlpha, duration);
+		[SerializeField] SpriteRenderer rend;
+		[SerializeField] protected float targetAlpha;
+
+		protected override Tween GetTween()
+		{
+			return rend.DOFade(targetAlpha, duration);
+		}
 	}
 }

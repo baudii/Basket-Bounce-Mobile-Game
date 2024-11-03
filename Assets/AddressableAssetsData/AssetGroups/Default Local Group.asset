@@ -27,6 +27,16 @@ MonoBehaviour:
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 9f02384d6dca8b549ba97dcd73b1e934
+    m_Address: LevelSet-1
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: e4e8c10caef66ae4d996f074c7d9956d
+    m_Address: LevelSet-2
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: f081d06ab0ac4ad48a5c45f5fedabea0
     m_Address: Door_Wire
     m_ReadOnly: 0

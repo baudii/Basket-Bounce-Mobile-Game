@@ -1,7 +1,8 @@
 using UnityEngine;
-using BasketBounce.Systems.Interfaces;
 using KK.Common;
 using KK.Common.Gameplay;
+using BasketBounce.Systems;
+using BasketBounce.DOTweenComponents;
 
 namespace BasketBounce.Gameplay.Mechanics
 {
@@ -39,7 +40,7 @@ namespace BasketBounce.Gameplay.Mechanics
 
 		public void ResetState()
 		{
-			this.SmartLog("Resetting state of Cactus");
+			this.Log("Resetting state of Cactus");
 			grown = false;
 			spriteTween.KillTween();
 			sr.size = initialSize;

@@ -4,10 +4,11 @@ using CandyCoded.HapticFeedback;
 using DG.Tweening;
 using System;
 using UnityEngine;
-using BasketBounce.UI;
 using BasketBounce.Systems;
 using BasketBounce.Gameplay.Visuals;
+using BasketBounce.Gameplay.Levels;
 using KK.Common;
+using UnityEngine.Events;
 
 
 namespace BasketBounce.Gameplay
@@ -35,9 +36,7 @@ namespace BasketBounce.Gameplay
 		[SerializeField] Transform GFX;
 		[SerializeField] LineController lineController;
 		[SerializeField] Rigidbody2D rb;
-		[Header("Outer dependencies")]
-		[SerializeField] ReflectionLine reflectionLine;
-		[SerializeField] UI_BounceCounter ui_bounceCounter;
+		
 
 		public enum BallState
 		{
@@ -52,6 +51,12 @@ namespace BasketBounce.Gameplay
 
 		public Action OnBallReleased;
 		public Action OnBallStartStretch;
+		public Action OnBallAbortStretch;
+		public Action OnBallDie;
+		public Action OnResetState;
+		public Action<int> OnBallBounce;
+
+		public UnityAction OnStuck;
 
 		bool useThreshhold;
 		bool canNotStuck;
@@ -70,8 +75,14 @@ namespace BasketBounce.Gameplay
 		float currentStuckTime;
 		float maxY;
 
+		// Outer dependancies
+		LevelManager levelManager;
+		GameManager gameManager;
+		GestureDetector gestureDetector;
+		ReflectionLine reflectionLine;
 
-		void Awake()
+		bool isInitialized;
+		public void Init(GameManager gameManager, LevelManager levelManager, GestureDetector gestureDetector, ReflectionLine reflectionLine)
 		{
 			maxStuckTimeCurrent = maxStuckTime;
 			timeOutOfScreen = 0;
@@ -83,16 +94,25 @@ namespace BasketBounce.Gameplay
 			lineController.Init(minSpeed);
 
 
-			GestureDetector.OnDragStart += StartBallStretch;
-			GestureDetector.OnDragUpdate += UpdateBallPosition;
-			GestureDetector.OnDragEnd += ReleaseBall;
+			gestureDetector.OnDragStart += StartBallStretch;
+			gestureDetector.OnDragUpdate += UpdateBallPosition;
+			gestureDetector.OnDragEnd += ReleaseBall;
 
-			LevelManager.Instance.OnLevelSetup.AddListener(ResetBall);
+			this.levelManager = levelManager;
+			this.gameManager = gameManager;
+			this.gestureDetector = gestureDetector;
+			this.reflectionLine = reflectionLine;
+
+			levelManager.OnLevelSetupEvent.AddListener(ResetBall);
+			isInitialized = true;
 		}
 
 
 		void Update()
 		{
+			if (!isInitialized)
+				return;
+
 			if (!IsBallInScreen())
 			{
 				timeOutOfScreen += Time.deltaTime;
@@ -112,7 +132,8 @@ namespace BasketBounce.Gameplay
 				currentStuckTime += Time.deltaTime;
 				if (currentStuckTime > maxStuckTimeCurrent && rb.velocity.y < 1)
 				{
-					GameManager.Instance.ShowStuckScreen();
+					// SHOW STACK SCREEN
+					OnStuck?.Invoke();
 					currentStuckTime = 0;
 				}
 			}
@@ -124,7 +145,7 @@ namespace BasketBounce.Gameplay
 
 		void SetState(BallState newState)
 		{
-			this.SmartLog("Switching state:", CurrentState, "->", newState);
+			this.Log("Switching state:", CurrentState, "->", newState);
 			CurrentState = newState;
 		}
 
@@ -141,32 +162,32 @@ namespace BasketBounce.Gameplay
 
 		void OnDestroy()
 		{
-			GestureDetector.OnDragStart -= StartBallStretch;
-			GestureDetector.OnDragUpdate -= UpdateBallPosition;
-			GestureDetector.OnDragEnd -= ReleaseBall;
+			if (gestureDetector != null)
+			{
+				gestureDetector.OnDragStart -= StartBallStretch;
+				gestureDetector.OnDragUpdate -= UpdateBallPosition;
+				gestureDetector.OnDragEnd -= ReleaseBall;
+			}
 
-			LevelManager.Instance.OnLevelSetup.RemoveListener(ResetBall);
+			if (levelManager != null)
+			{
+				levelManager.OnLevelSetupEvent.RemoveListener(ResetBall);
+			}
 
 			OnBallReleased = null;
 			OnBallStartStretch = null;
+			OnBallAbortStretch = null;
+			OnBallBounce = null;
+			OnResetState = null;
 		}
 
 		public bool BounceFromBouncePad(Vector2 direction, Vector3 position)
 		{
-			/*        var f = direction * force;
-					var reflected = rb.velocity;
-					var dot = Vector2.Dot(rb.velocity, direction);
-					if (dot < 0)
-						reflected = Vector2.Reflect(rb.velocity, direction);
-					this.SmartLog(f, direction, reflected, rb.velocity, dot);
-					var newdir = (reflected.normalized + f).normalized;
-
-					rb.velocity = newdir * speed * force * speedMultiplier;*/
 			if (CurrentState != BallState.Roaming)
 				return false;
 
 			bounces++;
-			ui_bounceCounter.OnBounce(bounces);
+			OnBallBounce?.Invoke(bounces);
 #if UNITY_ANDROID || UNITY_IOS
 			HapticFeedback.LightFeedback();
 #endif
@@ -212,7 +233,7 @@ namespace BasketBounce.Gameplay
 			rb.velocity *= 0;
 			animator.SetBool("IsRotating", false);
 			animator.speed = 1;
-			ui_bounceCounter.ResetState();
+			OnResetState?.Invoke();
 			useThreshhold = levelData.UseThreshold;
 			canNotStuck = levelData.CanNotStuck;
 			maxStuckTimeCurrent = levelData.OverrideStuckTime <= 0 ? maxStuckTime : levelData.OverrideStuckTime;
@@ -224,7 +245,10 @@ namespace BasketBounce.Gameplay
 			timeOutOfScreen = 0;
 			bounces = 0;
 			currentStretchPower = 1;
+
+
 			SetState(BallState.Preparation);
+
 		}
 
 		public void ResetRotation()
@@ -239,7 +263,7 @@ namespace BasketBounce.Gameplay
 			lineController.gameObject.SetActive(false);
 			reflectionLine.gameObject.SetActive(false);
 			currentStretchPower = 1;
-			GameManager.Instance.ShowOverview();
+			OnBallAbortStretch?.Invoke();
 			SetState(BallState.Preparation);
 		}
 
@@ -248,11 +272,9 @@ namespace BasketBounce.Gameplay
 			if (CurrentState != BallState.Preparation)
 				return;
 
-			GameManager.Instance.HideOverview();
-
 			lineController.gameObject.SetActive(true);
 
-			if (LevelManager.Instance.isReflectionMode)
+			if (levelManager.isReflectionMode)
 				reflectionLine.gameObject.SetActive(true);
 
 			OnBallStartStretch?.Invoke();
@@ -314,7 +336,7 @@ namespace BasketBounce.Gameplay
 			HapticFeedback.LightFeedback();
 #endif
 
-			LevelManager.Instance.OnBallReleased();
+			levelManager.OnBallReleased();
 
 			OnBallReleased?.Invoke();
 
@@ -359,11 +381,11 @@ namespace BasketBounce.Gameplay
 				HapticFeedback.LightFeedback();
 #endif
 
-				this.Co_DelayedExecute(GameManager.Instance.GameOver, () => explodeAnimator.GetCurrentAnimatorStateInfo(0).IsName("Finished"));
+				this.Co_DelayedExecute(gameManager.GameOver, () => explodeAnimator.GetCurrentAnimatorStateInfo(0).IsName("Finished"));
 			}
 			else
 			{
-				GameManager.Instance.GameOver();
+				gameManager.GameOver();
 			}
 		}
 
@@ -393,7 +415,7 @@ namespace BasketBounce.Gameplay
 
 			transform.DOScaleY(initialScale.y * Mathf.Pow(bounceScaleValue, speed), bounceAnimationDuration).OnComplete(() => transform.DOScaleY(initialScale.y, bounceAnimationDuration));
 			bounces++;
-			ui_bounceCounter.OnBounce(bounces);
+			OnBallBounce?.Invoke(bounces);
 			if (bounces > 100)
 			{
 				Die(false);

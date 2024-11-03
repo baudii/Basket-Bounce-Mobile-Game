@@ -1,291 +1,111 @@
+using System;
+using System.Threading;
 using UnityEngine;
 using UnityEngine.Events;
-using UnityEngine.UI;
-using KK.Common;
-using BasketBounce.UI;
-using BasketBounce.Gameplay;
-using BasketBounce.SO;
-using BasketBounce.DOTweenComponents.UI;
-
-
-#if UNITY_ANDROID || UNITY_IOS
-using CandyCoded.HapticFeedback;
-#endif
-
+using UnityEngine.SceneManagement;
 
 namespace BasketBounce.Systems
 {
-	[DefaultExecutionOrder(-2)]
-	public class GameManager : Singleton<GameManager>
+	public class GameManager : IDisposable
 	{
-		public enum State
+		// Last opened means the last level that can be chosen from level select - Switches to next when level is finished
+		public const string LOADING_SCENE_NAME = "LoadingScene";
+
+		public enum GameState
 		{
 			InGame,
-			Completed,
-			GameOver,
-			LevelSelect,
-			Paused,
-			Finished,
-			None
+			Loading,
+			InMenu
 		}
 
-		/*	public static GameManager Instance => instance;
-			static GameManager instance;*/
-
-		[Header("References")]
-		[SerializeField] GameObject gameOverScreen;
-		[SerializeField] UI_LevelCompleted levelCompleteScreen;
-		[SerializeField] UI_PauseController pauseScreen;
-		[SerializeField] GameObject loadingScreen;
-		[SerializeField] UI_LevelSelector levelSelectorScreen;
-		[SerializeField] UI_GameFinished gameFinishedScreen;
-		[SerializeField] Image mainUiBgImage;
-		[SerializeField] Image gameCompleteBgImage;
-		[SerializeField] AudioSource src;
-		[SerializeField] UI_BounceCounter bounceCounter;
-		[SerializeField] UI_Overview overview;
-
-		[Header("Level Header")]
-		[SerializeField] UI_TweenFadeInOut levelNameMainUI;
-
-		[Header("Assets")]
-		[SerializeField] GameAssets_SO gameAssets;
-		public GameAssets_SO GameAssets => gameAssets;
+		AsyncOperation asyncOperation;
 
 		[HideInInspector]
-		public UnityEvent OnLevelComplete;
+		public UnityEvent OnInGameEnterEvent;
+		[HideInInspector] 
+		public UnityEvent OnInGameExitEvent;
 		[HideInInspector]
-		public UnityEvent OnGameOver;
-		[HideInInspector]
-		public UnityEvent OnRestart;
-		[HideInInspector]
-		public UnityEvent OnInGameStateEnter;
-		[HideInInspector]
-		public UnityEvent OnInGameStateExit;
-
-		[HideInInspector]
-		public State currentState;
-		State prevState;
+		public UnityEvent OnGameOverEvent;
 
 
-		InputMaster input;
+		GameState currentState;
 
-		protected override void OnAwake()
+		public GameManager()
 		{
-			currentState = State.InGame;
+			OnInGameEnterEvent = new UnityEvent();
+			OnInGameExitEvent = new UnityEvent();
+			OnGameOverEvent = new UnityEvent();
+
+			currentState = GameState.InMenu;
+		}
+
+		public void Init()
+		{
 #if UNITY_IOS || UNITY_ANDROID
-			Application.targetFrameRate = 120;
-#endif
-			input = new InputMaster();
-			input.Enable();
-			input.Taps.Tap.performed += ctx => Vibrate();
-		}
-
-		private void OnDestroy()
-		{
-			OnLevelComplete = null;
-			OnInGameStateEnter = null;
-			OnInGameStateExit = null;
-			input.Dispose();
-		}
-
-#if UNITY_EDITOR
-		[ContextMenu("Clear Prefs")]
-		public void ClearPrefs()
-		{
-			PlayerPrefs.DeleteAll();
-		}
-
-#endif
-
-		void Vibrate()
-		{
-			src.Play();
-#if (UNITY_IOS || UNITY_ANDROID)
-			HapticFeedback.LightFeedback();
+			//Application.targetFrameRate = 120;
 #endif
 		}
 
-		public void PlayButtonClickSound() => src.PlayOneShot(GameAssets.BlopSound, 0.6f);
-
-		public void PlayMainSound() => src.Play();
-
-		void SetState(State state)
+		public void Dispose()
 		{
-			this.SmartLog("Current state: " + currentState + ". New state: " + state);
+			OnInGameEnterEvent = null;
+			OnInGameExitEvent = null;
+			OnGameOverEvent = null;
+		}
+
+		void SetState(GameState state)
+		{
+			if (state == currentState)
+				return;
+
 			OnExitState(currentState);
 
 			switch (state)
 			{
-				case State.InGame:
-					DisableAll();
+				case GameState.InGame:
 					Time.timeScale = 1;
-					OnInGameStateEnter?.Invoke();
-					bounceCounter.gameObject.SetActive(true);
+					OnInGameEnterEvent?.Invoke();
 					break;
-				case State.Completed:
-					src.PlayOneShot(GameAssets.WinSound, 0.3f);
-					levelSelectorScreen.UpdateLevelSelector();
-					levelCompleteScreen.gameObject.SetActive(true);
-					OnLevelComplete?.Invoke();
-					break;
-				case State.GameOver:
-					if (currentState != State.InGame && currentState != State.LevelSelect)
-						return;
-					OnGameOver?.Invoke();
-					gameOverScreen.SetActive(true);
-					break;
-				case State.LevelSelect:
-					levelSelectorScreen.gameObject.SetActive(true);
-					break;
-				case State.Paused:
-					pauseScreen.gameObject.SetActive(true);
-					break;
-				case State.Finished:
-					gameFinishedScreen.gameObject.SetActive(true);
-					gameCompleteBgImage.gameObject.SetActive(true);
-					break;
-				case State.None:
+				case GameState.Loading:
+					asyncOperation = SceneManager.LoadSceneAsync(LOADING_SCENE_NAME, LoadSceneMode.Additive);
 					break;
 			}
-
-			prevState = currentState;
 			currentState = state;
 		}
 
-		void OnExitState(State state)
+		void OnExitState(GameState state)
 		{
 			switch (state)
 			{
-				case State.InGame:
+				case GameState.InGame:
 					Time.timeScale = 0;
-					mainUiBgImage.gameObject.SetActive(true);
-					OnInGameStateExit?.Invoke();
-					bounceCounter.gameObject.SetActive(false);
+					OnInGameExitEvent?.Invoke();
 					break;
-				case State.Completed:
-					levelCompleteScreen.gameObject.SetActive(false);
-					break;
-				case State.GameOver:
-					gameOverScreen.SetActive(false);
-					break;
-				case State.LevelSelect:
-					levelSelectorScreen.gameObject.SetActive(false);
-					break;
-				case State.Paused:
-					pauseScreen.gameObject.SetActive(false);
-					break;
-				case State.Finished:
-					gameFinishedScreen.gameObject.SetActive(false);
-					break;
-				case State.None:
+				case GameState.Loading:
+					SceneManager.UnloadSceneAsync(LOADING_SCENE_NAME);
 					break;
 			}
-		}
-
-		public void Back()
-		{
-			/*        if (prevState == State.None)
-					{
-						ShowPauseScreen();
-						return;
-					}
-
-					DisableAll();
-
-					currentState = prevState;
-					prevState = State.None;
-
-					switch (currentState)
-					{
-						case State.Completed:
-							levelCompleteScreen.gameObject.SetActive(true);
-							break;
-						case State.GameOver:
-							gameOverScreen.SetActive(true);
-							break;
-						case State.LevelSelect:
-							levelSelectorScreen.gameObject.SetActive(true);
-							break;
-						case State.Paused:
-							pauseScreen.SetActive(true);
-							break;
-					}*/
-
-			SetState(prevState);
-			prevState = State.None;
-		}
-
-		public void HideOverview() => overview.Hide();
-		public void ShowOverview() => overview.Show();
-
-		public void GameOver()
-		{
-			if (currentState == State.InGame)
-				SetState(State.GameOver);
-		}
-
-		public void SetActiveLoadingScreen(bool isActive)
-		{
-			loadingScreen.SetActive(isActive);
-		}
-
-		public void OnLevelLoad(string header, int level)
-		{
-			levelNameMainUI.gameObject.SetActive(true);
-			levelNameMainUI.StartAnimation(header, level);
-		}
-
-		public void ShowLevelSelect()
-		{
-			SetState(State.LevelSelect);
-		}
-
-		public UI_LevelSelector GetUILevelSelector() => levelSelectorScreen;
-
-		public void UpodateUI()
-		{
-			levelSelectorScreen.UpdateLevelSelector();
-		}
-
-		public void ShowLevelCompleteScreen(ScoreData scoreData, int bounces)
-		{
-			SetState(State.Completed);
-			levelCompleteScreen.SetStars(scoreData, bounces);
-		}
-
-		public void ShowPauseScreen()
-		{
-			pauseScreen.InitPause();
-			SetState(State.Paused);
-		}
-
-		public void ShowStuckScreen()
-		{
-			pauseScreen.InitStuck();
-			SetState(State.Paused);
 		}
 
 		public void ResumeGame()
 		{
-			SetState(State.InGame);
+			SetState(GameState.InGame);
 		}
 
-		public void FinishLevelSet()
+		public void InMenu()
 		{
-			SetState(State.Finished);
+			SetState(GameState.InMenu);
 		}
 
-		void DisableAll()
+		public AsyncOperation StartLoading()
 		{
-			mainUiBgImage.gameObject.SetActive(false);
-			gameCompleteBgImage.gameObject.SetActive(false);
-			loadingScreen.SetActive(false);
-			gameOverScreen.SetActive(false);
-			levelCompleteScreen.gameObject.SetActive(false);
-			pauseScreen.gameObject.SetActive(false);
-			levelSelectorScreen.gameObject.SetActive(false);
-			gameFinishedScreen.gameObject.SetActive(false);
+			SetState(GameState.Loading);
+			return asyncOperation;
+		}
+
+		public void GameOver()
+		{
+			OnGameOverEvent?.Invoke();
 		}
 	}
 }

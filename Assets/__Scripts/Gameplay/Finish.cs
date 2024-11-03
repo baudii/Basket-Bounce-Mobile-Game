@@ -1,13 +1,15 @@
 using System.Collections;
 using UnityEngine;
 using UnityEngine.Events;
+using BasketBounce.Gameplay.Levels;
 using BasketBounce.Systems;
-using BasketBounce.Systems.Interfaces;
 using KK.Common;
+using BasketBounce.Models;
+using System;
 
 namespace BasketBounce.Gameplay
 {
-	public class Finish : MonoBehaviour, IResetableItem
+	public class Finish : MonoBehaviour, IResetableItem, ILevelInitializer
 	{
 		[SerializeField] float localScaleModifier;
 		[SerializeField] float animationSpeed;
@@ -18,6 +20,19 @@ namespace BasketBounce.Gameplay
 
 		public bool finished;
 
+		LevelManager levelManager;
+
+		bool initilized;
+
+		public void Initialize(LevelManager levelManager)
+		{
+			if (levelManager == null)
+				throw new ArgumentException($"Level Manager can not be null");
+
+			this.levelManager = levelManager;
+			initilized = true;
+		}
+
 		private void OnTriggerEnter2D(Collider2D collision)
 		{
 			if (finished)
@@ -25,6 +40,9 @@ namespace BasketBounce.Gameplay
 
 			if (collision.transform.TryGetComponent(out Ball ball))
 			{
+				if (!initilized)
+					throw new InvalidOperationException("Finish is not initialized!");
+
 				if (ball.CurrentState != Ball.BallState.Roaming)
 					return;
 
@@ -34,6 +52,7 @@ namespace BasketBounce.Gameplay
 				StartCoroutine(AnimateFinish(ball));
 			}
 		}
+
 		IEnumerator AnimateFinish(Ball ball)
 		{
 			int bounces = ball.OnFinish();
@@ -76,30 +95,16 @@ namespace BasketBounce.Gameplay
 
 			//сделать все остальное
 
-			LevelData levelData = LevelManager.Instance.CurrentLevelData;
+			LevelData levelData = levelManager.CurrentLevelData;
 			ScoreData scoreData = levelData.ConvertToStars(bounces);
 
-			LevelManager.Instance.OnFinish(scoreData.stars);
-
-			GameManager.Instance.ShowLevelCompleteScreen(scoreData, bounces);
+			levelManager.OnFinishedLevel(scoreData);
 		}
 
 		public void ResetState()
 		{
 			finished = false;
 		}
-
-		/*
-			ѕотенциально переделать в dotween
-			public void AnimateFinishTween(Ball ball)
-			{
-				Sequence sequence = DOTween.Sequence(ball.transform);
-
-				Tween moveToStartPos = transform.DOMove(animationStartPoint.position, secToStart);
-				Tween moveToEndPos = transform.DOMove(animationEndPoint.position, secToEnd);
-				Tween shrink = transform.DOSc
-
-			}*/
 	}
 
 }

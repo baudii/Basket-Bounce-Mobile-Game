@@ -1,5 +1,5 @@
 using UnityEngine;
-using BasketBounce.Systems.Interfaces;
+using BasketBounce.Systems;
 
 namespace BasketBounce.Gameplay.Visuals
 {

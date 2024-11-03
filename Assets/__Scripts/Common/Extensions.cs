@@ -1,6 +1,9 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
+using System.Threading;
+using System.Threading.Tasks;
 using UnityEngine;
 
 namespace KK.Common
@@ -126,21 +129,21 @@ namespace KK.Common
 		#region Log
 		/// <summary> Logs out a message to the Console in format: "[callerScript.callerMethodName()]: message" </summary>
 		/// <param name="message">Log messages</param>
-		public static void SmartLog(this object callerScript, params object[] messages)
+		public static void Log(this object callerScript, params object[] messages)
 		{
 			string log = GetLog(callerScript, messages);
 			Debug.Log(log);
 		}
 		/// <summary> Logs out a message to the Console in format: "[callerScript.callerMethodName()]: message" </summary>
 		/// <param name="message">Log messages</param>
-		public static void SmartError(this object callerScript, params object[] messages)
+		public static void Error(this object callerScript, params object[] messages)
 		{
 			string log = GetLog(callerScript, messages);
 			Debug.LogError(log);
 		}
 		/// <summary> Logs out a message to the Console in format: "[callerScript.callerMethodName()]: message" </summary>
 		/// <param name="messages">Log messages</param>
-		public static void SmartWarning(this object callerScript, params object[] messages)
+		public static void Warning(this object callerScript, params object[] messages)
 		{
 			string log = GetLog(callerScript, messages);
 			Debug.LogWarning(log);
@@ -176,6 +179,44 @@ namespace KK.Common
 		}
 
 		/// <summary>
+		/// Perform action on every transform in the whole hierarchy of descendants including root parent
+		/// Includes break functionality: return true from the delegate to break out of the loop, false to continue iterating
+		/// </summary>
+		public static void ForEachDescendant(this Transform parent, Func<Transform, bool> func, bool toBreak = false)
+		{
+			if (toBreak)
+				return;
+
+			toBreak = func.Invoke(parent);
+
+			foreach (Transform child in parent)
+			{
+				ForEachDescendant(child, func, toBreak);
+			}
+		}
+
+		/// <summary>
+		/// Asynchronously perform action on every transform in the whole hierarchy of descendants including root parent
+		/// Includes break functionality: return true from the delegate to break out of the loop, false to continue iterating
+		/// </summary>
+		public static async Task ForEachDescendantAsync(this Transform parent, Func<Transform, Task<bool>> func, bool toBreak = false)
+		{
+			if (toBreak)
+				return;
+
+			toBreak = await func.Invoke(parent);
+
+			List<Task> tasks = new List<Task>();
+
+			foreach (Transform child in parent)
+			{
+				tasks.Add(child.ForEachDescendantAsync(func, toBreak));
+			}
+
+			await Task.WhenAll(tasks);
+		}
+
+		/// <summary>
 		/// Perform action on every direct child
 		/// </summary>
 		public static void ForEach(this Transform parent, Action<Transform> action)
@@ -183,6 +224,19 @@ namespace KK.Common
 			foreach (Transform child in parent)
 			{
 				action?.Invoke(child);
+			}
+		}
+
+		/// <summary>
+		/// Perform action on every direct child
+		/// Includes break functionality: return true from the delegate to break out of the loop, false to continue iterating
+		/// </summary>
+		public static void ForEach(this Transform parent, Func<Transform, bool> func)
+		{
+			foreach (Transform child in parent)
+			{
+				if (func.Invoke(child))
+					break;
 			}
 		}
 		#endregion

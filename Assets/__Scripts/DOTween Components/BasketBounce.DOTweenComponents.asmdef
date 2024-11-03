@@ -1,6 +1,6 @@
 {
     "name": "BasketBounce.DOTweenComponents",
-    "rootNamespace": "",
+    "rootNamespace": "BasketBounce.DOTweenComponents",
     "references": [
         "GUID:6055be8ebefd69e48b49212b09b47b2f",
         "GUID:7ee385f8feab40d4a9b0e611b753d96b"

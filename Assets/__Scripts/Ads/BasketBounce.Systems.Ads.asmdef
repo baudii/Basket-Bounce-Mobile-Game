@@ -1,0 +1,20 @@
+{
+    "name": "BasketBounce.Ads",
+    "rootNamespace": "BasketBounce.Ads",
+    "references": [
+        "GUID:cbf3ace76183d694885c0f96a2696582",
+        "GUID:5a24ba4b42ee07c46afae6d53d14266f",
+        "GUID:07f86cff6f088e3439f11d0262ad3915",
+        "GUID:e990c6d3770ac6b4e911746e2b03c2a3",
+        "GUID:a4d8a1c4e5745f04488a6027f6bb30af"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

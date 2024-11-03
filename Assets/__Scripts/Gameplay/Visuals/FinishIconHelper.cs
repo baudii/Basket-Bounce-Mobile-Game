@@ -1,27 +1,35 @@
 using UnityEngine;
 using KK.Common;
-using BasketBounce.Systems;
+using BasketBounce.Gameplay.Levels;
+using BasketBounce.Models;
 
 namespace BasketBounce.Gameplay.Visuals
 {
 	public class FinishIconHelper : MonoBehaviour
 	{
 		[SerializeField] GameObject body;
-
+		LevelManager levelManager;
 		LevelData currentLevelData;
-
-		private void Awake()
+		public void Init(LevelManager levelManager)
 		{
-			LevelManager.Instance.OnLevelSetup.AddListener(Setup);
+			levelManager.OnLevelSetupEvent.AddListener(Setup);
+			this.levelManager = levelManager;
+			levelManager.OnFinishedLevelEvent.AddListener(OnFinishedLevel);
 		}
 
 		private void OnDestroy()
 		{
-			LevelManager.Instance.OnLevelSetup.RemoveListener(Setup);
+			if (levelManager != null)
+			{
+				levelManager.OnLevelSetupEvent.RemoveListener(Setup);
+			}
 		}
 
 		private void Update()
 		{
+			if (currentLevelData == null)
+				return;
+
 			bool isVisible = currentLevelData.IsFinishInScreen();
 			if (isVisible && body.activeSelf)
 			{
@@ -37,6 +45,11 @@ namespace BasketBounce.Gameplay.Visuals
 		{
 			transform.position = transform.position.WhereX(levelData.GetFinPos().x);
 			currentLevelData = levelData;
+		}
+
+		public void OnFinishedLevel(ScoreData _)
+		{
+			currentLevelData = null;
 		}
 	}
 }

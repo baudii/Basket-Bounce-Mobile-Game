@@ -1,7 +1,7 @@
 using UnityEngine;
 using KK.Common.Gameplay;
+using BasketBounce.Gameplay.Levels;
 using BasketBounce.Systems;
-using BasketBounce.Systems.Interfaces;
 
 namespace BasketBounce.Gameplay.Mechanics
 {

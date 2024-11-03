@@ -1,12 +1,14 @@
-﻿namespace BasketBounce.Gameplay
+﻿namespace BasketBounce.Models
 {
 	public struct ScoreData
 	{
+		public int bounces;
 		public int stars;
 		public int nextStarBounceRequirement;
 
-		public ScoreData(int stars, int nextStarBounceRequirement)
+		public ScoreData(int stars, int nextStarBounceRequirement, int bounces)
 		{
+			this.bounces = bounces;
 			this.stars = stars;
 			this.nextStarBounceRequirement = nextStarBounceRequirement;
 		}

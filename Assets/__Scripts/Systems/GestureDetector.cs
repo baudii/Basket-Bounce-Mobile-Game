@@ -10,38 +10,47 @@ namespace BasketBounce.Systems
 	public class GestureDetector : MonoBehaviour
 	{
 #if UNITY_EDITOR
-		[SerializeField] bool checkDragCoroutine;
+		[SerializeField] bool debugDragUpdate;
 #endif
-		[SerializeField] private Camera cam;
+		private Camera cam;
 
 		public static UnityAction<Vector2> OnSwipePerformed;
 
-		public static UnityAction<Vector2> OnDragStart;
-		public static Func<Vector2, bool> OnDragUpdate;
-		public static UnityAction<Vector2> OnDragEnd;
+		public Action<Vector2> OnDragStart;
+		public Action<Vector2> OnDragEnd;
+		public Func<Vector2, bool> OnDragUpdate;
 
 		private InputMaster input;
 
+		private EventSystem eventSystem;
+		private GameManager gameManager;
+
 		bool isDragging;
 
-		private void Awake()
+		public void Init(GameManager gameManager, EventSystem eventSystem)
 		{
 			input = new InputMaster();
-			input.Enable();
 
-			GameManager.Instance.OnInGameStateEnter.AddListener(() => input.Enable());
-			GameManager.Instance.OnInGameStateExit.AddListener(() => input.Disable());
-		}
+			this.eventSystem = eventSystem;
+			this.gameManager = gameManager;
+			this.Log(gameManager);
+			gameManager.OnInGameEnterEvent.AddListener(EnableInput);
+			gameManager.OnInGameExitEvent.AddListener(DisableInput);
 
-		private void Start()
-		{
-			if (cam == null)
-				cam = Camera.main;
+			cam = Camera.main == null ? throw new Exception("Wrong operation order. Camera is null.") : Camera.main;
+
 			InitDrag();
+			input.Disable();
 		}
 
 		private void OnDestroy()
 		{
+			if (gameManager != null)
+			{
+				gameManager.OnInGameEnterEvent.RemoveListener(EnableInput);
+				gameManager.OnInGameExitEvent.RemoveListener(DisableInput);
+			}
+
 			OnDragStart = null;
 			OnDragUpdate = null;
 			OnDragEnd = null;
@@ -68,16 +77,15 @@ namespace BasketBounce.Systems
 
 		IEnumerator DragUpdate()
 		{
-			LevelManager.Instance.OnClickAnywhere();
 			isDragging = true;
 
 			yield return null;
 
 			Vector2 startPos = GetTouchPosition();
 
-			if (EventSystem.current.currentSelectedGameObject != null)
+			if (eventSystem.currentSelectedGameObject != null)
 			{
-				this.SmartLog("Touching UI element");
+				this.Log("Touching UI element");
 				yield break;
 			}
 
@@ -93,10 +101,10 @@ namespace BasketBounce.Systems
 				direction = (startPos - GetTouchPosition());
 
 #if UNITY_EDITOR
-				if (checkDragCoroutine)
+				if (debugDragUpdate)
 				{
-					this.SmartLog("Inside drag update while loop");
-					this.SmartLog("Direction:", direction);
+					this.Log("Inside drag update while loop");
+					this.Log("Direction:", direction);
 				}
 #endif
 				if (OnDragUpdate != null)
@@ -108,14 +116,15 @@ namespace BasketBounce.Systems
 			if (isUpdateSuccessful)
 				OnDragEnd?.Invoke(direction);
 
-			this.SmartLog("Exiting drag update coroutine");
+			this.Log("Exiting drag update coroutine");
 		}
 
-
+		public void EnableInput() => input.Enable();
+		public void DisableInput() => input.Disable();
 
 		public void SetActive(bool isActive)
 		{
-			this.SmartLog("Setting input to: ", isActive);
+			this.Log("Setting input to: ", isActive);
 			if (isActive)
 				input.Enable();
 			else

@@ -99,8 +99,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   textMeshPro: {fileID: 7422947413520401202}
-  shakeMagnitude: 0.1
-  shakeSpeed: 3
   wordShakers:
   - startWordIndex: 2
     endWordIndex: 2
@@ -230,7 +228,6 @@ MonoBehaviour:
   levelHeader: Cactus Climb
   russianLevelHeader: "\u0412\u043E\u0441\u0445\u043E\u0436\u0434\u0435\u043D\u0438\u0435
     \u043D\u0430 \u043A\u0430\u043A\u0442\u0443\u0441"
-  finTransform: {fileID: 521016085481241726}
   bounces3star: 5
   bounces2star: 7
   useThreshHold: 0
@@ -248,6 +245,7 @@ MonoBehaviour:
   OnResetEvent:
     m_PersistentCalls:
       m_Calls: []
+  LevelNum: 0
   validateLevel: 0
 --- !u!1 &1318582956649379837
 GameObject:
@@ -413,7 +411,6 @@ MonoBehaviour:
   levelHeader: Bouncing Through Thorns
   russianLevelHeader: "\u041E\u0442\u0441\u043A\u043E\u043A\u0438 \u0441\u043A\u0432\u043E\u0437\u044C
     \u0448\u0438\u043F\u044B"
-  finTransform: {fileID: 5370665876161795785}
   bounces3star: 3
   bounces2star: 0
   useThreshHold: 0
@@ -431,6 +428,7 @@ MonoBehaviour:
   OnResetEvent:
     m_PersistentCalls:
       m_Calls: []
+  LevelNum: 0
   validateLevel: 0
 --- !u!1 &2075026866897946977
 GameObject:
@@ -864,7 +862,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   levelHeader: Angled spring
   russianLevelHeader: "\u0423\u0433\u043B\u043E\u0432\u0430\u044F \u043F\u0440\u0443\u0436\u0438\u043D\u0430"
-  finTransform: {fileID: 3769112476072242665}
   bounces3star: 2
   bounces2star: 4
   useThreshHold: 0
@@ -882,6 +879,7 @@ MonoBehaviour:
   OnResetEvent:
     m_PersistentCalls:
       m_Calls: []
+  LevelNum: 0
   validateLevel: 0
 --- !u!1 &4241899041280415503
 GameObject:
@@ -941,7 +939,6 @@ MonoBehaviour:
   levelHeader: Diagonal Springs
   russianLevelHeader: "\u0414\u0438\u0430\u0433\u043E\u043D\u0430\u043B\u044C\u043D\u044B\u0435
     \u043F\u0440\u0443\u0436\u0438\u043D\u044B"
-  finTransform: {fileID: 813230266361950802}
   bounces3star: 4
   bounces2star: 5
   useThreshHold: 0
@@ -959,6 +956,7 @@ MonoBehaviour:
   OnResetEvent:
     m_PersistentCalls:
       m_Calls: []
+  LevelNum: 0
   validateLevel: 0
 --- !u!1 &4816218571788105336
 GameObject:
@@ -1018,7 +1016,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   levelHeader: High up in the skies!
   russianLevelHeader: "\u0412\u0432\u0435\u0440\u0445, \u043A \u043D\u0435\u0431\u0435\u0441\u0430\u043C!"
-  finTransform: {fileID: 4908673083879897288}
   bounces3star: 4
   bounces2star: 7
   useThreshHold: 0
@@ -1036,6 +1033,7 @@ MonoBehaviour:
   OnResetEvent:
     m_PersistentCalls:
       m_Calls: []
+  LevelNum: 0
   validateLevel: 0
 --- !u!1 &5454766626434969722
 GameObject:
@@ -1308,8 +1306,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   textMeshPro: {fileID: 2838671085463546394}
-  shakeMagnitude: 0.1
-  shakeSpeed: 3
   wordShakers:
   - startWordIndex: 5
     endWordIndex: 5
@@ -1368,7 +1364,6 @@ MonoBehaviour:
   levelHeader: Springing Surfaces
   russianLevelHeader: "\u041F\u0440\u0443\u0436\u0438\u043D\u0438\u0441\u0442\u044B\u0435
     \u043F\u043E\u0432\u0435\u0440\u0445\u043D\u043E\u0441\u0442\u0438"
-  finTransform: {fileID: 6840703687184594550}
   bounces3star: 3
   bounces2star: 4
   useThreshHold: 0
@@ -1410,6 +1405,7 @@ MonoBehaviour:
   OnResetEvent:
     m_PersistentCalls:
       m_Calls: []
+  LevelNum: 0
   validateLevel: 0
 --- !u!1 &7110015384343293128
 GameObject:
@@ -1465,7 +1461,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   levelHeader: Left or right?
   russianLevelHeader: "\u0412\u043B\u0435\u0432\u043E \u0438\u043B\u0438 \u0432\u043F\u0440\u0430\u0432\u043E?"
-  finTransform: {fileID: 8809187726508362175}
   bounces3star: 3
   bounces2star: 0
   useThreshHold: 0
@@ -1483,6 +1478,7 @@ MonoBehaviour:
   OnResetEvent:
     m_PersistentCalls:
       m_Calls: []
+  LevelNum: 0
   validateLevel: 0
 --- !u!1 &7355236096625062323
 GameObject:
@@ -1539,7 +1535,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   levelHeader: Spiky problem
   russianLevelHeader: "\u041E\u0441\u0442\u0440\u044B\u0435 \u043F\u0440\u043E\u0431\u043B\u0435\u043C\u044B"
-  finTransform: {fileID: 2815954153378006118}
   bounces3star: 3
   bounces2star: 0
   useThreshHold: 0
@@ -1581,6 +1576,7 @@ MonoBehaviour:
   OnResetEvent:
     m_PersistentCalls:
       m_Calls: []
+  LevelNum: 0
   validateLevel: 0
 --- !u!1 &7776697061150408691
 GameObject:
@@ -1598,7 +1594,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 2147483647
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &5215334892907315902
 Transform:
   m_ObjectHideFlags: 0
@@ -1639,7 +1635,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   levelHeader: In circles
   russianLevelHeader: "\u041A\u0440\u0443\u0433\u0430\u043C\u0438"
-  finTransform: {fileID: 6527960761623222634}
   bounces3star: 2
   bounces2star: 4
   useThreshHold: 0
@@ -1657,6 +1652,7 @@ MonoBehaviour:
   OnResetEvent:
     m_PersistentCalls:
       m_Calls: []
+  LevelNum: 0
   validateLevel: 0
 --- !u!1 &8555154593320311748
 GameObject:
@@ -1720,7 +1716,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   levelHeader: Spiky walls
   russianLevelHeader: "\u041E\u0441\u0442\u0440\u044B\u0435 \u0441\u0442\u0435\u043D\u044B"
-  finTransform: {fileID: 3152934424899952076}
   bounces3star: 3
   bounces2star: 0
   useThreshHold: 0
@@ -1738,6 +1733,7 @@ MonoBehaviour:
   OnResetEvent:
     m_PersistentCalls:
       m_Calls: []
+  LevelNum: 0
   validateLevel: 0
 --- !u!1001 &50087644401456958
 PrefabInstance:
@@ -11067,6 +11063,10 @@ PrefabInstance:
       value: 0.24
       objectReference: {fileID: 0}
     - target: {fileID: 3488044364981172352, guid: 97d98bf11248e8f45bd0e63db8ef7126, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3488044364981172352, guid: 97d98bf11248e8f45bd0e63db8ef7126, type: 3}
       propertyPath: m_DrawMode
       value: 2
       objectReference: {fileID: 0}
@@ -11145,6 +11145,10 @@ PrefabInstance:
     - target: {fileID: 8551963689945845647, guid: 97d98bf11248e8f45bd0e63db8ef7126, type: 3}
       propertyPath: m_LocalScale.x
       value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 8769687062094463481, guid: 97d98bf11248e8f45bd0e63db8ef7126, type: 3}
+      propertyPath: m_Size.x
+      value: 0.85
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

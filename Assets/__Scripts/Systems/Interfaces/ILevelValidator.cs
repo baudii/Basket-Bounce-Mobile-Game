@@ -1,5 +1,5 @@
 
-namespace BasketBounce.Systems.Interfaces
+namespace BasketBounce.Systems
 {
 	public interface ILevelValidator
 	{

@@ -1,6 +1,6 @@
 using UnityEngine;
 using UnityEngine.Events;
-using BasketBounce.Systems.Interfaces;
+using BasketBounce.Systems;
 using KK.Common;
 using KK.Common.Gameplay;
 
@@ -21,7 +21,7 @@ namespace BasketBounce.Gameplay.Mechanics
 
 		public void ResetState()
 		{
-			this.SmartLog("Reseting state");
+			this.Log("Reseting state");
 
 			onResetState?.Invoke();
 		}

@@ -117,6 +117,7 @@ MonoBehaviour:
   OnResetEvent:
     m_PersistentCalls:
       m_Calls: []
+  LevelNum: 0
   validateLevel: 0
 --- !u!1 &2112253170778079104
 GameObject:
@@ -199,6 +200,7 @@ MonoBehaviour:
   OnResetEvent:
     m_PersistentCalls:
       m_Calls: []
+  LevelNum: 0
   validateLevel: 0
 --- !u!1 &2232682673944647999
 GameObject:
@@ -417,6 +419,7 @@ MonoBehaviour:
   OnResetEvent:
     m_PersistentCalls:
       m_Calls: []
+  LevelNum: 0
   validateLevel: 0
 --- !u!1 &3896758958399284414
 GameObject:
@@ -522,6 +525,7 @@ MonoBehaviour:
   OnResetEvent:
     m_PersistentCalls:
       m_Calls: []
+  LevelNum: 0
   validateLevel: 0
 --- !u!1 &4964873458835944477
 GameObject:
@@ -630,6 +634,7 @@ MonoBehaviour:
   OnResetEvent:
     m_PersistentCalls:
       m_Calls: []
+  LevelNum: 0
   validateLevel: 0
 --- !u!1 &6488970630053573314
 GameObject:
@@ -711,6 +716,7 @@ MonoBehaviour:
   OnResetEvent:
     m_PersistentCalls:
       m_Calls: []
+  LevelNum: 0
   validateLevel: 0
 --- !u!1 &6572196952763491600
 GameObject:
@@ -869,6 +875,7 @@ MonoBehaviour:
   OnResetEvent:
     m_PersistentCalls:
       m_Calls: []
+  LevelNum: 0
   validateLevel: 0
 --- !u!1 &7300820984994221886
 GameObject:
@@ -976,6 +983,7 @@ MonoBehaviour:
   OnResetEvent:
     m_PersistentCalls:
       m_Calls: []
+  LevelNum: 0
   validateLevel: 0
 --- !u!1 &7869354627687429941
 GameObject:
@@ -1048,6 +1056,7 @@ MonoBehaviour:
   OnResetEvent:
     m_PersistentCalls:
       m_Calls: []
+  LevelNum: 0
   validateLevel: 0
 --- !u!1 &8059434902257061429
 GameObject:
@@ -1121,6 +1130,7 @@ MonoBehaviour:
   OnResetEvent:
     m_PersistentCalls:
       m_Calls: []
+  LevelNum: 0
   validateLevel: 0
 --- !u!1001 &40175832750092367
 PrefabInstance:
