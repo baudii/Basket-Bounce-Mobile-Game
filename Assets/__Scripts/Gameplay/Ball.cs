@@ -48,6 +48,17 @@ namespace BasketBounce.Gameplay
 		}
 		public BallState CurrentState { get; private set; }
 		Camera cam;
+		Camera Cam
+		{
+			get
+			{
+				if (cam == null)
+				{
+					cam = Camera.main;
+				}
+				return cam;
+			}
+		}
 
 		public Action OnBallReleased;
 		public Action OnBallStartStretch;
@@ -87,7 +98,6 @@ namespace BasketBounce.Gameplay
 			maxStuckTimeCurrent = maxStuckTime;
 			timeOutOfScreen = 0;
 			currentStuckTime = 0;
-			cam = Camera.main;
 			initialScale = transform.localScale;
 			initialPosition = transform.position;
 
@@ -213,7 +223,7 @@ namespace BasketBounce.Gameplay
 		}
 		bool IsBallInScreen()
 		{
-			var screenPos = cam.WorldToScreenPoint(transform.position);
+			var screenPos = Cam.WorldToScreenPoint(transform.position);
 			if (screenPos.x < 0 || screenPos.x > Screen.width || screenPos.y < 0 || screenPos.y > Screen.height)
 				return false;
 			return true;

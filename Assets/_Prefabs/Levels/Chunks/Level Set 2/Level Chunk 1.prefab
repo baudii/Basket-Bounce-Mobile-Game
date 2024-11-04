@@ -87,7 +87,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   levelHeader: Oh no, it's a trap!
   russianLevelHeader: "\u041E \u043D\u0435\u0442, \u044D\u0442\u043E \u043B\u043E\u0432\u0443\u0448\u043A\u0430!"
-  finTransform: {fileID: 6875705958527702208}
   bounces3star: 3
   bounces2star: 12
   useThreshHold: 1
@@ -170,7 +169,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   levelHeader: Oh no, it's a trap!
   russianLevelHeader: "\u041E \u043D\u0435\u0442, \u044D\u0442\u043E \u043B\u043E\u0432\u0443\u0448\u043A\u0430!"
-  finTransform: {fileID: 9150538768000687100}
   bounces3star: 16
   bounces2star: 23
   useThreshHold: 1
@@ -389,7 +387,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   levelHeader: Oh no, it's a trap!
   russianLevelHeader: "\u041E \u043D\u0435\u0442, \u044D\u0442\u043E \u043B\u043E\u0432\u0443\u0448\u043A\u0430!"
-  finTransform: {fileID: 6967645431280947571}
   bounces3star: 16
   bounces2star: 23
   useThreshHold: 1
@@ -507,7 +504,6 @@ MonoBehaviour:
   levelHeader: Breaking glass ceiling
   russianLevelHeader: "\u041B\u043E\u043C\u0430\u0435\u043C \u0441\u0442\u0435\u043A\u043B\u044F\u043D\u043D\u044B\u0439
     \u043F\u043E\u0442\u043E\u043B\u043E\u043A"
-  finTransform: {fileID: 8770673221896739780}
   bounces3star: 23
   bounces2star: 0
   useThreshHold: 1
@@ -616,7 +612,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   levelHeader: Wrong way...
   russianLevelHeader: "\u041D\u0435 \u0442\u0443\u0434\u0430..."
-  finTransform: {fileID: 2667103674294877191}
   bounces3star: 8
   bounces2star: 10
   useThreshHold: 0
@@ -686,7 +681,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   levelHeader: Oh no, it's a trap!
   russianLevelHeader: "\u041E \u043D\u0435\u0442, \u044D\u0442\u043E \u043B\u043E\u0432\u0443\u0448\u043A\u0430!"
-  finTransform: {fileID: 3545611352769858355}
   bounces3star: 16
   bounces2star: 23
   useThreshHold: 1
@@ -833,7 +827,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   levelHeader: Clearing the way
   russianLevelHeader: "\u0420\u0430\u0441\u0447\u0438\u0449\u0430\u0435\u043C \u043F\u0443\u0442\u044C"
-  finTransform: {fileID: 4527378120160323647}
   bounces3star: 6
   bounces2star: 7
   useThreshHold: 0
@@ -965,7 +958,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   levelHeader: Oh no, it's a trap!
   russianLevelHeader: "\u041E \u043D\u0435\u0442, \u044D\u0442\u043E \u043B\u043E\u0432\u0443\u0448\u043A\u0430!"
-  finTransform: {fileID: 3722146668433733699}
   bounces3star: 16
   bounces2star: 23
   useThreshHold: 1
@@ -1038,7 +1030,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   levelHeader: In between
   russianLevelHeader: "\u041C\u0435\u0436\u0434\u0443"
-  finTransform: {fileID: 155451949348320936}
   bounces3star: 5
   bounces2star: 12
   useThreshHold: 0
@@ -1112,7 +1103,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   levelHeader: Shatter and Explore
   russianLevelHeader: "\u041B\u043E\u043C\u0430\u0439 \u0438 \u0438\u0441\u0441\u043B\u0435\u0434\u0443\u0439"
-  finTransform: {fileID: 6738988703632452242}
   bounces3star: 6
   bounces2star: 7
   useThreshHold: 1
@@ -3126,7 +3116,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8916005148157861125, guid: 96934a8bc3577dc49b8dd4f218e93d4b, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -5.5
+      value: -6.06
       objectReference: {fileID: 0}
     - target: {fileID: 8916005148157861125, guid: 96934a8bc3577dc49b8dd4f218e93d4b, type: 3}
       propertyPath: m_LocalPosition.z
@@ -5836,7 +5826,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 382876129914526175, guid: 52dd8036f0eb93747856e3a9a6845a2e, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 3.406313
+      value: 3.236
       objectReference: {fileID: 0}
     - target: {fileID: 382876129914526175, guid: 52dd8036f0eb93747856e3a9a6845a2e, type: 3}
       propertyPath: m_LocalPosition.z

@@ -6,6 +6,7 @@ using DG.Tweening;
 using BasketBounce.DOTweenComponents.UI;
 using BasketBounce.Gameplay;
 using BasketBounce.Gameplay.Levels;
+using KK.Common;
 
 
 namespace BasketBounce.UI
@@ -25,6 +26,9 @@ namespace BasketBounce.UI
 
 		DollyCameraController _dolly;
 		LevelManager _levelManager;
+
+
+		[KKInject]
 		public void Init(LevelManager levelManager, DollyCameraController dolly)
 		{
 			initialAlphas = new float[maskableGraphics.Length];

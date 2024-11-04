@@ -1,12 +1,10 @@
 using BasketBounce.Systems;
-using BasketBounce.Gameplay;
-using BasketBounce.Gameplay.Levels;
 using BasketBounce.UI;
 using UnityEngine;
 using System.Threading.Tasks;
-using System.Threading;
+using KK.Common;
 
-public class UIEntry : BaseGameEntry
+public class UIEntry : SceneEntryPoint
 {
 	[SerializeField] UI_Manager uiManagerPrefab;
 
@@ -16,9 +14,9 @@ public class UIEntry : BaseGameEntry
 	UI_Button_Handler[] uiButtonHandlers;
 	UI_LevelSelector uiLevelSelector;
 	UI_LevelNameController uiLevelNameController;
-	public override Task Setup(CancellationToken token)
+	public override Task Setup()
 	{
-		token.ThrowIfCancellationRequested();
+		Cts.Token.ThrowIfCancellationRequested();
 
 		uiManager = Instantiate(uiManagerPrefab);
 		uiOverview = uiManager.GetComponentInChildren<UI_Overview>(true);
@@ -27,26 +25,16 @@ public class UIEntry : BaseGameEntry
 		uiLevelSelector = uiManager.GetComponentInChildren<UI_LevelSelector>(true);
 		uiLevelNameController = uiManager.GetComponentInChildren<UI_LevelNameController>(true);
 
+		DIContainer.Register(uiManager);
+
 		return Task.CompletedTask;
 	}
-	public override Task Activate(CancellationToken token)
+	public override Task Activate()
 	{
-		token.ThrowIfCancellationRequested();
+		Cts.Token.ThrowIfCancellationRequested();
 
-		GetDependancy(out GameManager gameManager);
-		GetDependancy(out LevelManager levelManager);
-		GetDependancy(out Ball ball);
-		GetDependancy(out DollyCameraController dolly);
-		GetDependancy(out GestureDetector gestureDetector);
-
-		uiLevelSelector.Init(levelManager);
-		foreach (var buttonHandler in uiButtonHandlers)
-			buttonHandler.Init(gameManager, levelManager, uiManager);
-		uiBounceCounter.Init(ball);
-
-		uiManager.Init(gameManager, levelManager, ball);
-		uiOverview.Init(levelManager, dolly);
-		uiLevelNameController.Init(gestureDetector);
+		DIContainer.InjectIn(uiLevelSelector, uiBounceCounter, uiManager, uiOverview, uiLevelNameController);
+		DIContainer.InjectIn(uiButtonHandlers);
 
 		return Task.CompletedTask;
 	}

@@ -7,7 +7,6 @@ using BasketBounce.Models;
 using KK.Common;
 
 
-
 #if UNITY_ANDROID || UNITY_IOS
 using CandyCoded.HapticFeedback;
 #endif
@@ -53,17 +52,19 @@ namespace BasketBounce.UI
 
 		MenuState currentState, prevState;
 
-		bool isInitialized;
+		private void Awake()
+		{
+			input = new InputMaster();
+			input.Enable();
+			input.Taps.Tap.performed += ctx => Vibrate();
+		}
 
+		[KKInject]
 		public void Init(GameManager gameManager, LevelManager levelManager, Ball ball)
 		{
 			this.gameManager = gameManager;
 			this.ball = ball;
 			this.levelManager = levelManager;
-
-			input = new InputMaster();
-			input.Enable();
-			input.Taps.Tap.performed += ctx => Vibrate();
 
 			this.gameManager.OnInGameEnterEvent.AddListener(OnInGameEnter);
 			this.gameManager.OnInGameExitEvent.AddListener(OnInGameExit);
@@ -77,15 +78,10 @@ namespace BasketBounce.UI
 			this.ball.OnBallStartStretch += HideOverview;
 			this.ball.OnBallAbortStretch += ShowOverview;
 			this.ball.OnStuck += ShowStuckScreen;
-
-			isInitialized = true;
 		}
 
 		private void OnDestroy()
 		{
-			if (!isInitialized)
-				return;
-
 			input.Dispose();
 
 			if (gameManager != null)
@@ -146,7 +142,6 @@ namespace BasketBounce.UI
 				case MenuState.LevelCompleted:
 					levelCompleteScreen.gameObject.SetActive(true);
 					levelSelectorScreen.UpdateLevelSelector();
-					src.PlayOneShot(GameAssets.WinSound, 0.3f);
 					break;
 				case MenuState.LevelSelect:
 					levelSelectorScreen.gameObject.SetActive(true);
@@ -158,6 +153,10 @@ namespace BasketBounce.UI
 					gameFinishedScreen.gameObject.SetActive(true);
 					gameCompleteBgImage.gameObject.SetActive(true);
 					break;
+				case MenuState.None:
+					prevState = currentState;
+					currentState = state;
+					return;
 			}
 
 			gameManager.InMenu();
@@ -250,6 +249,7 @@ namespace BasketBounce.UI
 
 		void OnInGameEnter()
 		{
+			this.Log("On In Game Enter");
 			DisableAll();
 			bounceCounter.gameObject.SetActive(true);
 			SetState(MenuState.None);
@@ -257,6 +257,7 @@ namespace BasketBounce.UI
 
 		void OnInGameExit()
 		{
+			this.Log("On In Game Exit");
 			mainUiBgImage.gameObject.SetActive(true);
 			bounceCounter.gameObject.SetActive(false);
 		}
@@ -269,6 +270,7 @@ namespace BasketBounce.UI
 		public void ShowLevelCompleteScreen(ScoreData scoreData)
 		{
 			SetState(MenuState.LevelCompleted);
+			src.PlayOneShot(GameAssets.WinSound, 0.3f);
 			levelCompleteScreen.SetStars(scoreData);
 		}
 

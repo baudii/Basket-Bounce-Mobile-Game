@@ -1,37 +1,42 @@
 using BasketBounce.Systems;
-using System.Threading;
 using System.Threading.Tasks;
 using UnityEngine;
+using KK.Common;
 
 namespace BasketBounce.Gameplay.Levels
 {
-	public class LevelsEntry : BaseGameEntry
+	public class LevelsEntry : SceneEntryPoint
     {
 		[SerializeField] LevelManager levelManagerPrefab;
 		[SerializeField] GameObject BG;
 
 		LevelManager levelManager;
+		GameManager gameManager;
 
-		public override Task Setup(CancellationToken token)
+		public override Task Setup()
 		{
-			token.ThrowIfCancellationRequested();
+			Cts.Token.ThrowIfCancellationRequested();
 
 			levelManager = Instantiate(levelManagerPrefab);
 
 			Instantiate(BG);
 
-			Register(levelManager);
+			DIContainer.GetDependency(out gameManager);
+
+			DIContainer.Register(levelManager);
 
 			return Task.CompletedTask;
 		}
-		public override Task Activate(CancellationToken token)
+		public async override Task Activate()
 		{
-			token.ThrowIfCancellationRequested();
+			Cts.Token.ThrowIfCancellationRequested();
 
-			GetDependancy(out GameManager gameManager);
-			levelManager.Init(gameManager);
-			
-			return Task.CompletedTask;
+			DIContainer.InjectIn(levelManager);
+
+			var levelSet = gameManager.RecieveLevelSet();
+
+			await levelManager.Init();
+			await levelManager.ActivateLevelSet(levelSet);
 		}
 	}
 }

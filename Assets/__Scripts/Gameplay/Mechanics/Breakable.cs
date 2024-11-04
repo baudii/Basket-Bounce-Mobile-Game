@@ -103,7 +103,7 @@ namespace BasketBounce.Gameplay.Mechanics
 				textObj.transform.rotation = Quaternion.identity;
 				textObj.transform.SetParent(transform);
 				textObj.transform.localPosition = localOffsetTextPosition;
-				transform.position = GetOverridenPosition(transform.position);
+				textObj.transform.position = GetOverridenPosition(transform.position);
 				_textObj = textObj.GetComponent<BreakableCounter_WorldUI>();
 				this.Log(_textObj.name);
 			}

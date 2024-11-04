@@ -4,12 +4,12 @@ using BasketBounce.Systems;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using System.Threading.Tasks;
-using System.Threading;
 using KK.Common;
+using System;
 
 namespace BasketBounce.Gameplay
 {
-    public class GameplayEntry : BaseGameEntry
+    public class GameplayEntry : SceneEntryPoint
     {
 		[SerializeField] Ball ballPrefab;
 		[SerializeField] GameObject camPrefab;
@@ -25,9 +25,9 @@ namespace BasketBounce.Gameplay
 		DollyCameraController dolly;
 		Ball ball;
 
-		public override Task Setup(CancellationToken token)
+		public override Task Setup()
 		{
-			token.ThrowIfCancellationRequested();
+			Cts.Token.ThrowIfCancellationRequested();
 
 			eventSystem = Instantiate(eventSystemPrefab, null);
 
@@ -41,21 +41,21 @@ namespace BasketBounce.Gameplay
 			ball = Instantiate(ballPrefab);
 			reflectionLine = Instantiate(reflectionLinePrefab);
 
-			Register(ball);
-			Register(dolly);
-			Register(gestureDetector);
+			DIContainer.Register(ball);
+			DIContainer.Register(dolly);
+			DIContainer.Register(gestureDetector);
 
 			return Task.CompletedTask;
 		}
 
-		public override async Task Activate(CancellationToken token)
+		public override async Task Activate()
 		{
-			token.ThrowIfCancellationRequested();
+			Cts.Token.ThrowIfCancellationRequested();
 
-			GetDependancy(out GameManager gameManager);
-			GetDependancy(out LevelManager levelManager);
+			DIContainer.GetDependency(out GameManager gameManager);
+			DIContainer.GetDependency(out LevelManager levelManager);
 
-			await InstantiateAsync(musicPrefab).GetOperation().AsTask(token);
+			await InstantiateAsync(musicPrefab).GetOperation().AsTask(Cts.Token);
 			gestureDetector.Init(gameManager, eventSystem);
 			ball.Init(gameManager, levelManager, gestureDetector, reflectionLine);
 			dolly.Init(levelManager, ball.transform);

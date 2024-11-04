@@ -3,6 +3,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using BasketBounce.Systems;
+using KK.Common;
 namespace BasketBounce.UI
 {
 	public class UI_LevelNameController : MonoBehaviour
@@ -22,6 +23,8 @@ namespace BasketBounce.UI
 		// float initialTextXPos; - old
 
 		GestureDetector gestureDetector;
+
+		[KKInject]
 		public void Init(GestureDetector gestureDetector)
 		{
 			// initialTextXPos = textRect.localPosition.x; - old

@@ -1,64 +1,60 @@
 using System;
 using System.Threading.Tasks;
-using UnityEngine;
 using UnityEngine.SceneManagement;
 using KK.Common;
 using System.Threading;
 
 namespace BasketBounce.Systems
 {
-    public class MainGameEntry : BaseGameEntry
+    public class MainGameEntry : SceneEntryPoint
 	{
-		public const string MAIN_ENTRY_SCENE_NAME = "MainEntry";
-		const string LEVEL_SCENE_NAME = "LevelsEntry";
-		const string GAMEPLAY_SCENE_NAME = "GameplayEntry";
-		const string UI_SCENE_NAME = "UIEntry";
 
-		BaseGameEntry levelsEntryPoint, uiEntryPoint, gameplayEntryPoint;
+		SceneEntryPoint levelsEntryPoint, uiEntryPoint, gameplayEntryPoint;
 
 		public async Task Enter()
 		{
 			try
 			{
-				var scene = SceneManager.GetSceneByName(MAIN_ENTRY_SCENE_NAME);
-				SceneManager.SetActiveScene(scene);
-				await Setup(destroyCancellationToken);
-				await Activate(destroyCancellationToken);
+				await Setup();
+				await Activate();
 			}
 			catch (OperationCanceledException ex)
 			{
-				this.Log("Operation was cancelled.", "Message:", ex.Message, "Stack trace:", ex.StackTrace);
+				this.Log(GameManager.GetOperationCancelledLog(ex));
 			}
 		}
 
-		public async override Task Setup(CancellationToken token)
+		public override async Task Setup()
 		{
-			await LoadScenes(token, LEVEL_SCENE_NAME, GAMEPLAY_SCENE_NAME, UI_SCENE_NAME);
+			var scene = SceneManager.GetSceneByName(SceneNames.MAIN_ENTRY);
+			SceneManager.SetActiveScene(scene);
 
-			levelsEntryPoint = GetEntryPoint(LEVEL_SCENE_NAME);
-			gameplayEntryPoint = GetEntryPoint(GAMEPLAY_SCENE_NAME);
-			uiEntryPoint = GetEntryPoint(UI_SCENE_NAME);
+			await LoadScenes(Cts.Token, SceneNames.LEVELS_ENTRY, SceneNames.GAMEPLAY_ENTRY, SceneNames.UI_ENTRY);
+
+			levelsEntryPoint = GetEntryPoint(SceneNames.LEVELS_ENTRY);
+			gameplayEntryPoint = GetEntryPoint(SceneNames.GAMEPLAY_ENTRY);
+			uiEntryPoint = GetEntryPoint(SceneNames.UI_ENTRY);
 
 			Task[] tasks = new Task[3];
-			tasks[0] = levelsEntryPoint.Setup(token);
-			tasks[1] = gameplayEntryPoint.Setup(token);
-			tasks[2] = uiEntryPoint.Setup(token);
+			tasks[0] = levelsEntryPoint.Setup();
+			tasks[1] = gameplayEntryPoint.Setup();
+			tasks[2] = uiEntryPoint.Setup();
 
 			await Task.WhenAll(tasks);
 
 			this.Log("Finished setup");
 		}
 
-		public override async Task Activate(CancellationToken token)
+		public override async Task Activate()
 		{
 			// Порядок важен
-			await gameplayEntryPoint.Activate(token);
-			await uiEntryPoint.Activate(token);
-			await levelsEntryPoint.Activate(token);
+			await gameplayEntryPoint.Activate();
+			await uiEntryPoint.Activate();
+			await levelsEntryPoint.Activate();
 
-			await SceneManager.UnloadSceneAsync(LEVEL_SCENE_NAME).AsTask(token);
-			await SceneManager.UnloadSceneAsync(GAMEPLAY_SCENE_NAME).AsTask(token);
-			await SceneManager.UnloadSceneAsync(UI_SCENE_NAME).AsTask(token);
+			await SceneManager.UnloadSceneAsync(SceneNames.LEVELS_ENTRY).AsTask(Cts.Token);
+			await SceneManager.UnloadSceneAsync(SceneNames.GAMEPLAY_ENTRY).AsTask(Cts.Token);
+			await SceneManager.UnloadSceneAsync(SceneNames.UI_ENTRY).AsTask(Cts.Token);
 
 			this.Log("Finished activation");
 		}
@@ -75,14 +71,14 @@ namespace BasketBounce.Systems
 			await Task.WhenAll(tasks);
 		}
 
-		private BaseGameEntry GetEntryPoint(string sceneName)
+		private SceneEntryPoint GetEntryPoint(string sceneName)
 		{
 			var scene = SceneManager.GetSceneByName(sceneName);
 			var rootGOs = scene.GetRootGameObjects();
 
 			foreach (var go in rootGOs)
 			{
-				if (go.TryGetComponent(out BaseGameEntry goEntry))
+				if (go.TryGetComponent(out SceneEntryPoint goEntry))
 				{
 					return goEntry;
 				}

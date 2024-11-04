@@ -16,6 +16,7 @@ namespace BasketBounce.UI
 
 		LevelManager levelManager;
 
+		[KKInject]
 		public void Init(LevelManager levelManager)
 		{
 			this.levelManager = levelManager;

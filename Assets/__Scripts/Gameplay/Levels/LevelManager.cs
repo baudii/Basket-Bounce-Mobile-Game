@@ -6,41 +6,14 @@ using BasketBounce.Models;
 using UnityEngine.AddressableAssets;
 using KK.Common;
 using System.Threading.Tasks;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace BasketBounce.Gameplay.Levels
 {
 	public class LevelManager : MonoBehaviour
 	{
-		#region Editor functionality
-
-#if UNITY_EDITOR
-		[Header("Level state")]
-		[SerializeField] bool validate;
-		[SerializeField] bool testReflectionMode;
-		[Header("Test levels")]
-		[SerializeField] int testLevel;
-		[SerializeField] bool testLastOpenedLevel;
-
-		private void OnValidate()
-		{
-			if (validate)
-			{
-				foreach (Transform t in transform)
-				{
-					if (t.TryGetComponent(out LevelSet levelSet))
-					{
-						currentLevelSet = levelSet;
-						levelSet.gameObject.name = "Level Set 1";
-						return;
-					}
-				}
-			}
-		}
-#endif
-
-		#endregion
-
-		[SerializeField] LevelSet currentLevelSet;
+		LevelSet currentLevelSet;
 
 		[HideInInspector]
 		public UnityEvent<LevelData> OnLevelSetupEvent;
@@ -56,6 +29,7 @@ namespace BasketBounce.Gameplay.Levels
 		public LevelData CurrentLevelData { get; private set; }
 		public int CurrentLevel { get; private set; }
 
+		[KKInject]
 		GameManager gameManager;
 
 		// Last opened means the last level that can be chosen from level select - Switches to next when level is finished
@@ -67,9 +41,13 @@ namespace BasketBounce.Gameplay.Levels
 
 		public int LevelSetId => currentLevelSet.LevelSetId;
 
-		public void Init(GameManager gameManager)
+		List<GameObject> levelSetPrefabs;
+
+		public async Task Init()
 		{
-			this.gameManager = gameManager;
+			var op = Addressables.LoadAssetsAsync<GameObject>("LevelSets", null);
+			await op.Task;
+			levelSetPrefabs = op.Result.ToList();
 		}
 
 		void OnDestroy()
@@ -87,16 +65,33 @@ namespace BasketBounce.Gameplay.Levels
 			return "Player-Last-Level-" + levelSetId;
 		}
 
+		public static string GetLastLevelSetIdKey()
+		{
+			return "Last-Played-Level-Set";
+		}
+
 		public async Task ActivateLevelSet(int levelSet)
 		{
-			await gameManager.StartLoading().AsTask(destroyCancellationToken);
-			if (levelSet <= 0)
-				throw new ArgumentOutOfRangeException($"Provided level set index={levelSet} is invalid. Should be at least 1");
-			var op = Addressables.LoadAssetAsync<GameObject>(LEVEL_SET_KEY + levelSet);
-			var delay = Task.Delay(1000);
-			await op.Task;
-			await delay;
-			var levelSetPrefab = op.Result;
+			destroyCancellationToken.ThrowIfCancellationRequested();
+
+			await gameManager.StartLoading(destroyCancellationToken);
+
+			try
+			{
+				if (levelSetPrefabs == null)
+					throw new ArgumentNullException($"Level set prefabs collections is null. It should be initialized.");
+
+				if (levelSet < 0 || levelSet >= levelSetPrefabs.Count)
+					throw new ArgumentOutOfRangeException($"Provided level set index={levelSet} is invalid. Should be at least between [0, {levelSetPrefabs.Count - 1}] inclusive");
+			}
+			catch (Exception ex)
+			{
+				// Если это не сделать, эксепшен ArgumentOutOfRangeException вообще нигде не перехватывается. Интересно, почему?
+				this.Error(ex);
+				await gameManager.InMenu(destroyCancellationToken);
+				return;
+			}
+			var levelSetPrefab = levelSetPrefabs[levelSet];
 			var levelSetGo = Instantiate(levelSetPrefab, Vector3.zero, Quaternion.identity, transform);
 			currentLevelSet = levelSetGo.GetComponent<LevelSet>();
 			OnLevelSetAvailable?.Invoke(currentLevelSet);
@@ -105,10 +100,12 @@ namespace BasketBounce.Gameplay.Levels
 
 		public Task ActivateLastSavedLevel()
 		{
+			destroyCancellationToken.ThrowIfCancellationRequested();
+
 			var key = GetLastDiscoveredLevelKey(currentLevelSet.LevelSetId);
 			CurrentLevel = PlayerPrefs.GetInt(key, 0);
 			currentLevelSet.Init(CurrentLevel);
-			return LoadLevelAsync(CurrentLevel, true);
+			return LoadLevelAsync(CurrentLevel);
 		}
 
 		void SwapLevelTo(int level)
@@ -134,17 +131,28 @@ namespace BasketBounce.Gameplay.Levels
 			}
 		}
 
-		void UpdateLevelSaveData(int stars)
+		void TrySaveStars(int stars)
 		{
 			var earnedStarsKey = GetEarnedStarsKey(CurrentLevel, currentLevelSet.LevelSetId);
 			int savedProgress = PlayerPrefs.GetInt(earnedStarsKey, 0);
 			if (stars > savedProgress)
 				PlayerPrefs.SetInt(earnedStarsKey, stars);
+		}
 
+		void TrySaveLastDiscoveredLevel()
+		{
 			var lastLevelKey = GetLastDiscoveredLevelKey(currentLevelSet.LevelSetId);
-			savedProgress = PlayerPrefs.GetInt(lastLevelKey, 0);
+			int savedProgress = PlayerPrefs.GetInt(lastLevelKey, 0);
 			if (CurrentLevel + 1 > savedProgress)
 				PlayerPrefs.SetInt(lastLevelKey, CurrentLevel + 1);
+		}
+
+		void TrySaveLastLevelSet()
+		{
+			var lastLevelSetIdKey = GetLastLevelSetIdKey();
+			int savedProgress = PlayerPrefs.GetInt(lastLevelSetIdKey, 0);
+			if (LevelSetId > savedProgress)
+				PlayerPrefs.SetInt(lastLevelSetIdKey, LevelSetId);
 		}
 		
 		public void SetupLevel()
@@ -155,7 +163,11 @@ namespace BasketBounce.Gameplay.Levels
 		public void OnFinishedLevel(ScoreData scoreData)
 		{
 			if (CurrentLevel + 1 < currentLevelSet.LevelCount)
-				UpdateLevelSaveData(scoreData.stars);
+				TrySaveLastDiscoveredLevel();
+
+			TrySaveStars(scoreData.stars);
+			TrySaveLastLevelSet();
+
 			OnFinishedLevelEvent?.Invoke(scoreData);
 		}
 
@@ -169,34 +181,36 @@ namespace BasketBounce.Gameplay.Levels
 			if (CurrentLevel == currentLevelSet.LevelCount - 1)
 			{
 				OnFinishedGameEvent?.Invoke();
+				_ = ActivateLevelSet(LevelSetId + 1);
 				return;
 			}
 			_ = LoadLevelAsync(CurrentLevel + 1);
 		}
 
-		public async Task LoadLevelAsync(int level, bool isFirstTimeLoad = false)
+		public async Task LoadLevelAsync(int level)
 		{
-			await gameManager.StartLoading().AsTask(destroyCancellationToken);
+			try
+			{
+				destroyCancellationToken.ThrowIfCancellationRequested();
+				await gameManager.StartLoading(destroyCancellationToken);
 
-			this.Log("Loading level: Level ", level);
-			if (level >= currentLevelSet.LevelCount)
-				throw new ArgumentException($"Incorrect level={level} was provided");
+				this.Log("Loading level: Level", level);
+				if (level >= currentLevelSet.LevelCount)
+					throw new ArgumentException($"Incorrect level={level} was provided");
 
+				SwapLevelTo(level);
+				SetupLevel();
+				CallOnFirstTimeLoad(level);
 
-			float loadTime = 1f;
-			if (isFirstTimeLoad)
-				loadTime = 3f;
+				await Task.Delay(1000, destroyCancellationToken);
 
-			SwapLevelTo(level);
-			SetupLevel();
-			CallOnFirstTimeLoad(level);
-
-			await Task.Delay((int)(loadTime * 1000), destroyCancellationToken);
-			if (destroyCancellationToken.IsCancellationRequested)
-				return;
-
-			OnLevelIsLoadedEvent?.Invoke(CurrentLevelData);
-			gameManager.ResumeGame();
+				OnLevelIsLoadedEvent?.Invoke(CurrentLevelData);
+				await gameManager.ResumeGame(destroyCancellationToken);
+			}
+			catch (OperationCanceledException ex)
+			{
+				this.Log(GameManager.GetOperationCancelledLog(ex));
+			}
 		}
 	}
 }

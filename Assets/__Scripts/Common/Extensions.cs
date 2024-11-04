@@ -125,21 +125,21 @@ namespace KK.Common
 		#endregion
 
 		#region Log
-		/// <summary> Logs out a message to the Console in format: "[callerScript.callerMethodName()]: message" </summary>
+		/// <summary> Logs out a message to the Console in format: "[callerScript]: message" </summary>
 		/// <param name="message">Log messages</param>
 		public static void Log(this object callerScript, params object[] messages)
 		{
 			string log = GetLog(callerScript, messages);
 			Debug.Log(log);
 		}
-		/// <summary> Logs out a message to the Console in format: "[callerScript.callerMethodName()]: message" </summary>
+		/// <summary> Logs out a message to the Console in format: "[callerScript]: message" </summary>
 		/// <param name="message">Log messages</param>
 		public static void Error(this object callerScript, params object[] messages)
 		{
 			string log = GetLog(callerScript, messages);
 			Debug.LogError(log);
 		}
-		/// <summary> Logs out a message to the Console in format: "[callerScript.callerMethodName()]: message" </summary>
+		/// <summary> Logs out a message to the Console in format: "[callerScript]: message" </summary>
 		/// <param name="messages">Log messages</param>
 		public static void Warning(this object callerScript, params object[] messages)
 		{

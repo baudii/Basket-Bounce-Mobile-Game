@@ -27,6 +27,7 @@ namespace BasketBounce.Systems
 
 		bool isDragging;
 
+		[KKInject]
 		public void Init(GameManager gameManager, EventSystem eventSystem)
 		{
 			input = new InputMaster();

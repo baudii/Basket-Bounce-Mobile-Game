@@ -3,7 +3,6 @@ using UnityEngine.EventSystems;
 using BasketBounce.Systems;
 using BasketBounce.Gameplay.Levels;
 using KK.Common;
-using System;
 
 namespace BasketBounce.UI
 {
@@ -12,13 +11,13 @@ namespace BasketBounce.UI
 		[SerializeField, Tooltip("Needed to adjust size. If none given - this gameobject's rectTransform will be taken by default")] RectTransform iconRect;
 		[SerializeField] bool scaleIcon;
 
+		[KKInject]
 		GameManager gameManager;
+		[KKInject]
 		LevelManager levelManager;
+		[KKInject]
 		UI_Manager uiManager;
 
-		public Action<int> OnStartGame;
-
-		int levelSetCache;
 
 		private void Awake()
 		{
@@ -28,12 +27,13 @@ namespace BasketBounce.UI
 			}
 		}
 
+/*		[KKInject]
 		public void Init(GameManager gameManager, LevelManager levelManager, UI_Manager uiManager)
 		{
 			this.gameManager = gameManager;
 			this.levelManager = levelManager;
 			this.uiManager = uiManager;
-		}
+		}*/
 
 		public void OnPointerDown(PointerEventData eventData)
 		{
@@ -82,6 +82,12 @@ namespace BasketBounce.UI
 					}, 0.3f);*/
 		}
 
+		public void Home()
+		{
+			_ = gameManager.HomeAsync();
+		}
+
+
 		public void NextLevel()
 		{
 			levelManager.NextLevel();
@@ -100,16 +106,6 @@ namespace BasketBounce.UI
 		public void Pause()
 		{
 			uiManager.ShowPauseScreen();
-		}
-
-		public void CacheLevelSet(int levelSet)
-		{
-			levelSetCache = levelSet + 1;
-		}
-
-		public void StartGame()
-		{
-			OnStartGame.Invoke(levelSetCache);
 		}
 	}
 }

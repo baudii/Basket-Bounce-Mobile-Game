@@ -18,7 +18,7 @@ namespace BasketBounce.UI
 		int thisLevel;
 		bool isCurrentLevel;
 
-		public static int SelectedLevel { get; private set; }
+		public static int SelectedLevel { get; private set; } = -1;
 
 		public void UpdateCell(int stars, int level, bool isOpened, bool isCurrentLevel)
 		{

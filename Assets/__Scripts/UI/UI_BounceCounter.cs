@@ -3,6 +3,7 @@ using TMPro;
 using UnityEngine;
 using BasketBounce.DOTweenComponents.UI;
 using BasketBounce.Gameplay;
+using KK.Common;
 
 namespace BasketBounce.UI
 {
@@ -13,6 +14,8 @@ namespace BasketBounce.UI
 		[SerializeField] UI_TweenFade tweenFade;
 		Ball ball;
 
+
+		[KKInject]
 		public void Init(Ball ball)
 		{
 			ball.OnBallBounce += OnBounce;

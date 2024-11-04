@@ -1,5 +1,7 @@
+using KK.Common;
 using System;
 using System.Threading;
+using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.SceneManagement;
@@ -9,7 +11,15 @@ namespace BasketBounce.Systems
 	public class GameManager : IDisposable
 	{
 		// Last opened means the last level that can be chosen from level select - Switches to next when level is finished
-		public const string LOADING_SCENE_NAME = "LoadingScene";
+		public const string LEVEL_SET_DEPENDANCY_KEY = "LevelSetNum";
+		
+		public static string GetOperationCancelledLog(OperationCanceledException ex)
+		{
+			return $"Operation was cancelled. Message: {ex.Message}\nStack trace: {ex.StackTrace}";
+		}
+
+		public int? CachedLevelSet { get; private set; }
+
 
 		public enum GameState
 		{
@@ -18,8 +28,6 @@ namespace BasketBounce.Systems
 			InMenu
 		}
 
-		AsyncOperation asyncOperation;
-
 		[HideInInspector]
 		public UnityEvent OnInGameEnterEvent;
 		[HideInInspector] 
@@ -27,6 +35,7 @@ namespace BasketBounce.Systems
 		[HideInInspector]
 		public UnityEvent OnGameOverEvent;
 
+		public Func<Task> OnSubmitLevelSet;
 
 		GameState currentState;
 
@@ -51,14 +60,21 @@ namespace BasketBounce.Systems
 			OnInGameEnterEvent = null;
 			OnInGameExitEvent = null;
 			OnGameOverEvent = null;
+			OnSubmitLevelSet = null;
 		}
 
-		void SetState(GameState state)
+		async Task SetStateAsync(GameState state, CancellationToken token)
 		{
+			token.ThrowIfCancellationRequested();
+
+			this.Log(currentState, "->", state);
+
 			if (state == currentState)
 				return;
 
-			OnExitState(currentState);
+			await OnExitStateAsync(currentState, token);
+
+			currentState = state;
 
 			switch (state)
 			{
@@ -67,13 +83,13 @@ namespace BasketBounce.Systems
 					OnInGameEnterEvent?.Invoke();
 					break;
 				case GameState.Loading:
-					asyncOperation = SceneManager.LoadSceneAsync(LOADING_SCENE_NAME, LoadSceneMode.Additive);
+					this.Log("Loading \"loading scene\"");
+					await SceneManager.LoadSceneAsync(SceneNames.LOADING, LoadSceneMode.Additive).AsTask(token);
 					break;
 			}
-			currentState = state;
 		}
 
-		void OnExitState(GameState state)
+		Task OnExitStateAsync(GameState state, CancellationToken token)
 		{
 			switch (state)
 			{
@@ -82,30 +98,78 @@ namespace BasketBounce.Systems
 					OnInGameExitEvent?.Invoke();
 					break;
 				case GameState.Loading:
-					SceneManager.UnloadSceneAsync(LOADING_SCENE_NAME);
-					break;
+					this.Log("Unloading \"loading scene\"");
+					return SceneManager.UnloadSceneAsync(SceneNames.LOADING).AsTask(token);
 			}
+			return Task.CompletedTask;
 		}
 
-		public void ResumeGame()
+		public Task ResumeGame(CancellationToken token = default)
 		{
-			SetState(GameState.InGame);
+			return SetStateAsync(GameState.InGame, token);
 		}
 
-		public void InMenu()
+		public Task InMenu(CancellationToken token = default)
 		{
-			SetState(GameState.InMenu);
+			return SetStateAsync(GameState.InMenu, token);
 		}
 
-		public AsyncOperation StartLoading()
+		public Task StartLoading(CancellationToken token = default)
 		{
-			SetState(GameState.Loading);
-			return asyncOperation;
+			return SetStateAsync(GameState.Loading, token);
 		}
 
 		public void GameOver()
 		{
 			OnGameOverEvent?.Invoke();
+		}
+
+		public async void SubmitLevelSet(int levelSet)
+		{
+			try
+			{
+				this.Log("Level set:", levelSet);
+				CachedLevelSet = levelSet;
+				await OnSubmitLevelSet?.Invoke();
+			}
+			catch (OperationCanceledException ex)
+			{
+				this.Log(GetOperationCancelledLog(ex));
+			}
+		}
+
+		public int RecieveLevelSet()
+		{
+			if (CachedLevelSet == null)
+				throw new InvalidOperationException("Before recieving cached level set, you must submit it first");
+
+			var levelSet = (int)CachedLevelSet;
+			CachedLevelSet = null;
+			return levelSet;
+		}
+
+		public async Task HomeAsync()
+		{
+			try
+			{
+				await SceneManager.LoadSceneAsync(SceneNames.MAIN_MENU_ENTRY).AsTask(SceneEntryPoint.Cts.Token);
+				var scene = SceneManager.GetSceneByName(SceneNames.MAIN_MENU_ENTRY);
+				var rootGo = scene.GetRootGameObjects();
+				SceneEntryPoint entry = null;
+				foreach (var go in rootGo)
+				{
+					if (go.TryGetComponent(out entry))
+						break;
+				}
+				if (entry == null)
+					throw new EntryPointNotFoundException($"Entry point was not found in scene {SceneNames.MAIN_MENU_ENTRY}");
+
+				await entry.Setup();
+			}
+			catch (OperationCanceledException ex)
+			{
+				this.Log(GetOperationCancelledLog(ex));
+			}
 		}
 	}
 }

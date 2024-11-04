@@ -37,12 +37,11 @@ namespace KK.Common
 		/// </summary>
 		public static Task AsTask(this AsyncOperation asyncOperation, CancellationToken cancellationToken = default)
 		{
-			if (asyncOperation == null) throw new ArgumentNullException(nameof(asyncOperation));
+			if (asyncOperation == null) 
+				throw new ArgumentNullException(nameof(asyncOperation), "Provided async operation is null");
 
 			if (asyncOperation.isDone)
-			{
 				return Task.CompletedTask;
-			}
 
 			var tcs = new TaskCompletionSource<object>();
 

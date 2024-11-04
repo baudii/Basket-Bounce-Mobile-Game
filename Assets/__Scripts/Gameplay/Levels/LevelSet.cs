@@ -41,7 +41,6 @@ namespace BasketBounce.Gameplay.Levels
 
 			currentChunkIndex = level / chunkSize;
 			currentChunk = Instantiate(chunks[currentChunkIndex], transform);
-			chunkSize = currentChunk.LevelCount;
 		}
 
 		public LevelData GetLevel(int level)
@@ -49,7 +48,7 @@ namespace BasketBounce.Gameplay.Levels
 			this.Log($"Request level {level}");
 			if (level / chunkSize != currentChunkIndex)
 			{
-				this.Log("Switching level chunk");
+				this.Log($"Switching level chunk. Level: {level}, chunkSize: {chunkSize}, index: {level/chunkSize}");
 				currentChunkIndex = level / chunkSize;
 				Destroy(currentChunk.gameObject);
 				currentChunk = Instantiate(chunks[currentChunkIndex], transform);
