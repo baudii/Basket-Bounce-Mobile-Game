@@ -24,21 +24,6 @@ namespace BasketBounce.Gameplay
 		DollyCameraController dolly;
 		Ball ball;
 
-		private async void Start()
-		{
-			eventSystem = EventSystem.current;
-			gestureDetector = FindAnyObjectByType<GestureDetector>();
-			reflectionLine = FindAnyObjectByType<ReflectionLine>();
-			finishIconHelper = FindAnyObjectByType<FinishIconHelper>();
-			dolly = FindAnyObjectByType<DollyCameraController>();
-			ball = FindAnyObjectByType<Ball>();
-
-			await Activate();
-
-			DIContainer.GetDependency(out GameManager gameManager);
-			await gameManager.ResumeGame();
-		}
-
 		public override Task Setup()
 		{
 			Cts.Token.ThrowIfCancellationRequested();

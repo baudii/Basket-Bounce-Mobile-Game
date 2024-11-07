@@ -20,9 +20,6 @@ namespace BasketBounce.Systems
 			SceneEntryPoint.Cts = new CancellationTokenSource();
 			Application.quitting += RevokeToken;
 
-			if (GestureDetector.DisableBootstrap)
-				return;
-
 			var menuEntry = new GameObject().AddComponent<MainMenuEntry>();
 			_ = menuEntry.Enter();
 		}
