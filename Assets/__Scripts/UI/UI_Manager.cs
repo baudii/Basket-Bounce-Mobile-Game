@@ -52,6 +52,8 @@ namespace BasketBounce.UI
 
 		MenuState currentState, prevState;
 
+		UI_LevelNameController uiLevelNameController;
+
 		private void Awake()
 		{
 			input = new InputMaster();
@@ -59,25 +61,29 @@ namespace BasketBounce.UI
 			input.Taps.Tap.performed += ctx => Vibrate();
 		}
 
-		[KKInject]
-		public void Init(GameManager gameManager, LevelManager levelManager, Ball ball)
+		public void Init()
 		{
-			this.gameManager = gameManager;
-			this.ball = ball;
-			this.levelManager = levelManager;
+			DIContainer.GetDependency(out gameManager);
+			DIContainer.GetDependency(out levelManager);
+			DIContainer.GetDependency(out ball);
 
-			this.gameManager.OnInGameEnterEvent.AddListener(OnInGameEnter);
-			this.gameManager.OnInGameExitEvent.AddListener(OnInGameExit);
-			this.gameManager.OnGameOverEvent.AddListener(ShowGameOverScreen);
+			gameManager.OnInGameEnterEvent.AddListener(OnInGameEnter);
+			gameManager.OnInGameExitEvent.AddListener(OnInGameExit);
+			gameManager.OnGameOverEvent.AddListener(ShowGameOverScreen);
 
-			this.levelManager.OnLevelSetupEvent.AddListener(OnLevelSetup);
-			this.levelManager.OnLevelIsLoadedEvent.AddListener(OnLevelIsLoaded);
-			this.levelManager.OnFinishedGameEvent.AddListener(OnFinishedGame);
-			this.levelManager.OnFinishedLevelEvent.AddListener(ShowLevelCompleteScreen);
+			levelManager.OnLevelSetupEvent.AddListener(OnLevelSetup);
+			levelManager.OnLevelIsLoadedEvent.AddListener(OnLevelIsLoaded);
+			levelManager.OnFinishedGameEvent.AddListener(OnFinishedGame);
+			levelManager.OnFinishedLevelEvent.AddListener(ShowLevelCompleteScreen);
 
-			this.ball.OnBallStartStretch += HideOverview;
-			this.ball.OnBallAbortStretch += ShowOverview;
-			this.ball.OnStuck += ShowStuckScreen;
+			ball.OnBallStartStretch += HideOverview;
+			ball.OnBallAbortStretch += ShowOverview;
+			ball.OnStuck += ShowStuckScreen;
+
+			var initializables = GetComponentsInChildren<IInitializable>(true);
+
+			foreach (var component in initializables)
+				component.Init();
 		}
 
 		private void OnDestroy()

@@ -105,7 +105,6 @@ namespace BasketBounce.Gameplay.Mechanics
 				textObj.transform.localPosition = localOffsetTextPosition;
 				textObj.transform.position = GetOverridenPosition(transform.position);
 				_textObj = textObj.GetComponent<BreakableCounter_WorldUI>();
-				this.Log(_textObj.name);
 			}
 			UpdateBlinkColor();
 		}

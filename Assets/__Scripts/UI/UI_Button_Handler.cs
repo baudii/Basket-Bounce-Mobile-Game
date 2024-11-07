@@ -6,16 +6,13 @@ using KK.Common;
 
 namespace BasketBounce.UI
 {
-	public class UI_Button_Handler : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
+	public class UI_Button_Handler : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, IInitializable
 	{
 		[SerializeField, Tooltip("Needed to adjust size. If none given - this gameobject's rectTransform will be taken by default")] RectTransform iconRect;
 		[SerializeField] bool scaleIcon;
 
-		[KKInject]
 		GameManager gameManager;
-		[KKInject]
 		LevelManager levelManager;
-		[KKInject]
 		UI_Manager uiManager;
 
 
@@ -27,13 +24,12 @@ namespace BasketBounce.UI
 			}
 		}
 
-/*		[KKInject]
-		public void Init(GameManager gameManager, LevelManager levelManager, UI_Manager uiManager)
+		public void Init()
 		{
-			this.gameManager = gameManager;
-			this.levelManager = levelManager;
-			this.uiManager = uiManager;
-		}*/
+			DIContainer.GetDependency(out gameManager);
+			DIContainer.GetDependency(out levelManager);
+			DIContainer.GetDependency(out uiManager);
+		}
 
 		public void OnPointerDown(PointerEventData eventData)
 		{

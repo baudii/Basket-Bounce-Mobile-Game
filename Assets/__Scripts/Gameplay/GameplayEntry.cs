@@ -5,7 +5,6 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using System.Threading.Tasks;
 using KK.Common;
-using System;
 
 namespace BasketBounce.Gameplay
 {
@@ -13,23 +12,37 @@ namespace BasketBounce.Gameplay
     {
 		[SerializeField] Ball ballPrefab;
 		[SerializeField] GameObject camPrefab;
-		[SerializeField] EventSystem eventSystemPrefab;
 		[SerializeField] ReflectionLine reflectionLinePrefab;
 		[SerializeField] GameObject musicPrefab;
 		[SerializeField] GestureDetector gestureDetectorPrefab;
+		[SerializeField] EventSystem eventSystemPrefab;
 
-		GestureDetector gestureDetector;
 		EventSystem eventSystem;
+		GestureDetector gestureDetector;
 		ReflectionLine reflectionLine;
 		FinishIconHelper finishIconHelper;
 		DollyCameraController dolly;
 		Ball ball;
 
+		private async void Start()
+		{
+			eventSystem = EventSystem.current;
+			gestureDetector = FindAnyObjectByType<GestureDetector>();
+			reflectionLine = FindAnyObjectByType<ReflectionLine>();
+			finishIconHelper = FindAnyObjectByType<FinishIconHelper>();
+			dolly = FindAnyObjectByType<DollyCameraController>();
+			ball = FindAnyObjectByType<Ball>();
+
+			await Activate();
+
+			DIContainer.GetDependency(out GameManager gameManager);
+			await gameManager.ResumeGame();
+		}
+
 		public override Task Setup()
 		{
 			Cts.Token.ThrowIfCancellationRequested();
 
-			eventSystem = Instantiate(eventSystemPrefab, null);
 
 			var camGo = Instantiate(camPrefab, null);
 
@@ -40,6 +53,8 @@ namespace BasketBounce.Gameplay
 
 			ball = Instantiate(ballPrefab);
 			reflectionLine = Instantiate(reflectionLinePrefab);
+
+			eventSystem = Instantiate(eventSystemPrefab);
 
 			DIContainer.Register(ball);
 			DIContainer.Register(dolly);

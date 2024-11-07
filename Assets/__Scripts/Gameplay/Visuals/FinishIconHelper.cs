@@ -12,8 +12,8 @@ namespace BasketBounce.Gameplay.Visuals
 		LevelData currentLevelData;
 		public void Init(LevelManager levelManager)
 		{
-			levelManager.OnLevelSetupEvent.AddListener(Setup);
 			this.levelManager = levelManager;
+			levelManager.OnLevelSetupEvent.AddListener(Setup);
 			levelManager.OnFinishedLevelEvent.AddListener(OnFinishedLevel);
 		}
 

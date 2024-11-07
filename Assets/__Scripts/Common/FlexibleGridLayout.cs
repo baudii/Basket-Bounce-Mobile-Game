@@ -138,7 +138,7 @@ namespace KK.Common
 				}
 				else
 				{
-					this.Warning("Can't fit to content's width. Wrong anchor's positions!");
+					this.LogWarning("Can't fit to content's width. Wrong anchor's positions!");
 					if (fitToContent == FitToContent.Width)
 						fitToContent = FitToContent.None;
 					else
@@ -155,7 +155,7 @@ namespace KK.Common
 				}
 				else
 				{
-					this.Warning("Can't fit to content's height. Wrong anchor's positions!");
+					this.LogWarning("Can't fit to content's height. Wrong anchor's positions!");
 					if (fitToContent == FitToContent.Height)
 						fitToContent = FitToContent.None;
 					else

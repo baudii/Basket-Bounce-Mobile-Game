@@ -134,22 +134,22 @@ namespace KK.Common
 		}
 		/// <summary> Logs out a message to the Console in format: "[callerScript]: message" </summary>
 		/// <param name="message">Log messages</param>
-		public static void Error(this object callerScript, params object[] messages)
+		public static void LogError(this object callerContext, params object[] messages)
 		{
-			string log = GetLog(callerScript, messages);
+			string log = GetLog(callerContext, messages);
 			Debug.LogError(log);
 		}
 		/// <summary> Logs out a message to the Console in format: "[callerScript]: message" </summary>
 		/// <param name="messages">Log messages</param>
-		public static void Warning(this object callerScript, params object[] messages)
+		public static void LogWarning(this object callerScript, params object[] messages)
 		{
 			string log = GetLog(callerScript, messages);
 			Debug.LogWarning(log);
 		}
 
-		static string GetLog(object callerScript, object[] messages)
+		private static string GetLog(object callerContext, object[] messages)
 		{
-			string log = "[" + callerScript.GetType().Name.ToString() + "]";
+			string log = "[" + callerContext.GetType().Name + "]";
 			foreach (var message in messages)
 			{
 				if (message != null)

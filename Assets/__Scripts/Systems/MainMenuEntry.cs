@@ -34,7 +34,7 @@ namespace BasketBounce.Systems
 
 		public override async Task Setup()
 		{
-			DIContainer.GetDependency(out GameManager gameManager);
+			DIContainer.GetDependency(out gameManager);
 
 			await SceneManager.LoadSceneAsync(SceneNames.MAIN_MENU).AsTask(Cts.Token);
 
@@ -52,7 +52,6 @@ namespace BasketBounce.Systems
 
 		public override async Task Activate()
 		{
-			DIContainer.GetDependency(out GameManager gameManager);
 			gameManager.OnSubmitLevelSet -= SubmitLevelSet;
 			await gameManager.StartLoading(Cts.Token);
 

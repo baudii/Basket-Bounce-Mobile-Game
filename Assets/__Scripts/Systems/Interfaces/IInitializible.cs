@@ -1,7 +1,7 @@
 namespace BasketBounce.Systems
 {
-    public interface IInitializable
+	public interface IInitializable
 	{
 		void Init();
-    }
+	}
 }

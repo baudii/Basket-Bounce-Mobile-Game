@@ -29,7 +29,6 @@ namespace BasketBounce.Gameplay.Levels
 		public LevelData CurrentLevelData { get; private set; }
 		public int CurrentLevel { get; private set; }
 
-		[KKInject]
 		GameManager gameManager;
 
 		// Last opened means the last level that can be chosen from level select - Switches to next when level is finished
@@ -41,13 +40,14 @@ namespace BasketBounce.Gameplay.Levels
 
 		public int LevelSetId => currentLevelSet.LevelSetId;
 
-		List<GameObject> levelSetPrefabs;
+		IList<GameObject> levelSetPrefabs;
 
 		public async Task Init()
 		{
+			DIContainer.GetDependency(out gameManager);
 			var op = Addressables.LoadAssetsAsync<GameObject>("LevelSets", null);
 			await op.Task;
-			levelSetPrefabs = op.Result.ToList();
+			levelSetPrefabs = op.Result;
 		}
 
 		void OnDestroy()
@@ -87,7 +87,7 @@ namespace BasketBounce.Gameplay.Levels
 			catch (Exception ex)
 			{
 				// Если это не сделать, эксепшен ArgumentOutOfRangeException вообще нигде не перехватывается. Интересно, почему?
-				this.Error(ex);
+				this.LogError(ex);
 				await gameManager.InMenu(destroyCancellationToken);
 				return;
 			}

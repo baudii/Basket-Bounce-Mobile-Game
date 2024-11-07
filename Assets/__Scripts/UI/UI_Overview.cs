@@ -6,12 +6,13 @@ using DG.Tweening;
 using BasketBounce.DOTweenComponents.UI;
 using BasketBounce.Gameplay;
 using BasketBounce.Gameplay.Levels;
+using BasketBounce.Systems;
 using KK.Common;
 
 
 namespace BasketBounce.UI
 {
-	public class UI_Overview : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
+	public class UI_Overview : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, IInitializable
 	{
 		[SerializeField] Scrollbar scrollbar;
 		[SerializeField] UI_TweenFadeLoop fadeLoop;
@@ -24,13 +25,14 @@ namespace BasketBounce.UI
 
 		float[] initialAlphas; 
 
-		DollyCameraController _dolly;
-		LevelManager _levelManager;
+		DollyCameraController dolly;
+		LevelManager levelManager;
 
-
-		[KKInject]
-		public void Init(LevelManager levelManager, DollyCameraController dolly)
+		public void Init()
 		{
+			DIContainer.GetDependency(out levelManager);
+			DIContainer.GetDependency(out dolly);
+
 			initialAlphas = new float[maskableGraphics.Length];
 			scrollbar.interactable = true;
 
@@ -38,20 +40,18 @@ namespace BasketBounce.UI
 			{
 				initialAlphas[i] = maskableGraphics[i].color.a;
 			}
-			_levelManager = levelManager;
-			_dolly = dolly;
 
 			levelManager.OnLevelSetupEvent.AddListener(SetActive);
 		}
 
 		private void OnDestroy()
 		{
-			_levelManager.OnLevelSetupEvent.RemoveListener(SetActive);
+			levelManager.OnLevelSetupEvent.RemoveListener(SetActive);
 		}
 
 		private void SetActive(LevelData levelData)
 		{
-			if (_dolly.PathLength <= 3f)
+			if (dolly.PathLength <= 3f)
 				gameObject.SetActive(false);
 			else
 				Enable();
@@ -66,7 +66,7 @@ namespace BasketBounce.UI
 			}
 			inivisbleButtonDisabler.SetActive(false);
 			scrollbar.value = 0;
-			_dolly.EnableFollow();
+			dolly.EnableFollow();
 			scrollbar.interactable = true;
 		}
 
@@ -101,7 +101,7 @@ namespace BasketBounce.UI
 
 		public void OnPointerDown(PointerEventData _)
 		{
-			_dolly.DisableFollow();
+			dolly.DisableFollow();
 			OnClick?.Invoke();
 			for (int i = 0; i < maskableGraphics.Length; i++)
 			{
@@ -111,7 +111,7 @@ namespace BasketBounce.UI
 
 		public void OnPointerUp(PointerEventData _)
 		{
-			_dolly.EnableFollow();
+			dolly.EnableFollow();
 			scrollbar.value = 0; 
 			for (int i = 0; i < maskableGraphics.Length; i++)
 			{
@@ -123,7 +123,7 @@ namespace BasketBounce.UI
 		// value is between 0 and 1
 		public void OnValueChanged(float value)
 		{
-			_dolly.SetPathPosition(value);
+			dolly.SetPathPosition(value);
 		}
 	}
 }

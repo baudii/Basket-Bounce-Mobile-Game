@@ -6,7 +6,7 @@ using BasketBounce.Systems;
 using KK.Common;
 namespace BasketBounce.UI
 {
-	public class UI_LevelNameController : MonoBehaviour
+	public class UI_LevelNameController : MonoBehaviour, IInitializable
 	{
 		[SerializeField] MaskableGraphic target;
 		[SerializeField] float targetAlpha;
@@ -24,11 +24,10 @@ namespace BasketBounce.UI
 
 		GestureDetector gestureDetector;
 
-		[KKInject]
-		public void Init(GestureDetector gestureDetector)
+		public void Init()
 		{
 			// initialTextXPos = textRect.localPosition.x; - old
-			this.gestureDetector = gestureDetector;
+			DIContainer.GetDependency(out gestureDetector);
 			levelTextField.DOFade(0, 0);
 			headerTextField.DOFade(0, 0);
 			initialAlpha = target.color.a;

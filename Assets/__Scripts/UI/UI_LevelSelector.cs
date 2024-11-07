@@ -2,10 +2,11 @@ using System.Collections.Generic;
 using UnityEngine;
 using BasketBounce.Gameplay.Levels;
 using KK.Common;
+using BasketBounce.Systems;
 
 namespace BasketBounce.UI
 {
-	public class UI_LevelSelector : MonoBehaviour
+	public class UI_LevelSelector : MonoBehaviour, IInitializable
 	{
 		[SerializeField] UI_LevelIcon levelIconPrefab;
 		[SerializeField] Transform gridParent;
@@ -16,10 +17,9 @@ namespace BasketBounce.UI
 
 		LevelManager levelManager;
 
-		[KKInject]
-		public void Init(LevelManager levelManager)
+		public void Init()
 		{
-			this.levelManager = levelManager;
+			DIContainer.GetDependency(out levelManager);
 			levelManager.OnLevelSetAvailable.AddListener(Setup);
 		}
 

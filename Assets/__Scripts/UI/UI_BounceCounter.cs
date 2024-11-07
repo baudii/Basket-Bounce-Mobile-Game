@@ -4,20 +4,20 @@ using UnityEngine;
 using BasketBounce.DOTweenComponents.UI;
 using BasketBounce.Gameplay;
 using KK.Common;
+using BasketBounce.Systems;
 
 namespace BasketBounce.UI
 {
-	public class UI_BounceCounter : MonoBehaviour
+	public class UI_BounceCounter : MonoBehaviour, IInitializable
 	{
 		[SerializeField] TextMeshProUGUI textObject;
 		[SerializeField] UI_TweenScale tweenScale;
 		[SerializeField] UI_TweenFade tweenFade;
 		Ball ball;
 
-
-		[KKInject]
-		public void Init(Ball ball)
+		public void Init()
 		{
+			DIContainer.GetDependency(out ball);
 			ball.OnBallBounce += OnBounce;
 			ball.OnResetState += ResetState;
 		}

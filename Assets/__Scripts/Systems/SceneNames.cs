@@ -9,6 +9,7 @@ namespace BasketBounce.Systems
 		public const string MAIN_ENTRY = "MainEntry";
 		public const string LEVELS_ENTRY = "LevelsEntry";
 		public const string GAMEPLAY_ENTRY = "GameplayEntry";
+		public const string GAMEPLAY_SCENE = "GameplayScene";
 		public const string UI_ENTRY = "UIEntry";
 	}
 }

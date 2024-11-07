@@ -44,7 +44,7 @@ namespace BasketBounce.UI
 			}
 			else
 			{
-				this.Warning("Shaking is already in progress or the word index is out of range.");
+				this.LogWarning("Shaking is already in progress or the word index is out of range.");
 			}
 		}
 

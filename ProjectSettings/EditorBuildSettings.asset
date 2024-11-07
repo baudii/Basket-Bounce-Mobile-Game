@@ -27,7 +27,7 @@ EditorBuildSettings:
     path: Assets/_Scenes/Entry Point/UI/UIEntry.unity
     guid: 24f2a6dbe367139439be4dc978363c53
   - enabled: 1
-    path: Assets/_Scenes/Entry Point/LoadingScene.unity
+    path: Assets/_Scenes/Entry Point/Main/LoadingScene.unity
     guid: 5988c607f5e1b2442bfcf44f47d665d3
   m_configObjects:
     com.unity.adaptiveperformance.google.android.provider_settings: {fileID: 11400000, guid: b4a5801cfdd357b44bd840c95dd3f453, type: 2}

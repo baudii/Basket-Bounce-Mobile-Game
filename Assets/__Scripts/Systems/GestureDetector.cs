@@ -11,6 +11,12 @@ namespace BasketBounce.Systems
 	{
 #if UNITY_EDITOR
 		[SerializeField] bool debugDragUpdate;
+		[SerializeField] bool disableBootstrap;
+
+		private void OnValidate()
+		{
+			DisableBootstrap = disableBootstrap;
+		}
 #endif
 		private Camera cam;
 
@@ -22,19 +28,20 @@ namespace BasketBounce.Systems
 
 		private InputMaster input;
 
-		private EventSystem eventSystem;
 		private GameManager gameManager;
+		private EventSystem eventSystem;
 
 		bool isDragging;
 
-		[KKInject]
+		public static bool DisableBootstrap;
+
 		public void Init(GameManager gameManager, EventSystem eventSystem)
 		{
 			input = new InputMaster();
 
 			this.eventSystem = eventSystem;
 			this.gameManager = gameManager;
-			this.Log(gameManager);
+
 			gameManager.OnInGameEnterEvent.AddListener(EnableInput);
 			gameManager.OnInGameExitEvent.AddListener(DisableInput);
 
@@ -84,7 +91,7 @@ namespace BasketBounce.Systems
 
 			Vector2 startPos = GetTouchPosition();
 
-			if (eventSystem.currentSelectedGameObject != null)
+			if (EventSystem.current.currentSelectedGameObject != null)
 			{
 				this.Log("Touching UI element");
 				yield break;
