@@ -14,19 +14,16 @@ namespace BasketBounce.Systems
 		[SerializeField] int testLevel;
 		[SerializeField] int testLevelSet;
 		[SerializeField, Tooltip("Takes the last one in hierarchy")] bool testOpenedLevel;
-		private void Start()
+		private async void Start()
 		{
 			if (initializeOnStart)
 			{
 				DIContainer.GetDependency(out GameManager gameManager);
-				Utils.SafeExectuteFactory(async () =>
-				{
-					var level = testLevel;
-					if (testOpenedLevel)
-						level = -1;
-					await gameManager.SubmitLevel(level, -1);
-					await Enter();
-				});
+				var level = testLevel;
+				if (testOpenedLevel)
+					level = -1;
+				await gameManager.SubmitLevel(level, -1);
+				await Enter();
 			}
 		}
 #endif

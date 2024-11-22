@@ -1,5 +1,6 @@
 using KK.Common;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 namespace BasketBounce.Gameplay.Levels
@@ -7,6 +8,7 @@ namespace BasketBounce.Gameplay.Levels
     public class LevelChunk : MonoBehaviour
     {
 		[SerializeField] List<LevelData> levels;
+		public int levelChunkIndex { get; private set; }
 		public int LevelCount => levels.Count;
 
 #if UNITY_EDITOR
@@ -14,8 +16,13 @@ namespace BasketBounce.Gameplay.Levels
 		[SerializeField] bool validate;
 		private void OnValidate()
 		{
+			var name = transform.name;
+
 			if (validate)
 			{
+				int.TryParse(name.Split(' ').Last(), out int index);
+
+				levelChunkIndex = index - 1;
 				ValidateChunk();
 				validate = false;
 			}

@@ -85,7 +85,7 @@ namespace BasketBounce.Gameplay.Levels
 
 				foreach (Transform child in lastChunk.transform)
 				{
-					if (child.TryGetComponent(out LevelData levelData))
+					if (child.gameObject.activeSelf && child.TryGetComponent(out LevelData levelData))
 					{
 						if (lastLevel != null)
 							lastLevel.gameObject.SetActive(false);
@@ -96,7 +96,8 @@ namespace BasketBounce.Gameplay.Levels
 					i++;
 				}
 				this.Log($"Found current level: {levelNum}");
-
+				currentLevelSet.InitChunk(levelNum, lastChunk);
+				OnLevelSetAvailable?.Invoke(currentLevelSet);
 				await LoadLevelAsync(levelNum);
 			}
 #endif
@@ -147,6 +148,7 @@ namespace BasketBounce.Gameplay.Levels
 		{
 			this.Log($"Swapping to level {level}");
 			CurrentLevelData?.gameObject.SetActive(false);
+			this.Log($"Still, current level set: {currentLevelSet}");
 			CurrentLevelData = currentLevelSet.GetLevel(level);
 			CurrentLevelData.gameObject.SetActive(true);
 			CurrentLevelData.Init(this);
