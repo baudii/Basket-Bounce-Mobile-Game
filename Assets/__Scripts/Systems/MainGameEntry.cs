@@ -16,7 +16,12 @@ namespace BasketBounce.Systems
 		{
 			if (initializeOnStart)
 			{
-				Enter().SafeExectute();
+				DIContainer.GetDependency(out GameManager gameManager);
+				Utils.SafeExectuteFactory(async () =>
+				{
+					await gameManager.SubmitLevel(testLevel);
+					await Enter();
+				});
 			}
 		}
 #endif

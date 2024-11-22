@@ -158,7 +158,7 @@ namespace KK.Common
 		/// void method.
 		/// </summary>
 		/// <param name="task">The <see cref="Task"></see> to execute</param>
-		public static async Task SafeExectuteFactory(Func<Task> taskFactory)
+		public static async void SafeExectuteFactory(Func<Task> taskFactory)
 		{
 			try
 			{
@@ -171,13 +171,19 @@ namespace KK.Common
 			}
 		}
 
-		public static string GetLogWithContext(object callerContext, params object[] messages)
+		public static string GetLogWithContext(object context, params object[] messages)
 		{
-			string log = "<color=#A3CF77>[" + callerContext.ToString() + "]</color>";
-			foreach (var message in messages)
+			string contextHeader = "<color=#A3CF77>[" + context.ToString() + "]</color>";
+			return contextHeader + ' ' + GetLog(messages);
+		}
+
+		public static string GetLog(params object[] messages)
+		{
+			string log = messages[0].ToString();
+			for (int i = 1; i < messages.Length; i++)
 			{
-				if (message != null)
-					log += (" " + message.ToString());
+				if (messages[i] != null)
+					log += (' ' + messages[i].ToString());
 				else
 					log += (" null");
 			}
