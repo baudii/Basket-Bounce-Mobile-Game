@@ -34,7 +34,7 @@ namespace BasketBounce.UI
 		public void StartGame()
 		{
 			DIContainer.GetDependency(out GameManager gameManager);
-			Utils.SafeExecuteAsync(() => gameManager.SubmitLevel(levelCached));
+			gameManager.SubmitLevel(levelCached).SafeExectute();
 		}
 	}
 }

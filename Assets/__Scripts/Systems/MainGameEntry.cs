@@ -16,7 +16,7 @@ namespace BasketBounce.Systems
 		{
 			if (initializeOnStart)
 			{
-				Utils.SafeExecuteAsync(Enter);
+				Enter().SafeExectute();
 			}
 		}
 #endif
@@ -74,6 +74,12 @@ namespace BasketBounce.Systems
 			Task[] tasks = new Task[sceneNames.Length];
 			for (int i = 0; i < sceneNames.Length; i++)
 			{
+				var scene = SceneManager.GetSceneByName(sceneNames[i]);
+				if (scene.isLoaded)
+				{
+					tasks[i] = Task.CompletedTask;
+					continue;
+				}
 				tasks[i] = SceneManager.LoadSceneAsync(sceneNames[i], LoadSceneMode.Additive).AsTask(token);
 			}
 			await Task.WhenAll(tasks);

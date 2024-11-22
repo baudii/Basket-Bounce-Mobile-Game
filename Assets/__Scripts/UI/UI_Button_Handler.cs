@@ -86,7 +86,7 @@ namespace BasketBounce.UI
 
 		public void NextLevel()
 		{
-			Utils.SafeExecuteAsync(levelManager.NextLevel);
+			levelManager.NextLevel().SafeExectute();
 		}
 
 		public void ResumeGame()

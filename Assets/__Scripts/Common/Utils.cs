@@ -112,7 +112,13 @@ namespace KK.Common
 			return 0;
 		}
 
-		public static Vector2 GetClosestDirection(Vector2 v, float threshHold = 0.1f)
+		/// <summary>
+		/// Returns a closest direction to this <see cref="Vector2"
+		/// </summary>
+		/// <param name="v"></param>
+		/// <param name="threshHold"></param>
+		/// <returns></returns>
+		public static Vector2 GetClosestDirection2D(Vector2 v, float threshHold = 0.1f)
 		{
 			if (Vector2.Dot(Vector2.up, v.normalized) > threshHold)
 				return Vector2.up;
@@ -129,16 +135,53 @@ namespace KK.Common
 			return Vector2.zero;
 		}
 
-		public static async void SafeExecuteAsync(Func<Task> asyncOp)
+		/// <summary>
+		/// Executes task safely. Which implies catching any exceptions. Even if called from
+		/// void method.
+		/// </summary>
+		/// <param name="task">The <see cref="Task"></see> to execute</param>
+		public static async void SafeExectute(this Task task)
 		{
 			try
 			{
-				await asyncOp();
+				await task;
 			}
 			catch (Exception ex)
 			{
-				Debug.LogError(ex.Message);
+				var log = GetLogWithContext(nameof(Utils), ex.Message, ex.StackTrace);
+				Debug.LogError(log);
 			}
+		}
+
+		/// <summary>
+		/// Executes task safely. Which implies catching any exceptions. Even if called from
+		/// void method.
+		/// </summary>
+		/// <param name="task">The <see cref="Task"></see> to execute</param>
+		public static async Task SafeExectuteFactory(Func<Task> taskFactory)
+		{
+			try
+			{
+				await taskFactory();
+			}
+			catch (Exception ex)
+			{
+				var log = GetLogWithContext(nameof(Utils), ex.Message, ex.StackTrace);
+				Debug.LogError(log);
+			}
+		}
+
+		public static string GetLogWithContext(object callerContext, params object[] messages)
+		{
+			string log = "<color=#A3CF77>[" + callerContext.ToString() + "]</color>";
+			foreach (var message in messages)
+			{
+				if (message != null)
+					log += (" " + message.ToString());
+				else
+					log += (" null");
+			}
+			return log;
 		}
 	}
 

@@ -28,7 +28,7 @@ namespace BasketBounce.Gameplay.Levels
 
 			var level = gameManager.GetLevel();
 
-			await levelManager.ActivateLevelSet((int)levelSet);
+			await levelManager.ActivateLevelSet((int)level);
 		}
 	}
 }

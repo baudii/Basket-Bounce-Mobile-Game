@@ -129,35 +129,22 @@ namespace KK.Common
 		/// <param name="message">Log messages</param>
 		public static void Log(this object callerContext, params object[] messages)
 		{
-			string log = GetLog(callerContext, messages);
+			string log = Utils.GetLogWithContext(callerContext.GetType().Name, messages);
 			Debug.Log(log);
 		}
 		/// <summary> Logs out a message to the Console in format: "[callerScript]: message" </summary>
 		/// <param name="message">Log messages</param>
 		public static void LogError(this object callerContext, params object[] messages)
 		{
-			string log = GetLog(callerContext, messages);
+			string log = Utils.GetLogWithContext(callerContext.GetType().Name, messages);
 			Debug.LogError(log);
 		}
 		/// <summary> Logs out a message to the Console in format: "[callerScript]: message" </summary>
 		/// <param name="messages">Log messages</param>
 		public static void LogWarning(this object callerContext, params object[] messages)
 		{
-			string log = GetLog(callerContext, messages);
+			string log = Utils.GetLogWithContext(callerContext.GetType().Name, messages);
 			Debug.LogWarning(log);
-		}
-
-		private static string GetLog(object callerContext, object[] messages)
-		{
-			string log = "<color=#A3CF77>[" + callerContext.GetType().Name + "]</color>";
-			foreach (var message in messages)
-			{
-				if (message != null)
-					log += (" " + message.ToString());
-				else
-					log += (" null");
-			}
-			return log;
 		}
 
 		#endregion

@@ -352,7 +352,7 @@ namespace BasketBounce.Gameplay
 
 			if (useThreshhold)
 			{
-				var dir = Utils.GetClosestDirection(direction, threshHold);
+				var dir = Utils.GetClosestDirection2D(direction, threshHold);
 				if (dir != Vector2.zero)
 				{
 					direction = dir;

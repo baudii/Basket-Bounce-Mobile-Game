@@ -70,6 +70,11 @@ namespace BasketBounce.Gameplay.Levels
 			return "Last-Played-Level-Set";
 		}
 
+		public async Task ActivateLevel(int level)
+		{
+
+		}
+
 		public async Task ActivateLevelSet(int levelSet)
 		{
 			destroyCancellationToken.ThrowIfCancellationRequested();
