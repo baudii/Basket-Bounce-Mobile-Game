@@ -12,6 +12,8 @@ namespace BasketBounce.Systems
 #if UNITY_EDITOR
 		[SerializeField] bool initializeOnStart;
 		[SerializeField] int testLevel;
+		[SerializeField] int testLevelSet;
+		[SerializeField, Tooltip("Takes the last one in hierarchy")] bool testOpenedLevel;
 		private void Start()
 		{
 			if (initializeOnStart)
@@ -19,7 +21,10 @@ namespace BasketBounce.Systems
 				DIContainer.GetDependency(out GameManager gameManager);
 				Utils.SafeExectuteFactory(async () =>
 				{
-					await gameManager.SubmitLevel(testLevel);
+					var level = testLevel;
+					if (testOpenedLevel)
+						level = -1;
+					await gameManager.SubmitLevel(level, -1);
 					await Enter();
 				});
 			}

@@ -4,9 +4,6 @@ using KK.Common;
 using BasketBounce.Models;
 using BasketBounce.Systems;
 using System.IO;
-using System.Runtime.InteropServices.WindowsRuntime;
-using System.Threading.Tasks;
-using UnityEditor;
 
 namespace BasketBounce.Gameplay.Levels
 {
@@ -24,6 +21,9 @@ namespace BasketBounce.Gameplay.Levels
 		[SerializeField] public UnityEvent OnFirstTimeLoadEvemt;
 		[SerializeField] public UnityEvent OnClickAnywhereEvent;
 		[SerializeField] public UnityEvent OnResetEvent;
+
+		public bool isReflectionMode { get; private set; }
+		public void ActivateReflection() => isReflectionMode = true;
 
 		ResetableManager resetableManager; 
 		Transform finTransform;
@@ -89,12 +89,11 @@ namespace BasketBounce.Gameplay.Levels
 			return false;
 		}
 
-		public void Init(LevelManager levelManager, int levelNum)
+		public void Init(LevelManager levelManager)
 		{
-			this.Log($"Initializing Level Data of level {levelNum}");
+			this.Log($"Initializing Level Data");
 			resetableManager = new ResetableManager(transform);
 			resetableManager.ResetAll();
-			LevelNum = levelNum;
 
 			transform.ForEach(child =>
 			{
@@ -108,7 +107,7 @@ namespace BasketBounce.Gameplay.Levels
 			});
 
 			if (finTransform == null)
-				throw new InvalidDataException($"Could not locate Finish transform. Maybe it doesn't exist in {levelNum}. LevelSetId:{levelManager.LevelSetId}");
+				throw new InvalidDataException($"Could not locate Finish transform. Maybe it doesn't exist in {transform.name}. LevelSetId:{levelManager.LevelSetId}");
 		}
 
 		public void OnFirstTimeLoad()

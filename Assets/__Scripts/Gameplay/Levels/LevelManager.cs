@@ -7,13 +7,12 @@ using UnityEngine.AddressableAssets;
 using KK.Common;
 using System.Threading.Tasks;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace BasketBounce.Gameplay.Levels
 {
 	public class LevelManager : MonoBehaviour
 	{
-		LevelSet currentLevelSet;
+		#region Unity Events
 
 		[HideInInspector]
 		public UnityEvent<LevelData> OnLevelSetupEvent;
@@ -26,17 +25,13 @@ namespace BasketBounce.Gameplay.Levels
 		[HideInInspector]
 		public UnityEvent<LevelSet> OnLevelSetAvailable;
 
+		#endregion
+
+		LevelSet currentLevelSet;
 		public LevelData CurrentLevelData { get; private set; }
 		public int CurrentLevel { get; private set; }
 
 		GameManager gameManager;
-
-		// Last opened means the last level that can be chosen from level select - Switches to next when level is finished
-		public const string LEVEL_SET_KEY = "LevelSet-";
-		//public string LastDiscoverdLevelKey => 
-
-		public bool isReflectionMode { get; private set; }
-		public void ActivateReflection() => isReflectionMode = true;
 
 		public int LevelSetId => currentLevelSet.LevelSetId;
 
@@ -48,6 +43,63 @@ namespace BasketBounce.Gameplay.Levels
 			var op = Addressables.LoadAssetsAsync<GameObject>("LevelSets", null);
 			await op.Task;
 			levelSetPrefabs = op.Result;
+
+#if UNITY_EDITOR
+			var lvl = gameManager.GetLevel();
+			this.Log("get level = ", lvl);
+			if (lvl == -1)
+			{
+				LevelSet lastLevelSet = null;
+				foreach (Transform child in transform)
+				{
+					if (child.gameObject.activeSelf && child.TryGetComponent(out LevelSet levelSet))
+					{
+						if (lastLevelSet != null)
+							lastLevelSet.gameObject.SetActive(false);
+
+						lastLevelSet = levelSet;
+					}
+				}
+				currentLevelSet = lastLevelSet;
+
+				this.Log($"Found current level set: {currentLevelSet}");
+
+				LevelChunk lastChunk = null;
+
+				foreach (Transform child in lastLevelSet.transform)
+				{
+					if (child.gameObject.activeSelf && child.TryGetComponent(out LevelChunk chunk))
+					{
+						if (lastChunk != null)
+							lastChunk.gameObject.SetActive(false);
+
+						lastChunk = chunk;
+					}
+				}
+				this.Log($"Found current chunk: {lastChunk}");
+
+				int levelNum = 0;
+				int i = 0;
+
+				LevelData lastLevel = null;
+
+				foreach (Transform child in lastChunk.transform)
+				{
+					if (child.TryGetComponent(out LevelData levelData))
+					{
+						if (lastLevel != null)
+							lastLevel.gameObject.SetActive(false);
+
+						lastLevel = levelData;
+						levelNum = i;
+					}
+					i++;
+				}
+				this.Log($"Found current level: {levelNum}");
+
+				await LoadLevelAsync(levelNum);
+			}
+#endif
 		}
 
 		void OnDestroy()
@@ -55,31 +107,10 @@ namespace BasketBounce.Gameplay.Levels
 			OnLevelSetupEvent.RemoveAllListeners();
 		}
 
-		public static string GetEarnedStarsKey(int currentLevel, int levelSetId)
-		{
-			return "Level-Stars-" + currentLevel + "Set-" + levelSetId;
-		}
 
-		public static string GetLastDiscoveredLevelKey(int levelSetId)
-		{
-			return "Player-Last-Level-" + levelSetId;
-		}
-
-		public static string GetLastLevelSetIdKey()
-		{
-			return "Last-Played-Level-Set";
-		}
-
-		public async Task ActivateLevel(int level)
-		{
-
-		}
-
-		public async Task ActivateLevelSet(int levelSet)
+		public async Task ActivateLevelSet(int levelSet, int? level = null)
 		{
 			destroyCancellationToken.ThrowIfCancellationRequested();
-
-			await gameManager.StartLoading(destroyCancellationToken);
 
 			if (levelSetPrefabs == null)
 				throw new ArgumentNullException($"Level set prefabs collections is null. It should be initialized.");
@@ -91,16 +122,24 @@ namespace BasketBounce.Gameplay.Levels
 			var levelSetGo = Instantiate(levelSetPrefab, Vector3.zero, Quaternion.identity, transform);
 			currentLevelSet = levelSetGo.GetComponent<LevelSet>();
 			OnLevelSetAvailable?.Invoke(currentLevelSet);
-			await ActivateLastSavedLevel();
+
+			if (level == null)
+			{
+				var key = GetLastDiscoveredLevelKey(currentLevelSet.LevelSetId);
+				var lastLevel = PlayerPrefs.GetInt(key, 0);
+				await ActivateLevel(lastLevel);
+			}
+			else
+			{
+				await ActivateLevel(level.Value);
+			}
 		}
 
-		public Task ActivateLastSavedLevel()
+		public Task ActivateLevel(int level)
 		{
 			destroyCancellationToken.ThrowIfCancellationRequested();
-
-			var key = GetLastDiscoveredLevelKey(currentLevelSet.LevelSetId);
-			CurrentLevel = PlayerPrefs.GetInt(key, 0);
-			currentLevelSet.Init(CurrentLevel);
+			CurrentLevel = level;
+			currentLevelSet.InitChunk(CurrentLevel);
 			return LoadLevelAsync(CurrentLevel);
 		}
 
@@ -110,7 +149,8 @@ namespace BasketBounce.Gameplay.Levels
 			CurrentLevelData?.gameObject.SetActive(false);
 			CurrentLevelData = currentLevelSet.GetLevel(level);
 			CurrentLevelData.gameObject.SetActive(true);
-			CurrentLevelData.Init(this, level);
+			CurrentLevelData.Init(this);
+			CurrentLevelData.LevelNum = level;
 			CurrentLevel = level;
 		}
 
@@ -126,30 +166,6 @@ namespace BasketBounce.Gameplay.Levels
 			}
 		}
 
-		void TrySaveStars(int stars)
-		{
-			var earnedStarsKey = GetEarnedStarsKey(CurrentLevel, currentLevelSet.LevelSetId);
-			int savedProgress = PlayerPrefs.GetInt(earnedStarsKey, 0);
-			if (stars > savedProgress)
-				PlayerPrefs.SetInt(earnedStarsKey, stars);
-		}
-
-		void TrySaveLastDiscoveredLevel()
-		{
-			var lastLevelKey = GetLastDiscoveredLevelKey(currentLevelSet.LevelSetId);
-			int savedProgress = PlayerPrefs.GetInt(lastLevelKey, 0);
-			if (CurrentLevel + 1 > savedProgress)
-				PlayerPrefs.SetInt(lastLevelKey, CurrentLevel + 1);
-		}
-
-		void TrySaveLastLevelSet()
-		{
-			var lastLevelSetIdKey = GetLastLevelSetIdKey();
-			int savedProgress = PlayerPrefs.GetInt(lastLevelSetIdKey, 0);
-			if (LevelSetId > savedProgress)
-				PlayerPrefs.SetInt(lastLevelSetIdKey, LevelSetId);
-		}
-		
 		public void SetupLevel()
 		{
 			OnLevelSetupEvent?.Invoke(CurrentLevelData);
@@ -176,7 +192,7 @@ namespace BasketBounce.Gameplay.Levels
 			if (CurrentLevel == currentLevelSet.LevelCount - 1)
 			{
 				OnFinishedGameEvent?.Invoke();
-				await ActivateLevelSet(LevelSetId + 1);
+				await ActivateLevelSet(LevelSetId + 1, 0);
 				return;
 			}
 			await LoadLevelAsync(CurrentLevel + 1);
@@ -184,28 +200,57 @@ namespace BasketBounce.Gameplay.Levels
 
 		public async Task LoadLevelAsync(int level)
 		{
-			try
-			{
-				destroyCancellationToken.ThrowIfCancellationRequested();
-				await gameManager.StartLoading(destroyCancellationToken);
+			destroyCancellationToken.ThrowIfCancellationRequested();
 
-				this.Log("Loading level: Level", level);
-				if (level >= currentLevelSet.LevelCount)
-					throw new ArgumentException($"Incorrect level={level} was provided");
+			await gameManager.StartLoading(destroyCancellationToken);
 
-				SwapLevelTo(level);
-				SetupLevel();
-				CallOnFirstTimeLoad(level);
+			this.Log("Loading level: Level", level);
+			if (level >= currentLevelSet.LevelCount)
+				throw new ArgumentException($"Incorrect level={level} was provided");
 
-				await Task.Delay(1000, destroyCancellationToken);
+			SwapLevelTo(level);
+			SetupLevel();
+			CallOnFirstTimeLoad(level);
 
-				OnLevelIsLoadedEvent?.Invoke(CurrentLevelData);
-				await gameManager.ResumeGame(destroyCancellationToken);
-			}
-			catch (OperationCanceledException ex)
-			{
-				this.Log(GameManager.GetOperationCancelledLog(ex));
-			}
+			await Task.Delay(1000, destroyCancellationToken);
+
+			OnLevelIsLoadedEvent?.Invoke(CurrentLevelData);
+			await gameManager.ResumeGame(destroyCancellationToken);
 		}
+
+		#region Save
+		// ==================================================================================================================
+		public static string GetEarnedStarsKey(int currentLevel, int levelSetId) => "Level-Stars-" + currentLevel + "Set-" + levelSetId;
+
+		public static string GetLastDiscoveredLevelKey(int levelSetId) => "Player-Last-Level-" + levelSetId;
+
+		public static string GetLastLevelSetIdKey() => "Last-Played-Level-Set";
+
+		void TrySaveStars(int stars)
+		{
+			var earnedStarsKey = GetEarnedStarsKey(CurrentLevel, currentLevelSet.LevelSetId);
+			int savedProgress = PlayerPrefs.GetInt(earnedStarsKey, 0);
+			if (stars > savedProgress)
+				PlayerPrefs.SetInt(earnedStarsKey, stars);
+		}
+
+		void TrySaveLastDiscoveredLevel()
+		{
+			var lastLevelKey = GetLastDiscoveredLevelKey(currentLevelSet.LevelSetId);
+			int savedProgress = PlayerPrefs.GetInt(lastLevelKey, 0);
+			if (CurrentLevel + 1 > savedProgress)
+				PlayerPrefs.SetInt(lastLevelKey, CurrentLevel + 1);
+		}
+
+		void TrySaveLastLevelSet()
+		{
+			var lastLevelSetIdKey = GetLastLevelSetIdKey();
+			int savedProgress = PlayerPrefs.GetInt(lastLevelSetIdKey, 0);
+			if (LevelSetId > savedProgress)
+				PlayerPrefs.SetInt(lastLevelSetIdKey, LevelSetId);
+		}
+		// ==================================================================================================================
+		#endregion
+
 	}
 }

@@ -284,7 +284,7 @@ namespace BasketBounce.Gameplay
 
 			lineController.gameObject.SetActive(true);
 
-			if (levelManager.isReflectionMode)
+			if (levelManager.CurrentLevelData.isReflectionMode)
 				reflectionLine.gameObject.SetActive(true);
 
 			OnBallStartStretch?.Invoke();

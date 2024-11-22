@@ -31,13 +31,11 @@ namespace BasketBounce.Gameplay.Levels
 			}
 		}
 
-		public void Init(int level)
+		public void InitChunk(int level)
 		{
 			this.Log("Init with level", level);
 			foreach (var chunk in chunks)
-			{
 				chunk.ValidateChunk();
-			}
 
 			currentChunkIndex = level / chunkSize;
 			currentChunk = Instantiate(chunks[currentChunkIndex], transform);
@@ -45,15 +43,18 @@ namespace BasketBounce.Gameplay.Levels
 
 		public LevelData GetLevel(int level)
 		{
-			this.Log($"Request level {level}");
-			if (level / chunkSize != currentChunkIndex)
-			{
-				this.Log($"Switching level chunk. Level: {level}, chunkSize: {chunkSize}, index: {level/chunkSize}");
-				currentChunkIndex = level / chunkSize;
-				Destroy(currentChunk.gameObject);
-				currentChunk = Instantiate(chunks[currentChunkIndex], transform);
-			}
+			if (level / chunkSize != currentChunkIndex) // If level is not in current chunk
+				SwapChunks(level);
+
 			return currentChunk.GetLevel(level % chunkSize);
+		}
+
+		public void SwapChunks(int level)
+		{
+			this.Log($"Swapping level chunk. Level: {level}, chunkSize: {chunkSize}, index: {level / chunkSize}");
+			currentChunkIndex = level / chunkSize;
+			Destroy(currentChunk.gameObject);
+			currentChunk = Instantiate(chunks[currentChunkIndex], transform);
 		}
 	}
 }

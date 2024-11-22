@@ -21,6 +21,7 @@ namespace BasketBounce.Gameplay.Levels
 
 			return Task.CompletedTask;
 		}
+
 		public async override Task Activate()
 		{
 			Cts.Token.ThrowIfCancellationRequested();
@@ -28,7 +29,12 @@ namespace BasketBounce.Gameplay.Levels
 
 			var level = gameManager.GetLevel();
 
-			await levelManager.ActivateLevelSet(level);
+			if (level == -1)
+				return;
+
+			var levelSet = gameManager.GetLevelSet();
+
+			await levelManager.ActivateLevelSet(levelSet, level);
 		}
 	}
 }

@@ -19,6 +19,7 @@ namespace BasketBounce.Systems
 		}
 
 		public int? CachedLevel { get; private set; }
+		public int? CachedLevelSet { get; private set; }
 
 
 		public enum GameState
@@ -124,12 +125,13 @@ namespace BasketBounce.Systems
 			OnGameOverEvent?.Invoke();
 		}
 
-		public async Task SubmitLevel(int level)
+		public async Task SubmitLevel(int levelSet, int? level = null)
 		{
 			try
 			{
 				this.Log("Level:", level);
 				CachedLevel = level;
+				CachedLevelSet = levelSet;
 				if (OnSubmitLevel != null)
 					await OnSubmitLevel.Invoke();
 			}
@@ -142,11 +144,19 @@ namespace BasketBounce.Systems
 		public int GetLevel()
 		{
 			if (CachedLevel == null)
-				throw new InvalidOperationException("To get cached level, need to submit it it furst, using SubmitLevel(int level)");
+				throw new InvalidOperationException("To get cached level, need to submit it first, using SubmitLevel");
 			
-			int level = CachedLevel.Value;
-			CachedLevel = null;
-			return level;
+			return CachedLevel.Value;
+		}
+
+		public int GetLevelSet()
+		{
+			if (CachedLevelSet == null)
+				throw new InvalidOperationException("To get cached level set, need to submit it first, using SubmitLevel");
+
+			int levelSet = CachedLevelSet.Value;
+			CachedLevelSet = null;
+			return levelSet;
 		}
 
 		public async Task HomeAsync()
