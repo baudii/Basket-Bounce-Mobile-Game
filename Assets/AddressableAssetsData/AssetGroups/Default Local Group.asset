@@ -17,6 +17,11 @@ MonoBehaviour:
     m_SerializedData: []
   m_GUID: e90fa81d79324b84fa265b08f466b2de
   m_SerializeEntries:
+  - m_GUID: 1aba016c17fd17e46b539c9222aae180
+    m_Address: GameSettingsSO
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 36081ed38bbb354468f27cc0178907fe
     m_Address: Assets/_Prefabs/UI Buttons/World Text/World-Text.prefab
     m_ReadOnly: 0

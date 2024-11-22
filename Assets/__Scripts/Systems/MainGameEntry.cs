@@ -1,6 +1,7 @@
 using System;
 using System.Threading.Tasks;
 using UnityEngine.SceneManagement;
+using UnityEngine;
 using KK.Common;
 using System.Threading;
 
@@ -8,6 +9,17 @@ namespace BasketBounce.Systems
 {
     public class MainGameEntry : SceneEntryPoint
 	{
+#if UNITY_EDITOR
+		[SerializeField] bool initializeOnStart;
+		[SerializeField] int testLevel;
+		private void Start()
+		{
+			if (initializeOnStart)
+			{
+				Utils.SafeExecuteAsync(Enter);
+			}
+		}
+#endif
 
 		SceneEntryPoint levelsEntryPoint, uiEntryPoint, gameplayEntryPoint;
 
@@ -26,7 +38,7 @@ namespace BasketBounce.Systems
 
 		public override async Task Setup()
 		{
-			var scene = SceneManager.GetSceneByName(SceneNames.MAIN_ENTRY);
+			var scene = SceneManager.GetSceneByName(SceneNames.MAIN_GAME_ENTRY);
 			SceneManager.SetActiveScene(scene);
 
 			await LoadScenes(Cts.Token, SceneNames.LEVELS_ENTRY, SceneNames.GAMEPLAY_ENTRY, SceneNames.UI_ENTRY);
@@ -51,10 +63,6 @@ namespace BasketBounce.Systems
 			await gameplayEntryPoint.Activate();
 			await uiEntryPoint.Activate();
 			await levelsEntryPoint.Activate();
-
-			await SceneManager.UnloadSceneAsync(SceneNames.LEVELS_ENTRY).AsTask(Cts.Token);
-			await SceneManager.UnloadSceneAsync(SceneNames.GAMEPLAY_ENTRY).AsTask(Cts.Token);
-			await SceneManager.UnloadSceneAsync(SceneNames.UI_ENTRY).AsTask(Cts.Token);
 
 			this.Log("Finished activation");
 		}

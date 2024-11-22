@@ -128,6 +128,18 @@ namespace KK.Common
 
 			return Vector2.zero;
 		}
+
+		public static async void SafeExecuteAsync(Func<Task> asyncOp)
+		{
+			try
+			{
+				await asyncOp();
+			}
+			catch (Exception ex)
+			{
+				Debug.LogError(ex.Message);
+			}
+		}
 	}
 
 	[Serializable]

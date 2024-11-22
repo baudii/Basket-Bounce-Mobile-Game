@@ -1,7 +1,7 @@
 using KK.Common;
 using System.Threading;
-using System.Threading.Tasks;
 using UnityEngine;
+using UnityEngine.AddressableAssets;
 
 
 namespace BasketBounce.Systems
@@ -9,7 +9,7 @@ namespace BasketBounce.Systems
 	public static class Bootstrap
 	{
 		[RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
-		private static void AutostartGame()
+		private static async void AutostartGame()
 		{
 			GameManager gameManager = new GameManager();
 			gameManager.Init();
@@ -20,8 +20,16 @@ namespace BasketBounce.Systems
 			SceneEntryPoint.Cts = new CancellationTokenSource();
 			Application.quitting += RevokeToken;
 
-			var menuEntry = new GameObject().AddComponent<MainMenuEntry>();
-			_ = menuEntry.Enter();
+
+			var operation = Addressables.LoadAssetAsync<GameSettings>("GameSettingsSO");
+			await operation.Task;
+			var gameSettings = operation.Result;
+
+			if (gameSettings.AutoStartEnabled)
+			{
+				var menuEntry = new GameObject().AddComponent<MainMenuEntry>();
+				await menuEntry.Enter();
+			}
 		}
 
 		private static void RevokeToken()

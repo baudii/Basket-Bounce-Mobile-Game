@@ -18,7 +18,7 @@ namespace BasketBounce.Systems
 			return $"Operation was cancelled. Message: {ex.Message}\nStack trace: {ex.StackTrace}";
 		}
 
-		public int? CachedLevelSet { get; private set; }
+		public int? CachedLevel { get; private set; }
 
 
 		public enum GameState
@@ -35,7 +35,7 @@ namespace BasketBounce.Systems
 		[HideInInspector]
 		public UnityEvent OnGameOverEvent;
 
-		public Func<Task> OnSubmitLevelSet;
+		public Func<Task> OnSubmitLevel;
 
 		GameState currentState;
 
@@ -60,7 +60,7 @@ namespace BasketBounce.Systems
 			OnInGameEnterEvent = null;
 			OnInGameExitEvent = null;
 			OnGameOverEvent = null;
-			OnSubmitLevelSet = null;
+			OnSubmitLevel = null;
 		}
 
 		async Task SetStateAsync(GameState state, CancellationToken token)
@@ -124,13 +124,14 @@ namespace BasketBounce.Systems
 			OnGameOverEvent?.Invoke();
 		}
 
-		public async void SubmitLevelSet(int levelSet)
+		public async Task SubmitLevel(int level)
 		{
 			try
 			{
-				this.Log("Level set:", levelSet);
-				CachedLevelSet = levelSet;
-				await OnSubmitLevelSet?.Invoke();
+				this.Log("Level:", level);
+				CachedLevel = level;
+				if (OnSubmitLevel != null)
+					await OnSubmitLevel.Invoke();
 			}
 			catch (OperationCanceledException ex)
 			{
@@ -138,14 +139,14 @@ namespace BasketBounce.Systems
 			}
 		}
 
-		public int RecieveLevelSet()
+		public int GetLevel()
 		{
-			if (CachedLevelSet == null)
-				throw new InvalidOperationException("Before recieving cached level set, you must submit it first");
-
-			var levelSet = (int)CachedLevelSet;
-			CachedLevelSet = null;
-			return levelSet;
+			if (CachedLevel == null)
+				throw new InvalidOperationException("To get cached level, need to submit it it furst, using SubmitLevel(int level)");
+			
+			int level = CachedLevel.Value;
+			CachedLevel = null;
+			return level;
 		}
 
 		public async Task HomeAsync()

@@ -122,7 +122,7 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
---- !u!1 &1152272985
+--- !u!1 &1168511864
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -130,8 +130,8 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 1152272986}
-  - component: {fileID: 1152272987}
+  - component: {fileID: 1168511866}
+  - component: {fileID: 1168511865}
   m_Layer: 0
   m_Name: Entry
   m_TagString: Untagged
@@ -139,13 +139,26 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &1152272986
+--- !u!114 &1168511865
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1168511864}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b7a2a00573ac410429b17567f96f02ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  initializeOnStart: 1
+--- !u!4 &1168511866
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1152272985}
+  m_GameObject: {fileID: 1168511864}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 1022.3713, y: 1203.0841, z: -0.80088824}
@@ -154,26 +167,8 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1152272987
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1152272985}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2d09a57f54c1a0046a754c4774f6d451, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  ballPrefab: {fileID: 4870092093485379522, guid: 34eb22ddba145254e8daafbf73c41cdc, type: 3}
-  camPrefab: {fileID: 5991462755021634462, guid: 6f7534f10661ad148bb0edc31b125e8c, type: 3}
-  reflectionLinePrefab: {fileID: 3268613373933519458, guid: 96cb2af38285d1245bb4b14d16880845, type: 3}
-  musicPrefab: {fileID: 3785971931113772755, guid: 84cb5432d6f55cc4ab737a93a7a84699, type: 3}
-  gestureDetectorPrefab: {fileID: 9144999542428759881, guid: c0c148bf4b0d778439a885ecb75394ba, type: 3}
-  eventSystemPrefab: {fileID: 519754594867866915, guid: 15a9c947fdcb0554b855e67f70f03d45, type: 3}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
   m_Roots:
-  - {fileID: 1152272986}
+  - {fileID: 1168511866}

@@ -6,25 +6,25 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/_Scenes/Entry Point/Main/Boot.unity
+    path: Assets/_Scenes/Entry Point/Boot.unity
     guid: ee01b03518c5bfe43914c12cb872097a
   - enabled: 1
     path: Assets/_Scenes/Entry Point/MainMenu/MainMenuEntry.unity
     guid: 1c5df57e0c807f34cbf2cf65f4292ea6
   - enabled: 1
-    path: Assets/_Scenes/Entry Point/Main/MainEntry.unity
+    path: Assets/_Scenes/Entry Point/Main/MainGameEntry.unity
     guid: 7ab6491f8b3a2dc4aa5a3bdbcf9ed241
   - enabled: 1
     path: Assets/_Scenes/Entry Point/MainMenu/MainMenu.unity
     guid: 5d13719a6f3025545a6ae5229d187a2c
   - enabled: 1
-    path: Assets/_Scenes/Entry Point/Gameplay/GameplayEntry.unity
+    path: Assets/_Scenes/Entry Point/Main/Gameplay/GameplayEntry.unity
     guid: b7c3f8b5fac8bc545aafbafbd06fe038
   - enabled: 1
-    path: Assets/_Scenes/Entry Point/Levels/LevelsEntry.unity
+    path: Assets/_Scenes/Entry Point/Main/Levels/LevelsEntry.unity
     guid: 20120f50d76578b4689588fd01a00c4f
   - enabled: 1
-    path: Assets/_Scenes/Entry Point/UI/UIEntry.unity
+    path: Assets/_Scenes/Entry Point/Main/UI/UIEntry.unity
     guid: 24f2a6dbe367139439be4dc978363c53
   - enabled: 1
     path: Assets/_Scenes/Entry Point/Main/LoadingScene.unity

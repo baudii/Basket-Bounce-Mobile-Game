@@ -3,6 +3,7 @@ using UnityEngine.EventSystems;
 using BasketBounce.Systems;
 using BasketBounce.Gameplay.Levels;
 using KK.Common;
+using System.Threading.Tasks;
 
 namespace BasketBounce.UI
 {
@@ -63,30 +64,29 @@ namespace BasketBounce.UI
 			uiManager.SubmitUiLevelSelector();
 		}
 
+		public async Task Test()
+		{
+			await Task.Delay(1000);
+		}
+
 		public void Restart()
 		{
 			//gm.SetActiveLoadingScreen(true);
 
 			levelManager.SetupLevel();
 			levelManager.CurrentLevelData.ResetLevel();
-			//uiManager.SetActiveLoadingScreen(false);
 			gameManager.ResumeGame();
-
-			// в будущем добавить лоадинг скрин в момент рестарта
-			/*		gm.Co_DelayedExecute(() =>
-					{
-					}, 0.3f);*/
 		}
 
 		public void Home()
 		{
-			_ = gameManager.HomeAsync();
+			var task = gameManager.HomeAsync();
 		}
 
 
 		public void NextLevel()
 		{
-			levelManager.NextLevel();
+			Utils.SafeExecuteAsync(levelManager.NextLevel);
 		}
 
 		public void ResumeGame()

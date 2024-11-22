@@ -43,7 +43,7 @@ namespace BasketBounce.Systems
 			var root = scene.GetRootGameObjects();
 
 
-			gameManager.OnSubmitLevelSet += SubmitLevelSet;
+			gameManager.OnSubmitLevel += SubmitLevelSet;
 
 			await Task.Delay(500, Cts.Token);
 
@@ -52,12 +52,12 @@ namespace BasketBounce.Systems
 
 		public override async Task Activate()
 		{
-			gameManager.OnSubmitLevelSet -= SubmitLevelSet;
+			gameManager.OnSubmitLevel -= SubmitLevelSet;
 			await gameManager.StartLoading(Cts.Token);
 
-			await SceneManager.LoadSceneAsync(SceneNames.MAIN_ENTRY, LoadSceneMode.Additive).AsTask(Cts.Token);
+			await SceneManager.LoadSceneAsync(SceneNames.MAIN_GAME_ENTRY, LoadSceneMode.Additive).AsTask(Cts.Token);
 			await SceneManager.UnloadSceneAsync(SceneNames.MAIN_MENU).AsTask(Cts.Token);
-			var scene = SceneManager.GetSceneByName(SceneNames.MAIN_ENTRY);
+			var scene = SceneManager.GetSceneByName(SceneNames.MAIN_GAME_ENTRY);
 			var root = scene.GetRootGameObjects();
 
 			MainGameEntry gameEntry = null;
@@ -65,7 +65,7 @@ namespace BasketBounce.Systems
 				child.TryGetComponent(out gameEntry);
 
 			if (gameEntry == null)
-				throw new EntryPointNotFoundException($"Entry point was not found in scene: {SceneNames.MAIN_ENTRY}");
+				throw new EntryPointNotFoundException($"Entry point was not found in scene: {SceneNames.MAIN_GAME_ENTRY}");
 
 			await gameEntry.Enter();
 		}

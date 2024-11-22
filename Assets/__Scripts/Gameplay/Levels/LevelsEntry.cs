@@ -7,19 +7,13 @@ namespace BasketBounce.Gameplay.Levels
 {
 	public class LevelsEntry : SceneEntryPoint
     {
-		[SerializeField] LevelManager levelManagerPrefab;
-		[SerializeField] GameObject BG;
+		[SerializeField] LevelManager levelManager;
 
-		LevelManager levelManager;
 		GameManager gameManager;
 
 		public override Task Setup()
 		{
 			Cts.Token.ThrowIfCancellationRequested();
-
-			levelManager = Instantiate(levelManagerPrefab);
-
-			Instantiate(BG);
 
 			DIContainer.GetDependency(out gameManager);
 
@@ -30,13 +24,11 @@ namespace BasketBounce.Gameplay.Levels
 		public async override Task Activate()
 		{
 			Cts.Token.ThrowIfCancellationRequested();
+			await levelManager.Init(gameManager);
 
-			DIContainer.InjectIn(levelManager);
+			var level = gameManager.GetLevel();
 
-			var levelSet = gameManager.RecieveLevelSet();
-
-			await levelManager.Init();
-			await levelManager.ActivateLevelSet(levelSet);
+			await levelManager.ActivateLevelSet((int)levelSet);
 		}
 	}
 }

@@ -42,9 +42,9 @@ namespace BasketBounce.Gameplay.Levels
 
 		IList<GameObject> levelSetPrefabs;
 
-		public async Task Init()
+		public async Task Init(GameManager gameManager)
 		{
-			DIContainer.GetDependency(out gameManager);
+			this.gameManager = gameManager;
 			var op = Addressables.LoadAssetsAsync<GameObject>("LevelSets", null);
 			await op.Task;
 			levelSetPrefabs = op.Result;
@@ -76,21 +76,12 @@ namespace BasketBounce.Gameplay.Levels
 
 			await gameManager.StartLoading(destroyCancellationToken);
 
-			try
-			{
-				if (levelSetPrefabs == null)
-					throw new ArgumentNullException($"Level set prefabs collections is null. It should be initialized.");
+			if (levelSetPrefabs == null)
+				throw new ArgumentNullException($"Level set prefabs collections is null. It should be initialized.");
 
-				if (levelSet < 0 || levelSet >= levelSetPrefabs.Count)
-					throw new ArgumentOutOfRangeException($"Provided level set index={levelSet} is invalid. Should be at least between [0, {levelSetPrefabs.Count - 1}] inclusive");
-			}
-			catch (Exception ex)
-			{
-				// Если это не сделать, эксепшен ArgumentOutOfRangeException вообще нигде не перехватывается. Интересно, почему?
-				this.LogError(ex);
-				await gameManager.InMenu(destroyCancellationToken);
-				return;
-			}
+			if (levelSet < 0 || levelSet >= levelSetPrefabs.Count)
+				throw new ArgumentOutOfRangeException($"Provided level set index={levelSet} is invalid. Should be at least between [0, {levelSetPrefabs.Count - 1}] inclusive");
+			
 			var levelSetPrefab = levelSetPrefabs[levelSet];
 			var levelSetGo = Instantiate(levelSetPrefab, Vector3.zero, Quaternion.identity, transform);
 			currentLevelSet = levelSetGo.GetComponent<LevelSet>();
@@ -110,7 +101,6 @@ namespace BasketBounce.Gameplay.Levels
 
 		void SwapLevelTo(int level)
 		{
-			// Переключение уровней через включение и выключение объектов
 			this.Log($"Swapping to level {level}");
 			CurrentLevelData?.gameObject.SetActive(false);
 			CurrentLevelData = currentLevelSet.GetLevel(level);
@@ -176,15 +166,15 @@ namespace BasketBounce.Gameplay.Levels
 			CurrentLevelData.OnBallReleased();
 		}
 
-		public void NextLevel()
+		public async Task NextLevel()
 		{
 			if (CurrentLevel == currentLevelSet.LevelCount - 1)
 			{
 				OnFinishedGameEvent?.Invoke();
-				_ = ActivateLevelSet(LevelSetId + 1);
+				await ActivateLevelSet(LevelSetId + 1);
 				return;
 			}
-			_ = LoadLevelAsync(CurrentLevel + 1);
+			await LoadLevelAsync(CurrentLevel + 1);
 		}
 
 		public async Task LoadLevelAsync(int level)

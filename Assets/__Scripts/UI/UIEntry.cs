@@ -6,15 +6,13 @@ using KK.Common;
 
 public class UIEntry : SceneEntryPoint
 {
-	[SerializeField] UI_Manager uiManagerPrefab;
-	UI_Manager uiManager;
+	[SerializeField] UI_Manager uiManager;
 
 
 	public override Task Setup()
 	{
 		Cts.Token.ThrowIfCancellationRequested();
 
-		uiManager = Instantiate(uiManagerPrefab);
 		DIContainer.Register(uiManager);
 
 		uiManager.Init();

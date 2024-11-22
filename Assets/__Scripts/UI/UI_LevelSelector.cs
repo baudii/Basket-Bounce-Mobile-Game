@@ -72,7 +72,8 @@ namespace BasketBounce.UI
 			if (selectedLevel == -1)
 				return;
 
-			levelManager.LoadLevelAsync(selectedLevel);
+
+			Utils.SafeExecuteAsync(() => levelManager.LoadLevelAsync(selectedLevel));
 		}
 	}
 }

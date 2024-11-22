@@ -8,7 +8,7 @@ namespace BasketBounce.UI
 {
 	public class UI_MainMenuPlayButton : MonoBehaviour
 	{
-		int levelSetCache;
+		int levelCached;
 
 		public Action<int> OnStartGame;
 
@@ -19,14 +19,14 @@ namespace BasketBounce.UI
 
 		public void LoadLevelSet()
 		{
-			levelSetCache = PlayerPrefs.GetInt(LevelManager.GetLastLevelSetIdKey(), 0);
-			if (levelSetCache == 0)
+			levelCached = PlayerPrefs.GetInt(LevelManager.GetLastLevelSetIdKey(), 0);
+			if (levelCached == 0)
 				gameObject.SetActive(false);
 		}
 
-		public void CacheLevelSet(int levelSet)
+		public void CacheLevel(int level)
 		{
-			levelSetCache = levelSet;
+			levelCached = level;
 			if (!gameObject.activeSelf)
 				gameObject.SetActive(true);
 		}
@@ -34,7 +34,7 @@ namespace BasketBounce.UI
 		public void StartGame()
 		{
 			DIContainer.GetDependency(out GameManager gameManager);
-			gameManager.SubmitLevelSet(levelSetCache);
+			Utils.SafeExecuteAsync(() => gameManager.SubmitLevel(levelCached));
 		}
 	}
 }
