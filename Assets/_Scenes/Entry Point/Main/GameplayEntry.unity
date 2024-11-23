@@ -200,15 +200,15 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 766244820111206179, guid: 6f7534f10661ad148bb0edc31b125e8c, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 3.3559856
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 4730047137461108599, guid: 6f7534f10661ad148bb0edc31b125e8c, type: 3}
       propertyPath: m_PathPosition
-      value: 0.2218672
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5024164621190854773, guid: 6f7534f10661ad148bb0edc31b125e8c, type: 3}
       propertyPath: m_Waypoints.Array.data[1].position.y
-      value: 10.251
+      value: 7.001
       objectReference: {fileID: 0}
     - target: {fileID: 5991462755021634462, guid: 6f7534f10661ad148bb0edc31b125e8c, type: 3}
       propertyPath: m_Name
@@ -535,7 +535,6 @@ MonoBehaviour:
   reflectionLine: {fileID: 412525386}
   gestureDetector: {fileID: 1005230298}
   eventSystem: {fileID: 742768148}
-  initializeOnStart: 0
 --- !u!1001 &1209596150
 PrefabInstance:
   m_ObjectHideFlags: 0

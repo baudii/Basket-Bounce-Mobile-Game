@@ -335,6 +335,7 @@ MonoBehaviour:
   - {fileID: 6211614644673464439}
   - {fileID: 4858732918864797514}
   validate: 0
+  disableAll: 0
 --- !u!1 &3286848375383868756
 GameObject:
   m_ObjectHideFlags: 0
