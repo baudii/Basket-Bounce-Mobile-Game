@@ -72,8 +72,8 @@ namespace BasketBounce.Gameplay.Levels
 		public void Init()
 		{
 			this.Log($"Initializing Level Data");
-			resetableManager = new ResetableManager(transform);
-			resetableManager.ResetAll();
+
+			resetableManager = new ResetableManager();
 
 			OnBallReleasedEvent.RemoveAllListeners();
 
@@ -88,11 +88,18 @@ namespace BasketBounce.Gameplay.Levels
 					finTransform = child;
 					finishInitializer.Initialize();
 				}
+				if (child.TryGetComponent(out IResetableItem resetable))
+				{
+					resetableManager.Add(resetable);
+				}
 			});
 
+			resetableManager.ResetAll();
+
 			if (finTransform == null)
-				throw new InvalidDataException($"Could not locate Finish transform. Maybe it doesn't exist in {transform.name}. Chunk: {transform.parent.name}, Level Set: {transform.parent.parent.name}");
+				throw new InvalidDataException($"Could not locate Finish transform. Maybe it doesn't exist in {transform.parent?.parent?.name} -> {transform.parent?.name} -> {transform.name}?");
 		}
+
 		public void ValidateLevel()
 		{
 			transform.ForEachDescendant(child =>
