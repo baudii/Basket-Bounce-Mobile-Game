@@ -9,14 +9,25 @@ namespace BasketBounce.Gameplay.Levels
 	{
 		private List<IResetableItem> resetables;
 
-		public ResetableManager(Transform transform)
+		public ResetableManager()
 		{
 			resetables = new List<IResetableItem>();
-			transform.ForEachDescendant((descendant) =>
-			{
-				var components = descendant.GetComponents<IResetableItem>();
-				resetables.AddRange(components);
-			});
+		}
+
+		public void Add(IResetableItem item)
+		{
+			resetables.Add(item);
+		}
+
+		public void AddRange(IEnumerable<IResetableItem> items)
+		{
+			resetables.AddRange(items);
+		}
+
+		public void MapResetables(Transform root)
+		{
+			var components = root.GetComponentsInChildren<IResetableItem>(true);
+			AddRange(components);
 		}
 
 		public void ResetAll()
