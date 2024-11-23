@@ -196,6 +196,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Level Chunk 2
       objectReference: {fileID: 0}
+    - target: {fileID: 4566128039597738563, guid: 529093529d0c29144b618cb3f49677d8, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 9134371682816538272, guid: 529093529d0c29144b618cb3f49677d8, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0

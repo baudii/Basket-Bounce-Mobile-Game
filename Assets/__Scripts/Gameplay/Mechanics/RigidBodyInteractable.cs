@@ -1,7 +1,5 @@
 using BasketBounce.Systems;
 using KK.Common;
-using System.Threading;
-using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 
 namespace BasketBounce.Gameplay
@@ -15,11 +13,12 @@ namespace BasketBounce.Gameplay
 		bool isFalling;
 		bool hasFallen;
 		float startTime;
-		private void Start()
+
+		bool isInitialized;
+		private void Awake()
 		{
 			initialPosition = transform.position;
 			rb = GetComponent<Rigidbody2D>();
-			startTime = Time.time;
 		}
 
 		private void FixedUpdate()

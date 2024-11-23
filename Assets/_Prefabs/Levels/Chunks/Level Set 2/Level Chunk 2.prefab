@@ -217,7 +217,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 2147483647
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &6941925998405628598
 Transform:
   m_ObjectHideFlags: 0
@@ -2688,7 +2688,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8618366652210311054, guid: 52dd8036f0eb93747856e3a9a6845a2e, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -0.099999905
+      value: -0.10000014
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -4943,7 +4943,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1427273597636659512, guid: 5b1868315e8fc9746810890a4dc531bf, type: 3}
       propertyPath: m_Size.y
-      value: 4.6928983
+      value: 4.9818835
       objectReference: {fileID: 0}
     - target: {fileID: 3276231788962343631, guid: 5b1868315e8fc9746810890a4dc531bf, type: 3}
       propertyPath: m_LocalPosition.x
@@ -5003,7 +5003,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6898716886392380574, guid: 5b1868315e8fc9746810890a4dc531bf, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -0.10000005
+      value: -0.099999815
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -6349,7 +6349,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3972365077149930787, guid: e2bed7e256565664eb2436ce2e5fe59d, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -0.100000024
+      value: -0.10000008
       objectReference: {fileID: 0}
     - target: {fileID: 5037845715610051442, guid: e2bed7e256565664eb2436ce2e5fe59d, type: 3}
       propertyPath: m_LocalPosition.x

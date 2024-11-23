@@ -200,15 +200,15 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 766244820111206179, guid: 6f7534f10661ad148bb0edc31b125e8c, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 2
+      value: 2.5147743
       objectReference: {fileID: 0}
     - target: {fileID: 4730047137461108599, guid: 6f7534f10661ad148bb0edc31b125e8c, type: 3}
       propertyPath: m_PathPosition
-      value: 0
+      value: 0.9440003
       objectReference: {fileID: 0}
     - target: {fileID: 5024164621190854773, guid: 6f7534f10661ad148bb0edc31b125e8c, type: 3}
       propertyPath: m_Waypoints.Array.data[1].position.y
-      value: 7.001
+      value: 2.001
       objectReference: {fileID: 0}
     - target: {fileID: 5991462755021634462, guid: 6f7534f10661ad148bb0edc31b125e8c, type: 3}
       propertyPath: m_Name
