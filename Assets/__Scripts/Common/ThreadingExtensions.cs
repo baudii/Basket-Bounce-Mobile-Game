@@ -68,5 +68,44 @@ namespace KK.Common
 				tcs.TrySetCanceled(cancellationToken);
 			}
 		}
+
+
+		/// <summary>
+		/// Executes task safely. Which implies catching any exceptions. Even if called from
+		/// void method.
+		/// </summary>
+		/// <param name="task">The <see cref="Task"></see> to execute</param>
+		public static async void SafeExectute(this Task task)
+		{
+			try
+			{
+				await task;
+			}
+			catch (Exception ex)
+			{
+				var log = Utils.GetLogWithContext(nameof(Utils), ex.Message, ex.StackTrace);
+				Debug.LogError(log);
+				throw ex;
+			}
+		}
+
+		/// <summary>
+		/// Executes task safely. Which implies catching any exceptions. Even if called from
+		/// void method.
+		/// </summary>
+		/// <param name="task">The <see cref="Task"></see> to execute</param>
+		public static async void SafeExectuteFactory(Func<Task> taskFactory)
+		{
+			try
+			{
+				await taskFactory();
+			}
+			catch (Exception ex)
+			{
+				var log = Utils.GetLogWithContext(nameof(Utils), ex.Message, ex.StackTrace);
+				Debug.LogError(log);
+				throw ex;
+			}
+		}
 	}
 }
