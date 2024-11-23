@@ -1,3 +1,4 @@
+using DG.Tweening.Core;
 using KK.Common;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,7 +14,9 @@ namespace BasketBounce.Gameplay.Levels
 
 #if UNITY_EDITOR
 
+		[Header("Editor only")]
 		[SerializeField] bool validate;
+		[SerializeField] bool disableAll;
 		private void OnValidate()
 		{
 			var name = transform.name;
@@ -23,14 +26,14 @@ namespace BasketBounce.Gameplay.Levels
 				int.TryParse(name.Split(' ').Last(), out int index);
 
 				levelChunkIndex = index - 1;
-				ValidateChunk();
+				ValidateChunk(disableAll);
 				validate = false;
 			}
 		}
 
 #endif
 
-		public void ValidateChunk()
+		public void ValidateChunk(bool toDisable = true)
 		{
 			levels = new List<LevelData>();
 
@@ -44,7 +47,8 @@ namespace BasketBounce.Gameplay.Levels
 					if (levelData.gameObject.activeSelf)
 					{
 						levelData.ValidateLevel();
-						levelData.gameObject.SetActive(false);
+						if (toDisable)
+							levelData.gameObject.SetActive(false);
 					}
 					i++;
 				}

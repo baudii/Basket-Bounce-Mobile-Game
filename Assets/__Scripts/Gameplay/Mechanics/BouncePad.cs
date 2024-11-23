@@ -2,21 +2,26 @@ using UnityEngine;
 using KK.Common.Gameplay;
 using BasketBounce.Gameplay.Levels;
 using BasketBounce.Systems;
+using UnityEngine.Events;
 
 namespace BasketBounce.Gameplay.Mechanics
 {
-	public class BouncePad : Activator, ISetuppableItem, IResetableItem
+	public class BouncePad : Activator, IBallReleaseHandler, IResetableItem
 	{
 		[SerializeField] float force;
 		[SerializeField] Animator animator;
 		[SerializeField] Transform arrows;
 
-		public void OnSetup(LevelData levelData)
+		LevelData levelData;
+
+		private void Start()
 		{
-			levelData.OnBallReleasedEvent.AddListener(() =>
-			{
-				arrows.gameObject.SetActive(false);
-			});
+			
+		}
+
+		public void Handle()
+		{
+			arrows.gameObject.SetActive(false);
 		}
 
 		public void ResetState()

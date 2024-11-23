@@ -68,6 +68,31 @@ namespace BasketBounce.Gameplay.Levels
 		}
 
 #endif
+
+		public void Init()
+		{
+			this.Log($"Initializing Level Data");
+			resetableManager = new ResetableManager(transform);
+			resetableManager.ResetAll();
+
+			OnBallReleasedEvent.RemoveAllListeners();
+
+			transform.ForEachDescendant(child =>
+			{
+				if (child.TryGetComponent(out IBallReleaseHandler ballReleaseHandler))
+				{
+					OnBallReleasedEvent.AddListener(ballReleaseHandler.Handle);
+				}
+				if (child.TryGetComponent(out IFinishInitializer finishInitializer))
+				{
+					finTransform = child;
+					finishInitializer.Initialize();
+				}
+			});
+
+			if (finTransform == null)
+				throw new InvalidDataException($"Could not locate Finish transform. Maybe it doesn't exist in {transform.name}. Chunk: {transform.parent.name}, Level Set: {transform.parent.parent.name}");
+		}
 		public void ValidateLevel()
 		{
 			transform.ForEachDescendant(child =>
@@ -87,27 +112,6 @@ namespace BasketBounce.Gameplay.Levels
 				return true;
 			}
 			return false;
-		}
-
-		public void Init(LevelManager levelManager)
-		{
-			this.Log($"Initializing Level Data");
-			resetableManager = new ResetableManager(transform);
-			resetableManager.ResetAll();
-
-			transform.ForEach(child =>
-			{
-				if (child.TryGetComponent(out ILevelInitializer levelValidator))
-				{
-					finTransform = child;
-					levelValidator.Initialize(levelManager);
-					return true;
-				}
-				return false;
-			});
-
-			if (finTransform == null)
-				throw new InvalidDataException($"Could not locate Finish transform. Maybe it doesn't exist in {transform.name}. LevelSetId:{levelManager.LevelSetId}");
 		}
 
 		public void OnFirstTimeLoad()

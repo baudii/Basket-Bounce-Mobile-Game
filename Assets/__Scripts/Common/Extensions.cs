@@ -195,9 +195,14 @@ namespace KK.Common
 		}
 
 		/// <summary>
-		/// Asynchronously perform action on every transform in the whole hierarchy of descendants including root parent.
+		/// Asynchronously perform action on every transform in the whole hierarchy of descendants including root parent.<seealso cref="Task"/>
+		/// 
 		/// Includes break functionality: return true from the delegate to break out of the loop, false to continue iterating.
 		/// </summary>
+		/// <param name="parent">The root <see cref="Transform"/> of the hierarchy</param>
+		/// <param name="func">Body of asynchronous <see langword="delegate"/> must return <see langword="true"/> 
+		/// to break out of loop, <see langword="false"/> to continue iterating</param>
+		/// <returns><see cref="Task"/> object of this job</returns>
 		public static async Task ForEachDescendantAsync(this Transform parent, Func<Transform, Task<bool>> func)
 		{
 			var stack = new Stack<Transform>();

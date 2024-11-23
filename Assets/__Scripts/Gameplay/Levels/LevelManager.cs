@@ -151,7 +151,7 @@ namespace BasketBounce.Gameplay.Levels
 			this.Log($"Still, current level set: {currentLevelSet}");
 			CurrentLevelData = currentLevelSet.GetLevel(level);
 			CurrentLevelData.gameObject.SetActive(true);
-			CurrentLevelData.Init(this);
+			CurrentLevelData.Init();
 			CurrentLevelData.LevelNum = level;
 			CurrentLevel = level;
 		}

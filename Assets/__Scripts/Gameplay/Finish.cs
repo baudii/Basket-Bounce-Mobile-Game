@@ -9,7 +9,7 @@ using System;
 
 namespace BasketBounce.Gameplay
 {
-	public class Finish : MonoBehaviour, IResetableItem, ILevelInitializer
+	public class Finish : MonoBehaviour, IResetableItem, IFinishInitializer
 	{
 		[SerializeField] float localScaleModifier;
 		[SerializeField] float animationSpeed;
@@ -24,12 +24,12 @@ namespace BasketBounce.Gameplay
 
 		bool initilized;
 
-		public void Initialize(LevelManager levelManager)
+		public void Initialize()
 		{
+			DIContainer.GetDependency(out levelManager);
 			if (levelManager == null)
 				throw new ArgumentException($"Level Manager can not be null");
 
-			this.levelManager = levelManager;
 			initilized = true;
 		}
 

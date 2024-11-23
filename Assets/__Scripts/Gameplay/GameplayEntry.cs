@@ -16,15 +16,6 @@ namespace BasketBounce.Gameplay
 		[SerializeField] ReflectionLine reflectionLine;
 		[SerializeField] GestureDetector gestureDetector;
 		[SerializeField] EventSystem eventSystem;
-		[SerializeField] bool initializeOnStart;
-
-		private void Start()
-		{
-			if (initializeOnStart)
-			{
-
-			}
-		}
 
 		public override Task Setup()
 		{
