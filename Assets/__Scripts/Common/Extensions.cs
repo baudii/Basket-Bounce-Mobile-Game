@@ -256,26 +256,14 @@ namespace KK.Common
 			return mask == (mask | (1 << layer));
 		}
 
-		/// <summary>
-		/// Checks if index is within the give array
-		/// </summary>
-		/// <param name="array">Array to test</param>
-		/// <param name="index">Index</param>
-		/// <returns></returns>
-		public static bool IsWithinBoundaries(this Array array, int index)
-		{
-			if (index < 0 || index >= array.Length)
-				return false;
-			return true;
-		}
 
 		/// <summary>
-		/// Checks if index is within the give array
+		/// Checks if index is valid for a given collection (e.g. it's not oustside of collection's boundaries)
 		/// </summary>
-		/// <param name="collection">Collection to test</param>
-		/// <param name="index">Index</param>
-		/// <returns></returns>
-		public static bool IsWithinBoundaries(this ICollection collection, int index)
+		/// <param name="collection">Collection to check</param>
+		/// <param name="index">Index to check</param>
+		/// <returns><see cref="bool"/> indicating if the index is valid</returns>
+		public static bool IsValidIndex(this ICollection collection, int index)
 		{
 			if (index < 0 || index >= collection.Count)
 				return false;
