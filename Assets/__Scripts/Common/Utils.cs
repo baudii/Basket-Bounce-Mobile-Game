@@ -135,46 +135,10 @@ namespace KK.Common
 			return Vector2.zero;
 		}
 
-		/// <summary>
-		/// Executes task safely. Which implies catching any exceptions. Even if called from
-		/// void method.
-		/// </summary>
-		/// <param name="task">The <see cref="Task"></see> to execute</param>
-		public static async void SafeExectute(this Task task)
-		{
-			try
-			{
-				await task;
-			}
-			catch (Exception ex)
-			{
-				var log = GetLogWithContext(nameof(Utils), ex.Message, ex.StackTrace);
-				Debug.LogError(log);
-			}
-		}
-
-		/// <summary>
-		/// Executes task safely. Which implies catching any exceptions. Even if called from
-		/// void method.
-		/// </summary>
-		/// <param name="task">The <see cref="Task"></see> to execute</param>
-		public static async void SafeExectuteFactory(Func<Task> taskFactory)
-		{
-			try
-			{
-				await taskFactory();
-			}
-			catch (Exception ex)
-			{
-				var log = GetLogWithContext(nameof(Utils), ex.Message, ex.StackTrace);
-				Debug.LogError(log);
-			}
-		}
-
 		public static string GetLogWithContext(object context, params object[] messages)
 		{
-			string contextHeader = "<color=#A3CF77>[" + context.ToString() + "]</color>";
-			return contextHeader + ' ' + GetLog(messages);
+			string prefix = "<color=#A3CF77>[" + context.ToString() + "]</color>";
+			return prefix + ' ' + GetLog(messages);
 		}
 
 		public static string GetLog(params object[] messages)
