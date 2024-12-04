@@ -21,10 +21,13 @@ namespace KK.Common
 
 		public static IEnumerator Co_DelayedExecute(Action action, float delay, bool scaledTime = true)
 		{
-			if (scaledTime)
-				yield return new WaitForSeconds(delay);
-			else
-				yield return new WaitForSecondsRealtime(delay);
+			if (delay > 0)
+			{
+				if (scaledTime)
+					yield return new WaitForSeconds(delay);
+				else
+					yield return new WaitForSecondsRealtime(delay);
+			}
 
 			action();
 		}
