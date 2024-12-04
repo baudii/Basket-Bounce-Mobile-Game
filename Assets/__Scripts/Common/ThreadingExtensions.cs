@@ -79,6 +79,13 @@ namespace KK.Common
 		/// <param name="task">The <see cref="Task"></see> to execute</param>
 		public static async void SafeExectute(this Task task)
 		{
+			var stackFrame = new StackFrame(3);
+			var callerMethod = stackFrame.GetMethod();
+			string context = $"{callerMethod.ReflectedType.Name}.{callerMethod.Name}()";
+			string formattedStackTrace = UnityEngine.StackTraceUtility.ExtractStackTrace();
+
+			UnityEngine.Debug.Log(formattedStackTrace);
+			UnityEngine.Debug.Log(context);
 			try
 			{
 				await task;
@@ -98,15 +105,19 @@ namespace KK.Common
 		/// <param name="task">The <see cref="Task"></see> to execute</param>
 		public static async void SafeExectuteFactory(Func<Task> taskFactory)
 		{
+			var stackFrame = new StackFrame(3);
+			var callerMethod = stackFrame.GetMethod(); 
+			string formattedStackTrace = UnityEngine.StackTraceUtility.ExtractStackTrace();
+			UnityEngine.Debug.Log(formattedStackTrace);
+			string context = $"{callerMethod.ReflectedType.Name}.{callerMethod.Name}()";
+
 			try
 			{
 				await taskFactory();
 			}
 			catch (Exception ex)
 			{
-				var log = Utils.GetLogWithContext(nameof(Utils), ex.Message, ex.StackTrace);
-				Debug.LogError(log);
-				throw ex;
+				HandleException(ex, context);
 			}
 		}
 
