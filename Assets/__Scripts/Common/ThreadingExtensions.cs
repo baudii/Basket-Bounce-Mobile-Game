@@ -92,9 +92,7 @@ namespace KK.Common
 			}
 			catch (Exception ex)
 			{
-				var log = Utils.GetLogWithContext(nameof(Utils), ex.Message, ex.StackTrace);
-				Debug.LogError(log);
-				throw ex;
+				HandleException(ex, context);
 			}
 		}
 
