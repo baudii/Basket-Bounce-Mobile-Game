@@ -138,18 +138,23 @@ namespace KK.Common
 		public static string GetLogWithContext(object context, params object[] messages)
 		{
 			string prefix = "<color=#A3CF77>[" + context.ToString() + "]</color>";
-			return prefix + ' ' + GetLog(messages);
+			return prefix + ' ' + GetLog(" ", messages);
+		}
+		public static string GetLogWithContext(object context, string separator, params object[] messages)
+		{
+			string prefix = "<color=#A3CF77>[" + context.ToString() + "]</color>";
+			return prefix + ' ' + GetLog(separator, messages);
 		}
 
-		public static string GetLog(params object[] messages)
+		public static string GetLog(string separator, params object[] messages)
 		{
 			string log = messages[0].ToString();
 			for (int i = 1; i < messages.Length; i++)
 			{
 				if (messages[i] != null)
-					log += (' ' + messages[i].ToString());
+					log += (separator + messages[i].ToString());
 				else
-					log += (" null");
+					log += (separator + "null");
 			}
 			return log;
 		}
