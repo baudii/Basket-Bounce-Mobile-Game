@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Diagnostics;
+using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
 using UnityEngine;
@@ -106,6 +108,18 @@ namespace KK.Common
 				Debug.LogError(log);
 				throw ex;
 			}
+		}
+
+		private static void HandleException(Exception ex, string context)
+		{
+			var log = Utils.GetLogWithContext(nameof(Utils), 
+				separator: "\n-----------------------------------\n", 
+				ex.Message, 
+				$"Error occured during {nameof(SafeExectute)}() or {nameof(SafeExectuteFactory)}(). Caller context:{context}",
+				ex.StackTrace);
+			UnityEngine.Debug.LogError(log);
+
+			throw ex;
 		}
 	}
 }
