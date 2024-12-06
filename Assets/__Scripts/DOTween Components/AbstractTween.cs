@@ -26,11 +26,13 @@ namespace BasketBounce.DOTweenComponents
 
 		protected virtual void Animate()
 		{
-			Sequence seq = DOTween.Sequence();
-			tween = GetTween()
+			Sequence seq = DOTween.Sequence(gameObject);
+
+			tween = GetTween(duration)
 					.SetUpdate(isUnscaledTime)
 					.SetEase(ease);
-			seq.Append(tween).AppendInterval(loopDelay).SetDelay(initialDelay);
+
+			seq.AppendInterval(loopDelay).Append(tween).SetDelay(initialDelay);
 
 			if (isLoop)
 				seq.SetLoops(-1, loopType);
