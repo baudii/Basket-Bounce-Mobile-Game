@@ -20,6 +20,7 @@ namespace BasketBounce.Gameplay
 		[SerializeField] float maxStuckTime;
 		[SerializeField] float bounceAnimationDuration;
 		[SerializeField] float bounceScaleValue;
+		[SerializeField] float maxVelocityMagnitude;
 		[SerializeField] LayerMask bounceLayerMask;
 		[Header("Preparation phase")]
 		[SerializeField] float minSpeed;
@@ -151,6 +152,11 @@ namespace BasketBounce.Gameplay
 			{
 				currentStuckTime = 0;
 			}
+		}
+
+		private void FixedUpdate()
+		{
+			rb.velocity = Vector2.ClampMagnitude(rb.velocity, maxVelocityMagnitude);
 		}
 
 		void SetState(BallState newState)
