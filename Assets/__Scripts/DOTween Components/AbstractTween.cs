@@ -5,7 +5,7 @@ namespace BasketBounce.DOTweenComponents
 {
 	public abstract class AbstractTween : MonoBehaviour
 	{
-		[SerializeField] protected float duration;
+		[SerializeField] float duration;
 		[SerializeField] bool activateOnStart;
 		[SerializeField] bool isLoop;
 		[SerializeField] LoopType loopType = LoopType.Yoyo;
@@ -22,7 +22,7 @@ namespace BasketBounce.DOTweenComponents
 				Animate();
 		}
 
-		protected abstract Tween GetTween();
+		protected abstract Tween GetTween(float duration);
 
 		protected virtual void Animate()
 		{
