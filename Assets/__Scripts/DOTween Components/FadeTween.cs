@@ -8,7 +8,7 @@ namespace BasketBounce.DOTweenComponents
 		[SerializeField] SpriteRenderer rend;
 		[SerializeField] protected float targetAlpha;
 
-		protected override Tween GetTween()
+		protected override Tween GetTween(float duration)
 		{
 			return rend.DOFade(targetAlpha, duration);
 		}

@@ -7,9 +7,9 @@ namespace BasketBounce.DOTweenComponents
 	{
 		[SerializeField] Vector3 targetLocalPos;
 
-		protected override Tween GetTween()
+		protected override Tween GetTween(float duration)
 		{
-			return transform.DOLocalMove(targetLocalPos, duration);
+			return transform.DOLocalMove(transform.localPosition + targetLocalPos, duration);
 		}
 	}
 }
