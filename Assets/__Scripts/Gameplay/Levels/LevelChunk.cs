@@ -57,6 +57,8 @@ namespace BasketBounce.Gameplay.Levels
 
 		public LevelData GetLevel(int level)
 		{
+			// 0 < level < chunkSize
+
 			this.Log("Retrieving level: ", levels[level]);
 			return levels[level];
 		}

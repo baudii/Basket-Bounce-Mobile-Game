@@ -65,6 +65,7 @@ namespace BasketBounce.Gameplay.Levels
 			{
 				ValidateLevel();
 			}
+			validateLevel = false;
 		}
 
 #endif
@@ -88,10 +89,7 @@ namespace BasketBounce.Gameplay.Levels
 					finTransform = child;
 					finishInitializer.Initialize();
 				}
-				if (child.TryGetComponent(out IResetableItem resetable))
-				{
-					resetableManager.Add(resetable);
-				}
+				resetableManager.AddRange(child.GetComponents<IResetableItem>());
 			});
 
 			resetableManager.ResetAll();
