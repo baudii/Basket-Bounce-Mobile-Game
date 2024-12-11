@@ -118,6 +118,7 @@ namespace BasketBounce.Gameplay.Levels
 
 			if (levelSet < 0 || levelSet >= levelSetPrefabs.Count)
 				throw new ArgumentOutOfRangeException($"Provided level set index={levelSet} is invalid. Should be at least between [0, {levelSetPrefabs.Count - 1}] inclusive");
+			if (levelSet < 0 || levelSet >= levelSetPrefabs.Count - 1)
 			
 			var levelSetPrefab = levelSetPrefabs[levelSet];
 			var levelSetGo = Instantiate(levelSetPrefab, Vector3.zero, Quaternion.identity, transform);
