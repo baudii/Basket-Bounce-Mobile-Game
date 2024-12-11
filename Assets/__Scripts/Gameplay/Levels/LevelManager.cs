@@ -115,10 +115,12 @@ namespace BasketBounce.Gameplay.Levels
 
 			if (levelSetPrefabs == null)
 				throw new ArgumentNullException($"Level set prefabs collections is null. It should be initialized.");
+				throw new ArgumentNullException(nameof(levelSetPrefabs), $"Level set prefabs collections is null. It should be initialized.");
 
 			if (levelSet < 0 || levelSet >= levelSetPrefabs.Count)
 				throw new ArgumentOutOfRangeException($"Provided level set index={levelSet} is invalid. Should be at least between [0, {levelSetPrefabs.Count - 1}] inclusive");
 			if (levelSet < 0 || levelSet >= levelSetPrefabs.Count - 1)
+				throw new ArgumentOutOfRangeException(nameof(levelSet), $"Provided levelSet={levelSet} is invalid. Should be at least between [0, {levelSetPrefabs.Count - 1}] inclusive");
 			
 			var levelSetPrefab = levelSetPrefabs[levelSet];
 			var levelSetGo = Instantiate(levelSetPrefab, Vector3.zero, Quaternion.identity, transform);
@@ -191,6 +193,7 @@ namespace BasketBounce.Gameplay.Levels
 
 		public async Task NextLevel()
 		{
+			this.Log("Last level index:", currentLevelSet.LevelCount - 1, "Current level index:", CurrentLevel);
 			if (CurrentLevel == currentLevelSet.LevelCount - 1)
 			{
 				OnFinishedGameEvent?.Invoke();
