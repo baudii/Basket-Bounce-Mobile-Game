@@ -45,6 +45,14 @@ namespace BasketBounce.Gameplay
 			}
 		}
 
+		private void OnApplicationQuit()
+		{
+			if (ctd != null)
+			{
+				ctd.m_PathPosition = 0;
+			}
+		}
+
 		public void UpdateDollyWaypoint(Vector3 finPos)
 		{
 			var desiredPos = Vector2.zero.WhereY(2 + 0.001f);
