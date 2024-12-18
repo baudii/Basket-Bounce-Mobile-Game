@@ -46,7 +46,8 @@ namespace BasketBounce.Gameplay.Mechanics
 		#region Unity Methods
 
 #if UNITY_EDITOR
-		[SerializeField] bool defaultValues;
+		[SerializeField]
+		bool defaultValues = true;
 		private void OnValidate()
 		{
 			if (defaultValues)
@@ -70,6 +71,7 @@ namespace BasketBounce.Gameplay.Mechanics
 				gravityScale = 6;
 
 				blinkColor = new Color32(12 * 16 + 1, 5 * 16 + 13, 32, 255);
+				defaultValues = false;
 			}
 		}
 
