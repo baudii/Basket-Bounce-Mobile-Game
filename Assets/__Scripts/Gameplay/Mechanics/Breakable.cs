@@ -31,14 +31,6 @@ namespace BasketBounce.Gameplay.Mechanics
 		[SerializeField] Vector3 localOffsetTextPosition;
 		private static GameObject _textPrefab;
 		private BreakableCounter_WorldUI _textObj;
-		private async Task<GameObject> GetTextPrefabAsync()
-		{
-			if (_textPrefab == null)
-			{
-				var result = Addressables.LoadAssetAsync<GameObject>(key: "WT_Counter");
-				await result.Task;
-				_textPrefab = result.Result;
-			}
 
 			return _textPrefab;
 		}
