@@ -32,8 +32,18 @@ namespace BasketBounce.Gameplay.Mechanics
 		private static GameObject _textPrefab;
 		private BreakableCounter_WorldUI _textObj;
 
-			return _textPrefab;
-		}
+		const float blinkDuration = 1;
+
+		Color initialColor;
+		int currentHits;
+
+		bool broken = false;
+
+		bool isKinematicInitial;
+
+		Vector2 initialPos;
+
+		#region Unity Methods
 
 #if UNITY_EDITOR
 		[SerializeField] bool defaultValues;
